@@ -7,8 +7,7 @@ in
 
 {
   home.packages = with pkgs; [ home-manager ];
-    # No conditional imports; handled in host config
-    imports = [];
+  imports = [ ./work-config.nix ];
 
   home.username = userConfig.username;
     home.stateVersion = "25.11";
@@ -57,8 +56,4 @@ in
   '';
   home.file."bin/clone-personal-repos".executable = true;
 
-  # Create directories on activation
-  home.activation.createDirectories = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    mkdir -p ${homeDir}/halfdane
-  '';
 }

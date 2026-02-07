@@ -59,8 +59,19 @@
       #!/usr/bin/env bash
       cd ~/nixos-config
       git add .
-      nix flake update work-config
       sudo nixos-rebuild switch --flake .#laptop
+    '';
+    executable = true;
+  };
+
+  home.file."bin/nrst" = {
+    text = ''
+      #!/usr/bin/env bash
+      cd ~/nixos-config
+      git add .
+      sudo nixos-rebuild switch --flake .#laptop
+      ls ~/work/.envrc
+      ls ~/halfdane/.envrc
     '';
     executable = true;
   };

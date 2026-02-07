@@ -1,7 +1,7 @@
 # Laptop host configuration
 
 
-{ config, pkgs, lib, inputs, externalWorkDir ? null, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 let
   userConfig = import ../../user-config.nix;
@@ -11,6 +11,7 @@ in
   imports = [
     ./hardware-configuration-laptop.nix
     ./qemu-vm.nix
+    ./work-system.nix
   ];
 
   # Enable x86_64 emulation on aarch64

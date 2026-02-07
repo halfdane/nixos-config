@@ -75,21 +75,7 @@
       "inputs": {
         "home-manager": "home-manager",
         "nixos-aarch64-widevine": "nixos-aarch64-widevine",
-        "nixpkgs": "nixpkgs_2",
-        "work-config": "work-config"
-      }
-    },
-    "work-config": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1770472579,
-        "narHash": "sha256-X1meWVOEYMKUjJedKnc00er6XXSY1B4WV4Kkd5HvC5g=",
-        "path": "/home/tvollert/work/work-nixos-config",
-        "type": "path"
-      },
-      "original": {
-        "path": "/home/tvollert/work/work-nixos-config",
-        "type": "path"
+        "nixpkgs": "nixpkgs_2"
       }
     }
   },
