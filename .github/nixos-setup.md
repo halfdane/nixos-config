@@ -1,19 +1,5 @@
 # NixOS Setup - Knowledge Document
 
-## Architecture Decisions
-
-### Why Compartmentalization?
-The configuration is split between public (`nixos-config`) and private (`work-nixos-config`) repositories to:
-- Share personal NixOS setup publicly without leaking employer name or work email
-- Keep work-specific config in enterprise GitHub (not publicly accessible)
-- Allow independent version control of work and personal settings
-
-### Why Flake Path Input (Not Git)?
-The work-config uses a `path:` flake input rather than a git URL because:
-- Work repo is in enterprise GitHub (not publicly accessible)
-- Simpler for local development (no authentication needed)
-- **Trade-off**: Must manually run `nix flake update work-config` after changes
-- This is automated in the `nrs` abbreviation
 
 ## Non-Obvious Patterns
 
@@ -39,9 +25,3 @@ The `clone-work-repos` script supports `"subdir:owner/repo"` syntax to organize 
 - Not a standard pattern - custom implementation
 - Allows grouping related projects under `~/work/`
 
-## Gotchas
-
-### Flake Lock Staleness
-- Work-config changes don't automatically update (path inputs are locked by lastModified)
-- Must explicitly run `nix flake update work-config` or use `--recreate-lock-file`
-- Automated in `nrs` command
