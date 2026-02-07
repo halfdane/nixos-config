@@ -120,7 +120,7 @@ in
     #!/usr/bin/env bash
     cd ~/nixos-config
     nix flake update work-config
-    sudo nixos-rebuild switch --flake .#vm-qemu
+    sudo nixos-rebuild switch --flake .#laptop
   '';
   home.file."bin/nrs".executable = true;
 

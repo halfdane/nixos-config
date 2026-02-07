@@ -39,11 +39,11 @@
       ];
     in {
       nixosConfigurations = {
-        vm-qemu = nixpkgs.lib.nixosSystem {
+        laptop = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = { inherit inputs; };
           modules = commonModules ++ [
-            ./hardware-configuration-qemu.nix
+            ./hardware-configuration-laptop.nix
             ./qemu-vm.nix
           ];
         };

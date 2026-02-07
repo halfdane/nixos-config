@@ -11,7 +11,6 @@ in
   imports =
     [ # Include the results of the hardware scan.
       # Hardware configuration is imported by flake.nix based on VM type
-      # ./hardware-configuration-qemu.nix or ./hardware-configuration-apple.nix
     ];
 
   # Enable x86_64 emulation on aarch64
