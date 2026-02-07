@@ -1,12 +1,22 @@
 { config, pkgs, inputs, lib, ... }:
 let
-  userConfig = import ../../user-config.nix;
+  userConfig = import ./user-config.nix;
   username = userConfig.username;
   homeDir = "/home/${username}";
 in
 
 {
-  home.packages = with pkgs; [ home-manager ];
+  home.packages = with pkgs; [ 
+    home-manager 
+    kdePackages.kate
+    kdePackages.kdeconnect-kde
+    vscode
+    keepassxc
+    chromium
+    pkgs.maestral
+    pkgs.maestral-gui
+    pkgs.gh
+  ];
   imports = [ ./work-config.nix ];
 
   home.username = userConfig.username;

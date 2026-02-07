@@ -14,13 +14,12 @@
   outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, ... }:
     let
       system = "aarch64-linux";
-      userConfig = import ./user-config.nix;
       commonModules = [
         home-manager.nixosModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.${userConfig.username} = { config, pkgs, lib, ... }: {
+          home-manager.users.tvollert = { config, pkgs, lib, ... }: {
             imports = [
               ./home.nix
               ./hosts/laptop/home.nix

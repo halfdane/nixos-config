@@ -4,7 +4,7 @@
 { config, pkgs, lib, inputs, ... }:
 
 let
-  userConfig = import ../../user-config.nix;
+  userConfig = import ./user-config.nix;
 in
 {
   nixpkgs.overlays = [ inputs.nixos-aarch64-widevine.overlays.default ];

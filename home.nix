@@ -8,14 +8,6 @@
   home.packages = with pkgs; [
         pkgs.htop
         pkgs.curl
-        kdePackages.kate
-        kdePackages.kdeconnect-kde
-        vscode
-        keepassxc
-        chromium
-        pkgs.maestral
-        pkgs.maestral-gui
-        pkgs.gh
         pkgs.direnv
         pkgs.sqlite
         pkgs.fzf
