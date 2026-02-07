@@ -48,9 +48,8 @@ in
         src = pkgs.fishPlugins.plugin-git.src;
       }
     ];
-    shellAbbrs = {
-      nrs = "cd ~/nixos-config && nix flake update work-config && sudo nixos-rebuild switch --flake .#vm-qemu";
-    };
+    shellAbbrs = {};
+    functions = {};
   };
 
   # Enable direnv for automatic gh auth switching
@@ -117,6 +116,13 @@ in
   '';
   
   home.file."bin/clone-personal-repos".executable = true;
+  home.file."bin/nrs".text = ''
+    #!/usr/bin/env bash
+    cd ~/nixos-config
+    nix flake update work-config
+    sudo nixos-rebuild switch --flake .#vm-qemu
+  '';
+  home.file."bin/nrs".executable = true;
 
   # Create directories on activation
   home.activation.createDirectories = lib.hm.dag.entryAfter ["writeBoundary"] ''
