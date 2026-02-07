@@ -82,8 +82,8 @@
     "work-config": {
       "flake": false,
       "locked": {
-        "lastModified": 1769079797,
-        "narHash": "sha256-jcfyt/ygHTvKJiMf6rTkvSXpF5Y+n6/EoxZwA7PmY48=",
+        "lastModified": 1770397329,
+        "narHash": "sha256-v6B6iOA012jPg9RoJOP0AbSDTV9fLGObfNc2g5YAjuQ=",
         "path": "/home/tvollert/work/work-nixos-config",
         "type": "path"
       },

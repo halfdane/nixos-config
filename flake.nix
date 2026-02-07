@@ -20,11 +20,7 @@
     let
       system = "aarch64-linux";
       userConfig = import ./user-config.nix;
-      
-      # Check if work configs are available
       hasWorkConfig = work-config != null;
-      
-      # Shared configuration for both VMs
       commonModules = [
         ./configuration.nix
       ] ++ (if hasWorkConfig then [ "${work-config}/work-system.nix" ] else [])
@@ -43,22 +39,12 @@
       ];
     in {
       nixosConfigurations = {
-        # QEMU VM configuration
         vm-qemu = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = { inherit inputs; };
           modules = commonModules ++ [
             ./hardware-configuration-qemu.nix
             ./qemu-vm.nix
-          ];
-        };
-
-        # Apple Virtualization VM configuration
-        vm-apple = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs; };
-          modules = commonModules ++ [
-            ./hardware-configuration-apple.nix
           ];
         };
       };
