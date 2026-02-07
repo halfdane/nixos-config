@@ -13,6 +13,7 @@
       url = "path:/home/tvollert/work/work-nixos-config";
       flake = false;
     };
+    
     nixos-aarch64-widevine.url = "github:epetousis/nixos-aarch64-widevine";
   };
 
@@ -21,30 +22,27 @@
       system = "aarch64-linux";
       userConfig = import ./user-config.nix;
       hasWorkConfig = work-config != null;
-      commonModules = [
-        ./configuration.nix
-      ] ++ (if hasWorkConfig then [ "${work-config}/work-system.nix" ] else [])
-      ++ [
+      commonModules = (if hasWorkConfig then [ "${work-config}/work-system.nix" ] else []) ++ [
         home-manager.nixosModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.${userConfig.username} = { config, pkgs, lib, ... }: {
-            imports = [ ./home.nix ] ++ (if hasWorkConfig then [ "${work-config}/work-config.nix" ] else [ ]);
+            imports = [
+              ./home.nix
+              ./hosts/laptop/home.nix
+            ] ++ (if hasWorkConfig then [ "${work-config}/work-config.nix" ] else []);
           };
         }
-        {
-          nixpkgs.overlays = [ nixos-aarch64-widevine.overlays.default ];
-        }
       ];
+      externalWorkDir = /home/tvollert/work/work-nixos-config;
     in {
       nixosConfigurations = {
         laptop = nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit inputs; };
+          specialArgs = { inherit inputs externalWorkDir; };
           modules = commonModules ++ [
-            ./hardware-configuration-laptop.nix
-            ./qemu-vm.nix
+            ./hosts/laptop/configuration.nix
           ];
         };
       };

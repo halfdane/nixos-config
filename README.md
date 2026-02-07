@@ -77,8 +77,28 @@ cd ~/work      # Auto-switches to work account (after you set your username in .
 - The SSH config automatically routes `github-work` to github.com with the work key
 - Git conditional config ensures commits use the correct identity based on directory
 
-## Directory Structure
+## Multi-Host Configuration (Flake-based)
 
+This repository supports multiple hosts using Nix flakes. Each host has its own configuration in `hosts/<host>/configuration.nix`.
+
+### Host Structure
+- Host-specific configs: `hosts/laptop/configuration.nix`, `hosts/<other>/configuration.nix`, etc.
+
+### Host Selection
+Hosts are defined in `flake.nix` under `nixosConfigurations`. To add a new host, add a new entry pointing to its config file.
+
+**To build for a specific host:**
+```bash
+sudo nixos-rebuild switch --flake .#laptop
+```
+Replace `laptop` with your desired host name as defined in `flake.nix`.
+
+### Adding a New Host
+1. Create a new subdirectory in `hosts/` (e.g., `hosts/livingroom/`).
+2. Add your host-specific configuration file (e.g., `hosts/livingroom/configuration.nix`).
+3. Add a new entry to `nixosConfigurations` in `flake.nix` for the new host.
+
+### Directory Structure
 - `~/halfdane/` - Personal projects (uses personal Git identity)
 - `~/work/` - Work projects (uses work Git identity automatically)
 
