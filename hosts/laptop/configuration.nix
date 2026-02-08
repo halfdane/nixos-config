@@ -79,6 +79,12 @@ in
     shell = pkgs.fish;
   };
 
+  security.sudo = {
+    enable = true;
+    # Sudo no pw
+    wheelNeedsPassword = false;
+  };
+
   virtualisation.docker.enable = true;
   programs.fish.enable = true;
   programs.firefox.enable = true;
