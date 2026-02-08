@@ -10,17 +10,27 @@
     nixos-aarch64-widevine.url = "github:epetousis/nixos-aarch64-widevine";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+    agenix.url = "github:ryantm/agenix";
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, ... }:
+  outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, agenix, ... }:
     let
-      # No commonModules; move to laptop config
+      commonModules = [ 
+        ./common.nix 
+        agenix.nixosModules.default
+      ];
     in {
+      packages = {
+        x86_64-linux = agenix.packages.x86_64-linux.default;
+        aarch64-linux = agenix.packages.aarch64-linux.default;
+      };
+
+
       nixosConfigurations = {
         laptop = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
-          specialArgs = { inherit inputs; };
-          modules = [
+          specialArgs = { inherit inputs agenix; };
+          modules = commonModules ++ [
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
@@ -37,10 +47,9 @@
         };
         ada = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
-          modules = [
+          specialArgs = { inherit inputs agenix; };
+          modules = commonModules ++ [
             disko.nixosModules.disko
-            ./hosts/ada/disko.nix
             ./hosts/ada/configuration.nix
             home-manager.nixosModules.home-manager
             {

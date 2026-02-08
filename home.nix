@@ -5,14 +5,6 @@
   # Add ~/bin to PATH
   home.sessionPath = [ "~/bin" ];
 
-  home.packages = with pkgs; [
-        pkgs.htop
-        pkgs.curl
-        pkgs.direnv
-        pkgs.sqlite
-        pkgs.fzf
-    ];
-
   # Enable bash to source Home Manager session variables
   programs.bash = {
     enable = true;
@@ -43,6 +35,11 @@
 
   programs.git = {
     enable = true;
+  };
+
+  programs.vim = {
+    enable = true;
+    defaultEditor = true;
   };
 
   

@@ -11,3 +11,12 @@
 
 # Notes
 - Log in with: `ssh halfdane@152.53.176.47`
+
+
+Later: 
+```
+rsync -av --delete ~/nixos-config/ halfdane@152.53.176.47:/home/halfdane/nixos-config/
+ssh halfdane@152.53.176.47
+cd ~/nixos-config
+sudo nixos-rebuild switch --flake ./#ada
+```
