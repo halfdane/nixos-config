@@ -1,9 +1,20 @@
-# Minimal NixOS configuration for ada (VPS)
 { config, pkgs, ... }:
 {
   imports = [
     ./hardware-configuration-ada.nix
+    ./disko.nix
     ];
+
+  # Use agenix secret in initrd for LUKS key, with password fallback
+  # age.secrets."ada-luks-key".file = ../../secrets/ada-luks-key.age; 
+  # boot.initrd.secrets."/boot/ada-luks.key" = config.age.secrets."ada-luks-key".path; 
+
+  boot.initrd.secrets."/ada-luks.key" = ./ada-luks.key;  # Nix embeds in EFI stub
+  boot.initrd.luks.devices."luks-root".keyFile = "/ada-luks.key";  # Tmpfs root
+
+  boot.initrd.luks.devices."luks-root".fallbackToPassword = true;
+
+  age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
   # Basic networking (systemd-networkd, ens3 DHCP)
   networking.hostName = "ada";
@@ -32,10 +43,13 @@
     wheelNeedsPassword = false;
   };
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
   # Minimal packages
   environment.systemPackages = with pkgs; [
     vim
     git
+    age
   ];
 
   # Enable SSH (for remote access)
