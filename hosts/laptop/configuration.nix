@@ -7,6 +7,10 @@ let
   userConfig = import ./user-config.nix;
 in
 {
+  agenix.secrets = {
+    "secrets/laptop-test.age" = ../../secrets/laptop-test.age;
+    "secrets/tailscale-invite.age" = ../../secrets/tailscale-invite.age;
+  };
   nixpkgs.overlays = [ inputs.nixos-aarch64-widevine.overlays.default ];
   imports = [
     ./hardware-configuration-laptop.nix

@@ -1,5 +1,9 @@
 { config, pkgs, ... }:
 {
+  agenix.secrets = {
+    "secrets/ada-luks-key.age" = ../../secrets/ada-luks-key.age;
+    "secrets/tailscale-invite.age" = ../../secrets/tailscale-invite.age;
+  };
   imports = [
     ./hardware-configuration-ada.nix
     ./disko.nix
