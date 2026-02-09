@@ -16,7 +16,9 @@
     tailscale
   ];
 
-  age.secrets."secrets/tailscale-invite.age".file = ./secrets/tailscale-invite.age;
+  agenix.secrets = {
+    "secrets/tailscale-invite.age" = ./secrets/tailscale-invite.age;
+  };
   # Use the reusable Tailscale module
   tailscale = {
     enable = true;

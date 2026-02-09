@@ -18,6 +18,7 @@
       commonModules = [ 
         ./common.nix 
         ./modules/tailscale.nix
+        ./modules/agenix.nix
         agenix.nixosModules.default
       ];
     in {
