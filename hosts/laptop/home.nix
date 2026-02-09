@@ -24,6 +24,8 @@ in
   programs.git = {
     enable = true;
     settings = {
+      user.name = userConfig.github.personal.name;
+      user.email = userConfig.github.personal.email;
       init.defaultBranch = "main";
       credential.helper = "!${pkgs.gh}/bin/gh auth git-credential";
     };
