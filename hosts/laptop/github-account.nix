@@ -1,4 +1,4 @@
-{ githubConfig, homeDir, ... }:
+{ githubConfig, ... }:
 {
   # Direnv config for GitHub account
   home.file."${githubConfig.directory}/.envrc".text = ''
@@ -16,7 +16,7 @@
     {
       repos = githubConfig.repos;
       account = githubConfig.account;
-      targetDir = "${homeDir}/${githubConfig.account}";
+      targetDir = "${githubConfig.directory}/${githubConfig.account}";
       scriptName = "clone-${githubConfig.account}-repos";
     }
   ];

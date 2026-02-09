@@ -1,16 +1,22 @@
+let 
+  personal = {
+    name = "halfdane";
+    email = "REDACTED_PERSONAL_EMAIL";
+    account = "halfdane";
+    directory = "halfdane";
+    repos = [
+      "halfdane/duality_keyboard"
+    ];
+  };
+in
 {
   username = "tvollert";
   fullName = "a user";
 
   github = {
-    personal = {
-      name = "halfdane";
-      email = "REDACTED_PERSONAL_EMAIL";
-      account = "halfdane";
-      directory = "halfdane";
-      repos = [
-        "halfdane/duality_keyboard"
-      ];
+    inherit personal;
+    system = personal // {
+      directory = "nixos-config";
     };
     work = {
       name = "REDACTED_WORK_NAME";

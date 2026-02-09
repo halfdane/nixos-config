@@ -34,11 +34,12 @@ in
   imports = [
     (import ./github-account.nix {
       githubConfig = userConfig.github.personal;
-      homeDir = homeDir;
     })
     (import ./github-account.nix {
       githubConfig = userConfig.github.work;
-      homeDir = homeDir;
+    })
+    (import ./github-account.nix {
+      githubConfig = userConfig.github.system;
     })
     ../../modules/clone-repos.nix
   ];
