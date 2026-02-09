@@ -14,6 +14,9 @@ in
     ./work-system.nix
   ];
 
+  age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+
+
   # Enable x86_64 emulation on aarch64
   boot.binfmt.emulatedSystems = [ "x86_64-linux" ];
 

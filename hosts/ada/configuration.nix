@@ -50,6 +50,7 @@
     settings.PasswordAuthentication = false;
   };
 
+  nix.settings.require-sigs = false;
 
   # Timezone
   time.timeZone = "Europe/Berlin";

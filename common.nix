@@ -1,4 +1,4 @@
-{ pkgs, agenix, ... }:
+{ config, pkgs, agenix, ... }:
 {
   environment.systemPackages = with pkgs; [
     agenix.packages.${stdenv.hostPlatform.system}.default
@@ -13,6 +13,13 @@
     fzf
     rage
     vim
+    tailscale
   ];
+
+  age.secrets."secrets/tailscale-invite.age".file = ./secrets/tailscale-invite.age;
+  services.tailscale = {
+    enable = true;
+    authKeyFile = config.age.secrets."secrets/tailscale-invite.age".path;
+  };
 
 }
