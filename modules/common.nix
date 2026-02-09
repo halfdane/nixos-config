@@ -1,11 +1,11 @@
 { config, pkgs, agenix, ... }:
+
 {
   environment.systemPackages = with pkgs; [
-    agenix.packages.${stdenv.hostPlatform.system}.default
+    agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
     jq
     yq
     python3
-
     htop
     curl
     direnv
@@ -21,5 +21,4 @@
     enable = true;
     authKeyFile = config.age.secrets."secrets/tailscale-invite.age".path;
   };
-
 }

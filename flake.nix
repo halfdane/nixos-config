@@ -16,7 +16,7 @@
   outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, agenix, ... }:
     let
       commonModules = [ 
-        ./common.nix 
+        ./modules/common.nix 
         ./modules/tailscale.nix
         ./modules/agenix.nix
         agenix.nixosModules.default
