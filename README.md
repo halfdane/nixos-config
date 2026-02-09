@@ -102,6 +102,19 @@ Replace `laptop` with your desired host name as defined in `flake.nix`.
 - `~/halfdane/` - Personal projects (uses personal Git identity)
 - `~/work/` - Work projects (uses work Git identity automatically)
 
+## Reusable Modules
+
+### Tailscale Module
+This repository provides a reusable Tailscale module in `modules/tailscale.nix`. To enable Tailscale and optionally use an agenix-managed secret for the auth key:
+
+```nix
+tailscale = {
+   enable = true;
+   authKeyFile = config.age.secrets."secrets/tailscale-invite.age".path;
+};
+```
+This module is included in all hosts via the flake's `commonModules`.
+
 ## Building
 
 For QEMU VM:

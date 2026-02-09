@@ -17,6 +17,7 @@
     let
       commonModules = [ 
         ./common.nix 
+        ./modules/tailscale.nix
         agenix.nixosModules.default
       ];
     in {

@@ -17,7 +17,8 @@
   ];
 
   age.secrets."secrets/tailscale-invite.age".file = ./secrets/tailscale-invite.age;
-  services.tailscale = {
+  # Use the reusable Tailscale module
+  tailscale = {
     enable = true;
     authKeyFile = config.age.secrets."secrets/tailscale-invite.age".path;
   };
