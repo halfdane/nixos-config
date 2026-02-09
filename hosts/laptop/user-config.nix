@@ -7,6 +7,7 @@
       name = "halfdane";
       email = "REDACTED_PERSONAL_EMAIL";
       account = "halfdane";
+      directory = "halfdane";
       repos = [
         "halfdane/duality_keyboard"
       ];
@@ -15,6 +16,7 @@
       name = "REDACTED_WORK_NAME";
       email = "REDACTED_WORK_EMAIL";
       account = "TomVollerthun1337";
+      directory = "work";
       repos = [
         "tsc:otto-ec/tech-rules-of-play"
         "tsc:otto-ec/milliseconds_make_millions"
