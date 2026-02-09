@@ -114,6 +114,7 @@ agenix.secrets = {
 ```
 Reference them in other modules as `config.age.secrets."secrets/my-secret.age".path`.
 
+
 ### Tailscale Module
 Enable Tailscale in your config:
 ```nix

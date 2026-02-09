@@ -119,5 +119,4 @@ in
     allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
     allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
   };
-  system.stateVersion = "25.11";
 }

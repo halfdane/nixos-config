@@ -19,7 +19,6 @@ in
   ];
 
   home.username = userConfig.username;
-  home.stateVersion = "25.11";
 
   # Global Git configuration
   programs.git = {

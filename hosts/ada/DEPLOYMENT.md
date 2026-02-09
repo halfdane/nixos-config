@@ -12,7 +12,7 @@
 # Notes
 - Log in with: `ssh halfdane@152.53.176.47`
 
-## Updating configuration (recommended)
+## Updating configuration for ada (recommended)
 
 From your local machine, run:
 ```bash

@@ -23,4 +23,6 @@
     enable = true;
     authKeyFile = config.age.secrets."secrets/tailscale-invite.age".path;
   };
+  
+  system.stateVersion = "25.11";
 }

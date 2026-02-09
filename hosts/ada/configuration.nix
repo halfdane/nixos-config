@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 {
   agenix.secrets = {
-    "secrets/ada-luks-key.age" = ../../secrets/ada-luks-key.age;
     "secrets/tailscale-invite.age" = ../../secrets/tailscale-invite.age;
   };
   imports = [
@@ -59,6 +58,4 @@
 
   # Timezone
   time.timeZone = "Europe/Berlin";
-
-  system.stateVersion = "25.11";
 }
