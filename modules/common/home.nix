@@ -1,16 +1,12 @@
-{ config, pkgs, inputs, lib, ... }:
+{ config, pkgs, ... }:
 {
   home.stateVersion = "25.11";
 
-  # Add ~/bin to PATH
+  # Shell configuration
   home.sessionPath = [ "~/bin" ];
 
-  # Enable bash to source Home Manager session variables
-  programs.bash = {
-    enable = true;
-  };
+  programs.bash.enable = true;
 
-  # Fish shell - modern shell with better defaults
   programs.fish = {
     enable = true;
     plugins = [
@@ -21,31 +17,29 @@
     ];
   };
 
-  # Enable direnv
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
-    
-    # Automatically load .envrc from parent directories
     stdlib = ''
       # Load parent .envrc files automatically
       source_up_if_exists
     '';
   };
 
-  programs.git = {
-    enable = true;
-  };
-
+  # Editor setup
   programs.vim = {
     enable = true;
     defaultEditor = true;
   };
 
-  
+  # Version control
+  programs.git.enable = true;
+
+  # Custom scripts
   home.file."bin/nrs" = {
     text = ''
       #!/usr/bin/env bash
+      # Rebuild NixOS and commit changes
       cd ~/nixos-config
       git add .
       sudo nixos-rebuild switch --flake .#laptop
@@ -56,6 +50,7 @@
   home.file."bin/nrst" = {
     text = ''
       #!/usr/bin/env bash
+      # Rebuild NixOS, then list .envrc files
       cd ~/nixos-config
       git add .
       sudo nixos-rebuild switch --flake .#laptop
@@ -64,5 +59,4 @@
     '';
     executable = true;
   };
-
 }

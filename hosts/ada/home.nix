@@ -4,6 +4,7 @@
   home.username = "halfdane";
   home.homeDirectory = "/home/halfdane";
 
-  programs.vim.enable = true;
-  programs.git.enable = true;
+  # Is globally enabled in common
+  # keeping it here as example of how to enable programs host-specific
+  # programs.vim.enable = true;
 }

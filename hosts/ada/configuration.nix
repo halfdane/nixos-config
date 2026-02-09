@@ -42,9 +42,10 @@
 
   # Minimal packages
   environment.systemPackages = with pkgs; [
-    vim
-    git
-    age
+
+    # Is globally enabled in common
+    # keeping it here as example of how to enable programs host-specific
+    # vim
   ];
 
   # Enable SSH (for remote access)

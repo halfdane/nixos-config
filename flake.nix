@@ -16,7 +16,7 @@
   outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, agenix, ... }:
     let
       commonModules = [ 
-        ./modules/common.nix 
+        ./modules/common/configuration.nix 
         ./modules/tailscale.nix
         ./modules/agenix.nix
         agenix.nixosModules.default
@@ -39,7 +39,7 @@
               home-manager.useUserPackages = true;
               home-manager.users.tvollert = { config, pkgs, lib, ... }: {
                 imports = [
-                  ./home.nix
+                  ./modules/common/home.nix
                   ./hosts/laptop/home.nix
                 ];
               };
@@ -59,7 +59,7 @@
               home-manager.useUserPackages = true;
               home-manager.users.halfdane = { config, pkgs, lib, ... }: {
                 imports = [
-                  ./home.nix
+                  ./modules/common/home.nix
                   ./hosts/ada/home.nix
                 ];
               };
