@@ -1,19 +1,29 @@
-# Personal configuration values
-# Public personal settings (work-specific settings are in work-nixos-config repo)
 {
-  # Username for the system
   username = "tvollert";
-  
-  # Full name for user account description
   fullName = "a user";
-  
-  # Personal Git identity
-  personalGitName = "halfdane";
-  personalGitEmail = "REDACTED_PERSONAL_EMAIL";
-  personalGitAccount = "halfdane";
-  
-  # Personal repositories to clone into ~/halfdane/
-  personalRepos = [
-    "halfdane/duality_keyboard"
-  ];
+
+  github = {
+    personal = {
+      name = "halfdane";
+      email = "REDACTED_PERSONAL_EMAIL";
+      account = "halfdane";
+      repos = [
+        "halfdane/duality_keyboard"
+      ];
+    };
+    work = {
+      name = "REDACTED_WORK_NAME";
+      email = "REDACTED_WORK_EMAIL";
+      account = "TomVollerthun1337";
+      repos = [
+        "tsc:otto-ec/tech-rules-of-play"
+        "tsc:otto-ec/milliseconds_make_millions"
+        "roadie:otto-ec/roadie_otto-business-catalog"
+        "roadie:otto-ec/roadie_backstage-platform-services"
+        "roadie:otto-ec/roadie_backstage"
+        "roadie:otto-ec/roadie_backstage-community-plugins"
+        "roadie:otto-ec/roadie_backstage-docs-entrypage"
+      ];
+    };
+  };
 }
