@@ -102,18 +102,26 @@ Replace `laptop` with your desired host name as defined in `flake.nix`.
 - `~/halfdane/` - Personal projects (uses personal Git identity)
 - `~/work/` - Work projects (uses work Git identity automatically)
 
-## Reusable Modules
+
+## Minimal Module Usage
+
+### Secrets (agenix module)
+Declare secrets in your host config:
+```nix
+agenix.secrets = {
+   "secrets/my-secret.age" = ../../secrets/my-secret.age;
+};
+```
+Reference them in other modules as `config.age.secrets."secrets/my-secret.age".path`.
 
 ### Tailscale Module
-This repository provides a reusable Tailscale module in `modules/tailscale.nix`. To enable Tailscale and optionally use an agenix-managed secret for the auth key:
-
+Enable Tailscale in your config:
 ```nix
 tailscale = {
    enable = true;
    authKeyFile = config.age.secrets."secrets/tailscale-invite.age".path;
 };
 ```
-This module is included in all hosts via the flake's `commonModules`.
 
 ## Building
 
