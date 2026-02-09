@@ -1,6 +1,4 @@
 # Laptop host configuration
-
-
 { config, pkgs, lib, inputs, ... }:
 
 let

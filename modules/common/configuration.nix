@@ -16,6 +16,8 @@
     tailscale
   ];
 
+  environment.variables.EDITOR = "vim";
+
   # Use the reusable Tailscale module
   tailscale = {
     enable = true;
