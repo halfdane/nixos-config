@@ -12,4 +12,9 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOx9sXjVaW0eYotn3mM9Ct9bBuBEseqsCtz+R1SGWYQD agenix-dedicated"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICciBSfBDLlD+btY8umPTuFOcWoGsTv+w3+Z4JjXJrL9 root@nixos"
   ];
+  # Tailscale invitation key, accessible by both ada and laptop
+  "secrets/tailscale-invite.age".publicKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDHWGuX4TkCbSULp4k2DE6wAIzQc7+fQiDIflAZXj4Si root@ada"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICciBSfBDLlD+btY8umPTuFOcWoGsTv+w3+Z4JjXJrL9 root@nixos"
+  ];
 }
