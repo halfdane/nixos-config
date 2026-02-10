@@ -23,8 +23,8 @@
       ];
     in {
       packages = {
-        x86_64-linux = agenix.packages.x86_64-linux.default;
-        aarch64-linux = agenix.packages.aarch64-linux.default;
+        x86_64-linux.default = agenix.packages.x86_64-linux.default;
+        aarch64-linux.default = agenix.packages.aarch64-linux.default;
       };
 
 
