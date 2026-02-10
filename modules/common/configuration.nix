@@ -8,12 +8,14 @@
     python3
     htop
     curl
+    wget
     direnv
     sqlite
     fzf
     rage
     vim
     tailscale
+    screen
   ];
 
   environment.variables.EDITOR = "vim";
