@@ -41,7 +41,7 @@
 
   # Minimal packages
   environment.systemPackages = with pkgs; [
-
+    navidrome
     # Is globally enabled in common
     # keeping it here as example of how to enable programs host-specific
     # vim
