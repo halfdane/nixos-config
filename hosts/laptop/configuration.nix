@@ -47,18 +47,6 @@ in
     LC_TIME = "de_DE.UTF-8";
   };
 
-  nix = {
-    package = pkgs.nix;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
-    };
-  };
-
   services.xserver.enable = true;
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
@@ -106,7 +94,6 @@ in
     file
     strawberry
     ffmpeg
-    vorbis-tools
   ];
   programs.git = {
     enable = true;
