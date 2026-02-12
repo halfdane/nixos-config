@@ -46,6 +46,25 @@
             ./hosts/laptop/configuration.nix
           ];
         };
+        curie = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          specialArgs = { inherit inputs agenix; };
+          modules = commonModules ++ [
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.tvollert = { config, pkgs, lib, ... }: {
+                imports = [
+                  ./modules/common/home.nix
+                  ./hosts/laptop/home.nix
+                ];
+              };
+            }
+            ./hosts/laptop/configuration.nix
+          ];
+        };
+
         ada = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = { inherit inputs agenix; };
