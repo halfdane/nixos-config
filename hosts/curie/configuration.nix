@@ -70,6 +70,9 @@ in
     description = userConfig.fullName;
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.fish;
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK10b+CmOMZsc4cLe7CmbSmibCIGA7KC3yY447e1qxtS"
+    ];
   };
 
   security.sudo = {
@@ -105,5 +108,12 @@ in
   networking.firewall = {
     allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
     allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
+  };
+
+    # Enable SSH (for remote access)
+  services.openssh = {
+    enable = true;
+    settings.PermitRootLogin = "no";
+    settings.PasswordAuthentication = false;
   };
 }
