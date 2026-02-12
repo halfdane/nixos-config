@@ -10,7 +10,7 @@
   ];
   # Tailscale invitation key, accessible by both ada and laptop
   "secrets/tailscale-invite.age".publicKeys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDHWGuX4TkCbSULp4k2DE6wAIzQc7+fQiDIflAZXj4Si root@ada"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPBv3YA8tvbpu6riWsDaMtSs7yqidiQpD9do6gBi2BQn root@ada"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICciBSfBDLlD+btY8umPTuFOcWoGsTv+w3+Z4JjXJrL9 root@nixos"
   ];
 }

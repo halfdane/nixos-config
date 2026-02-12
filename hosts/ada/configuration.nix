@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 {
   agenix.secrets = {
     "secrets/tailscale-invite.age" = ../../secrets/tailscale-invite.age;
@@ -6,6 +6,7 @@
   imports = [
     ./hardware-configuration-ada.nix
     ./disko.nix
+    ./navidrome.nix
     ];
 
   boot.initrd.luks.devices."luks-root".fallbackToPassword = true;
@@ -41,7 +42,6 @@
 
   # Minimal packages
   environment.systemPackages = with pkgs; [
-    navidrome
     # Is globally enabled in common
     # keeping it here as example of how to enable programs host-specific
     # vim
