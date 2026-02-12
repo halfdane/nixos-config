@@ -37,6 +37,8 @@
       options = "--delete-older-than 7d";
     };
   };
+
+  systemd.network.wait-online.enable = false;
   
   system.stateVersion = "25.11";
 }

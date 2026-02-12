@@ -7,8 +7,8 @@
     ./hardware-configuration-ada.nix
     ./disko.nix
     ./navidrome.nix
-    ];
-
+    ./homer
+  ];
   boot.initrd.luks.devices."luks-root".fallbackToPassword = true;
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
