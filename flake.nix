@@ -18,7 +18,6 @@
       commonModules = [ 
         ./modules/common/configuration.nix 
         ./modules/tailscale.nix
-        ./modules/agenix.nix
         agenix.nixosModules.default
       ];
     in {
@@ -40,6 +39,7 @@
                 imports = [
                   ./modules/common/home.nix
                   ./hosts/laptop/home.nix
+                  inputs.agenix.homeManagerModules.default
                 ];
               };
             }
@@ -59,6 +59,7 @@
                 imports = [
                   ./modules/common/home.nix
                   ./hosts/curie/home.nix
+                  inputs.agenix.homeManagerModules.default
                 ];
               };
             }
@@ -80,6 +81,7 @@
                 imports = [
                   ./modules/common/home.nix
                   ./hosts/ada/home.nix
+                  inputs.agenix.homeManagerModules.default
                 ];
               };
             }

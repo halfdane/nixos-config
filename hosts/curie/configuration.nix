@@ -5,9 +5,9 @@ let
   userConfig = import ./user-config.nix;
 in
 {
-  agenix.secrets = {
-    "secrets/laptop-test.age" = ../../secrets/laptop-test.age;
-    "secrets/tailscale-invite.age" = ../../secrets/tailscale-invite.age;
+  age.secrets = {
+    "tailscale-invite.age".file = ./../../secrets/tailscale-invite.age;
+    "laptop-test.age".file = ../../secrets/laptop-test.age;
   };
   nixpkgs.overlays = [ inputs.nixos-aarch64-widevine.overlays.default ];
   imports = [

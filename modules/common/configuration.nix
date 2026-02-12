@@ -23,7 +23,7 @@
   # Use the reusable Tailscale module
   tailscale = {
     enable = true;
-    authKeyFile = config.age.secrets."secrets/tailscale-invite.age".path;
+    authKeyFile = config.age.secrets."tailscale-invite.age".path;
   };
 
   nix = {

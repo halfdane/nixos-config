@@ -6,6 +6,16 @@ let
 in
 
 {
+  age.secrets = {
+    "github-personal.age" = {  # Attr-Name = Secret-Name!
+      file = ./../../secrets/github-personal.age;
+    };
+    "github-work.age" = {
+      file = ./../../secrets/github-work.age;
+    };
+  };
+
+
   home.packages = with pkgs; [ 
     home-manager 
     kdePackages.kate
@@ -43,5 +53,30 @@ in
     })
     ../../modules/clone-repos.nix
   ];
+
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false; 
+    matchBlocks = {
+      "*" = {  # Default für alle Hosts
+        forwardAgent = false;
+        identitiesOnly = false;
+        # Weitere Defaults aus Warning
+      };
+      
+      "github-personal" = {
+        hostname = "github.com";
+        user = "git";
+        identityFile = config.age.secrets."github-personal.age".path;
+        identitiesOnly = true;
+      };
+      "github-work" = {
+        hostname = "github.com";
+        user = "git";
+        identityFile = config.age.secrets."github-work.age".path;
+        identitiesOnly = true;
+      };
+    };
+  };
 
 }

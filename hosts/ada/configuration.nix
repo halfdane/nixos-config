@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 {
-  agenix.secrets = {
-    "secrets/tailscale-invite.age" = ../../secrets/tailscale-invite.age;
+  age.secrets = {
+    "tailscale-invite.age".file = ./../../secrets/tailscale-invite.age;
   };
   imports = [
     ./hardware-configuration-ada.nix
