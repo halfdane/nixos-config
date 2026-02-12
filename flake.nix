@@ -2,9 +2,9 @@
   description = "NixOS configuration for my machines";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
-        url = "github:nix-community/home-manager/release-25.11";
+        url = "github:nix-community/home-manager/master";
         inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-aarch64-widevine.url = "github:epetousis/nixos-aarch64-widevine";
@@ -26,7 +26,6 @@
         x86_64-linux.default = agenix.packages.x86_64-linux.default;
         aarch64-linux.default = agenix.packages.aarch64-linux.default;
       };
-
 
       nixosConfigurations = {
         laptop = nixpkgs.lib.nixosSystem {
