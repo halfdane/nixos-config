@@ -50,18 +50,19 @@
           system = "aarch64-linux";
           specialArgs = { inherit inputs agenix; };
           modules = commonModules ++ [
+            disko.nixosModules.disko
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.tvollert = { config, pkgs, lib, ... }: {
+              home-manager.users.user = { config, pkgs, lib, ... }: {
                 imports = [
                   ./modules/common/home.nix
-                  ./hosts/laptop/home.nix
+                  ./hosts/curie/home.nix
                 ];
               };
             }
-            ./hosts/laptop/configuration.nix
+            ./hosts/curie/configuration.nix
           ];
         };
 

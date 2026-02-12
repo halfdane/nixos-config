@@ -11,9 +11,9 @@ in
   };
   nixpkgs.overlays = [ inputs.nixos-aarch64-widevine.overlays.default ];
   imports = [
-    ./hardware-configuration-laptop.nix
     ./qemu-vm.nix
     ./work-system.nix
+    ./disko.nix
   ];
 
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
