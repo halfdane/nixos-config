@@ -23,8 +23,6 @@ in
     vscode
     keepassxc
     chromium
-    pkgs.maestral
-    pkgs.maestral-gui
     pkgs.gh
   ];
 

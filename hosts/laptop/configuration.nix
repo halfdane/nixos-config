@@ -14,7 +14,13 @@ in
     ./hardware-configuration-laptop.nix
     ./qemu-vm.nix
     ./work-system.nix
+    ../../modules/maestral.nix  # hosts/laptop/ -> hosts/ -> modules/
   ];
+  services.maestral = {
+    enable = true;
+    user = "${userConfig.username}";
+  };
+
 
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
@@ -106,4 +112,5 @@ in
     allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
     allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
   };
+
 }
