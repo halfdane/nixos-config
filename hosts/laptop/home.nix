@@ -37,22 +37,39 @@ in
       user.name = userConfig.github.personal.name;
       user.email = userConfig.github.personal.email;
       init.defaultBranch = "main";
-      credential.helper = "!${pkgs.gh}/bin/gh auth git-credential";
+      core = {
+        sshCommand = "ssh -i ${config.age.secrets."github-personal.age".path} -o IdentitiesOnly=yes";
+      };
     };
+    includes = [
+      {
+        condition = "gitdir:~/work/**";
+        contents ={
+          user = {
+            name = "${userConfig.github.work.name}";
+            email = "${userConfig.github.work.email}";
+          };
+          core = {
+            sshCommand = "ssh -i ${config.age.secrets."github-work.age".path} -o IdentitiesOnly=yes";
+          };
+        };
+      }
+    ];
   };
 
-  imports = [
-    (import ./github-account.nix {
-      githubConfig = userConfig.github.personal;
-    })
-    (import ./github-account.nix {
-      githubConfig = userConfig.github.work;
-    })
-    (import ./github-account.nix {
-      githubConfig = userConfig.github.system;
-    })
-    ../../modules/clone-repos.nix
-  ];
+  # imports = [
+  #   (import ./github-account.nix {
+  #     githubConfig = userConfig.github.personal;
+  #   })
+  #   (import ./github-account.nix {
+  #     githubConfig = userConfig.github.work;
+  #   })
+  #   (import ./github-account.nix {
+  #     githubConfig = userConfig.github.system;
+  #   })
+  #   ../../modules/clone-repos.nix
+  # ];
+
 
   programs.ssh = {
     enable = true;
