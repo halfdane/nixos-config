@@ -38,6 +38,11 @@
 (cd ~/nixos-config/secrets; ssh-keygen -y -f <(agenix -d github-work.age))
 ```
 
+- add to known hosts automatically:
+```
+ssh-keyscan github.com >> ~/.ssh/known_hosts
+```
+
 ## 5. Troubleshooting
 - Ensure `secrets.nix` is valid Nix syntax and all entries are inside `{ ... }`.
 - Use the correct filename (no `secrets/` prefix) in agenix commands and `secrets.nix`.
