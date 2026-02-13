@@ -33,6 +33,11 @@
   ```
 - For binary/hex secrets, compare original and decrypted files with `diff`.
 
+- Get public key of a secret ssh key (here github-work.age):
+```
+(cd ~/nixos-config/secrets; ssh-keygen -y -f <(agenix -d github-work.age))
+```
+
 ## 5. Troubleshooting
 - Ensure `secrets.nix` is valid Nix syntax and all entries are inside `{ ... }`.
 - Use the correct filename (no `secrets/` prefix) in agenix commands and `secrets.nix`.
