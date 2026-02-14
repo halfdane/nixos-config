@@ -83,10 +83,6 @@ in
     ];
   };
 
-  age.secrets.personal_ssh.file = ./../../secrets/personal_ssh.age;
-  home-manager.users.${userConfig.username}.home.file.".ssh/id_ed25519".source = config.age.secrets.personal_ssh.path;  # /run/secrets/... is absolute Nix path!
-
-
   security.sudo = {
     enable = true;
     # Sudo no pw

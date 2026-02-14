@@ -6,12 +6,13 @@ let
 in
 
 {
-  age.secrets = {
-    "github-personal.age" = {  # Attr-Name = Secret-Name!
-      file = ./../../secrets/github-personal.age;
-    };
-    "github-work.age" = {
-      file = ./../../secrets/github-work.age;
+
+  age = {
+    identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
+    secrets = {
+      github-personal.file = ./../../secrets/github-personal.age;
+      github-work.file = ./../../secrets/github-work.age;
+      personal_ssh.file = ./../../secrets/personal_ssh.age;
     };
   };
 
@@ -40,56 +41,31 @@ in
 
   home.username = userConfig.username;
 
-  # Global Git configuration
   programs.git = {
     enable = true;
     settings = {
       user.name = userConfig.github.personal.name;
       user.email = userConfig.github.personal.email;
       init.defaultBranch = "main";
-      core = {
-        sshCommand = "ssh -i ${config.age.secrets."github-personal.age".path} -o IdentitiesOnly=yes";
+      core = {        
+        sshCommand = "ssh -i ${config.age.secrets.github-personal.path} -o IdentitiesOnly=yes";      
       };
     };
     includes = [
       {
         condition = "gitdir:~/work/**";
-        contents ={
-          user = {
-            name = "${userConfig.github.work.name}";
-            email = "${userConfig.github.work.email}";
-          };
-          core = {
-            sshCommand = "ssh -i ${config.age.secrets."github-work.age".path} -o IdentitiesOnly=yes";
+        contents ={          
+          user.name = "${userConfig.github.work.name}";            
+          user.email = "${userConfig.github.work.email}";                 
+          core = {            
+            sshCommand = "ssh -i ${config.age.secrets.github-work.path} -o IdentitiesOnly=yes";          
           };
         };
       }
     ];
   };
 
-  programs.ssh = {
-    enable = true;
-    enableDefaultConfig = false; 
-    matchBlocks = {
-      "*" = {  # Default für alle Hosts
-        forwardAgent = false;
-        identitiesOnly = false;
-        # Weitere Defaults aus Warning
-      };
-      
-      "github-personal" = {
-        hostname = "github.com";
-        user = "git";
-        identityFile = config.age.secrets."github-personal.age".path;
-        identitiesOnly = true;
-      };
-      "github-work" = {
-        hostname = "github.com";
-        user = "git";
-        identityFile = config.age.secrets."github-work.age".path;
-        identitiesOnly = true;
-      };
-    };
-  };
+  programs.ssh.enable = true;
+
 
 }
