@@ -14,8 +14,10 @@ let
     configFile = ./config.yml;
 
     installPhase = ''
-      cp ${configFile} assets/config.yml
-      cp -r . $out
+      mkdir -p $out/assets
+      cp -r ${./assets}/* $out/assets/
+      cp ${./config.yml} $out/assets/config.yml
+      cp -r ${pkgs.homer}/* $out/
     '';
   };
 in {
