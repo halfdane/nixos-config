@@ -6,7 +6,7 @@ let
 in
 {
   age.secrets = {
-    tailscale-invite.file = ./../../secrets/tailscale-invite.age;
+    "tailscale-invite.age".file = ./../../secrets/tailscale-invite.age;
     laptop-test.file = ../../secrets/laptop-test.age;
   };
   nixpkgs.overlays = [ inputs.nixos-aarch64-widevine.overlays.default ];
