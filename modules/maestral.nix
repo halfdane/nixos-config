@@ -23,8 +23,11 @@ in {
 
   config = mkIf cfg.enable {
     
-    age.secrets = {
-      "maestral.age".file = ../secrets/maestral.age;
+    age.secrets.maestral = {
+      file = ../secrets/maestral.age;
+      owner = "${cfg.user}";  # Makes readable by current user
+      mode = "0600";  # Only by current user
+      path = "/run/agenix/maestral";
     };
 
     users.users.${cfg.user}.packages = [ pkgs.maestral ];
@@ -42,9 +45,12 @@ in {
       preStart = ''
         echo "Checking if maestral is prepared..."
         ${pkgs.maestral}/bin/maestral auth status 2>/dev/null || {
+          set -x
+          ls -la /run/agenix/maestral
+          whoami
           echo "Not authenticated, so starting initial setup - fetching secrets..."
-          [ -r /run/secrets/maestral ] || { echo "Missing secrets"; exit 1; }
-          . /run/secrets/maestral
+          [ -r /run/agenix/maestral ] || { echo "Missing secrets"; exit 1; }
+          . /run/agenix/maestral
 
           echo "Preparing directories..."
           mkdir -p ~/.config/maestral ${cfg.dropboxPath}

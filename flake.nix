@@ -11,9 +11,14 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     agenix.url = "github:ryantm/agenix";
+
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";  # Pin to your nixpkgs
+    };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, agenix, ... }:
+  outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, agenix, plasma-manager, ... }:
     let
       commonModules = [ 
         ./modules/common/configuration.nix 
@@ -35,6 +40,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.sharedModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
               home-manager.users.tvollert = { config, pkgs, lib, ... }: {
                 imports = [
                   ./modules/common/home.nix

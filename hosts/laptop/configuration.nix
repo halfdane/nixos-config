@@ -14,13 +14,17 @@ in
     ./hardware-configuration-laptop.nix
     ./qemu-vm.nix
     ./work-system.nix
-    ../../modules/maestral.nix  # hosts/laptop/ -> hosts/ -> modules/
+    ../../modules/maestral.nix
+    ../../nixos/kde.nix
   ];
   services.maestral = {
     enable = true;
     user = "${userConfig.username}";
   };
-
+  services.kde = {
+    enable = true;
+    autoLogin = "${userConfig.username}";
+  };
 
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
@@ -54,8 +58,6 @@ in
   };
 
   services.xserver.enable = true;
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
   services.xserver.xkb = {
     layout = "us";
     variant = "";
@@ -69,7 +71,6 @@ in
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-
 
   users.users.${userConfig.username} = {
     isNormalUser = true;
