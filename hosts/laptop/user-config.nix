@@ -6,6 +6,7 @@ let
     directory = "halfdane";
     repos = [
       "halfdane/duality_keyboard"
+      "halfdane/spotify-player"
     ];
   };
 in

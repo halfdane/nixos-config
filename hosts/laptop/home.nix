@@ -7,7 +7,7 @@ in
 
 {
   age.secrets = {
-    "github-personal.age" = {  # Attr-Name = Secret-Name!
+    "github-personal.age" = {
       file = ./../../secrets/github-personal.age;
     };
     "github-work.age" = {
@@ -64,19 +64,6 @@ in
       }
     ];
   };
-
-  # imports = [
-  #   (import ./github-account.nix {
-  #     githubConfig = userConfig.github.personal;
-  #   })
-  #   (import ./github-account.nix {
-  #     githubConfig = userConfig.github.work;
-  #   })
-  #   (import ./github-account.nix {
-  #     githubConfig = userConfig.github.system;
-  #   })
-  #   ../../modules/clone-repos.nix
-  # ];
 
 
   programs.ssh = {

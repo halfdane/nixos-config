@@ -6,6 +6,26 @@ let
 in
 
 {
+  age.secrets = {
+    "github-personal.age" = {  # Attr-Name = Secret-Name!
+      file = ./../../secrets/github-personal.age;
+    };
+    "github-work.age" = {
+      file = ./../../secrets/github-work.age;
+    };
+  };
+
+  programs.plasma.enable = true;
+  programs.plasma.kscreenlocker.autoLock = false;
+  programs.plasma.kscreenlocker.lockOnResume = false;
+  programs.plasma.kscreenlocker.lockOnStartup = false;
+  programs.plasma.kscreenlocker.passwordRequired = false;
+  programs.plasma.configFile.kscreenlockerrc = {
+    Daemon = {
+      Autolock = false;
+    };
+  };
+
   home.packages = with pkgs; [ 
     home-manager 
     kdePackages.kate
@@ -47,17 +67,29 @@ in
     ];
   };
 
-  imports = [
-    (import ./github-account.nix {
-      githubConfig = userConfig.github.personal;
-    })
-    (import ./github-account.nix {
-      githubConfig = userConfig.github.work;
-    })
-    (import ./github-account.nix {
-      githubConfig = userConfig.github.system;
-    })
-    ../../modules/clone-repos.nix
-  ];
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false; 
+    matchBlocks = {
+      "*" = {  # Default für alle Hosts
+        forwardAgent = false;
+        identitiesOnly = false;
+        # Weitere Defaults aus Warning
+      };
+      
+      "github-personal" = {
+        hostname = "github.com";
+        user = "git";
+        identityFile = config.age.secrets."github-personal.age".path;
+        identitiesOnly = true;
+      };
+      "github-work" = {
+        hostname = "github.com";
+        user = "git";
+        identityFile = config.age.secrets."github-work.age".path;
+        identitiesOnly = true;
+      };
+    };
+  };
 
 }

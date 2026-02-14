@@ -6,18 +6,29 @@ let
 in
 {
   age.secrets = {
-    "tailscale-invite.age".file = ./../../secrets/tailscale-invite.age;
-    "laptop-test.age".file = ../../secrets/laptop-test.age;
+    tailscale-invite.file = ./../../secrets/tailscale-invite.age;
+    laptop-test.file = ../../secrets/laptop-test.age;
   };
   nixpkgs.overlays = [ inputs.nixos-aarch64-widevine.overlays.default ];
   imports = [
+    ./hardware-configuration.nix
     ./qemu-vm.nix
     ./work-system.nix
     ./disko.nix
+    ../../modules/maestral.nix
+    ../../nixos/kde.nix
   ];
+  services.maestral = {
+    enable = true;
+    user = "${userConfig.username}";
+  };
+  services.kde = {
+    enable = true;
+    autoLogin = "${userConfig.username}";
+  };
 
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-
+  nix.settings.trusted-users = [ "user" "@wheel" ];
 
   # Enable x86_64 emulation on aarch64
   boot.binfmt.emulatedSystems = [ "x86_64-linux" ];
@@ -48,8 +59,6 @@ in
   };
 
   services.xserver.enable = true;
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
   services.xserver.xkb = {
     layout = "us";
     variant = "";
@@ -64,7 +73,6 @@ in
     pulse.enable = true;
   };
 
-
   users.users.${userConfig.username} = {
     isNormalUser = true;
     description = userConfig.fullName;
@@ -74,6 +82,10 @@ in
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK10b+CmOMZsc4cLe7CmbSmibCIGA7KC3yY447e1qxtS"
     ];
   };
+
+  age.secrets.personal_ssh.file = ./../../secrets/personal_ssh.age;
+  home-manager.users.${userConfig.username}.home.file.".ssh/id_ed25519".source = config.age.secrets.personal_ssh.path;  # /run/secrets/... is absolute Nix path!
+
 
   security.sudo = {
     enable = true;
