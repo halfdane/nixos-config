@@ -32,6 +32,7 @@ in
         "roadie:otto-ec/roadie_backstage"
         "roadie:otto-ec/roadie_backstage-community-plugins"
         "roadie:otto-ec/roadie_backstage-docs-entrypage"
+        "otto-ec/techwriting_hub"
       ];
     };
   };
