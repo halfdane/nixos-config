@@ -1,3 +1,4 @@
 *.kate-swp
 nixos-config.code-workspace
 .envrc
+.direnv
