@@ -8,16 +8,11 @@ let
   package = cfg.package or inputs.fetching.packages.${pkgs.system}.ada or inputs.fetching.packages.${pkgs.system}.default;
 in {
   options.services.fetching = {
-    enable = mkEnableOption "FETCHing Spotify downloader";
+    enable = mkEnableOption "fetching Spotify downloader";
     package = mkOption {
       type = types.package;
       default = inputs.fetching.packages.${pkgs.system}.ada or inputs.fetching.packages.${pkgs.system}.default;
-      description = "FETCHing package derivation to use.";
-    };
-    secretPath = mkOption {  # Renamed, mkIf-safe
-      type = types.nullOr types.str;
-      default = null;
-      description = "Path to credentials file (agenix).";
+      description = "fetching package derivation to use.";
     };
     port = mkOption {
       type = types.port;
@@ -29,17 +24,27 @@ in {
     environment.systemPackages = [ package ];
 
     systemd.services.fetching = {
-      description = "FETCHing - Spotify Downloader";
+      description = "fetching - Spotify Downloader";
       wantedBy = [ "multi-user.target" ];
       after = [ "network-online.target" ];
       serviceConfig = {
         Type = "simple";
         User = "fetching";
         Group = "fetching";
-        WorkingDirectory = "/var/lib/fetching";
-        ExecStart = let
-          credsArg = optionalString (cfg.secretPath != null) "--credentials-file ${cfg.secretPath} ";
-        in "${package}/bin/fetching ${credsArg}--port ${toString cfg.port}";
+        StateDirectory = "fetching";
+        WorkingDirectory = "%S/fetching";
+        ExecStart = "${package}/bin/fetching server --port ${toString cfg.port} --credentials-file %S/fetching/secrets.json";
+
+        # Security
+        ProtectSystem = "strict";
+        ProtectHome = true;
+        PrivateTmp = true;
+        NoNewPrivileges = true;
+        LockPersonality = true;
+        # Optional: add these for extra hardening if desired
+        # ProtectKernelModules = true;
+        # ProtectControlGroups = true;
+
         Restart = "always";
         RestartSec = 10;
       };
@@ -50,7 +55,5 @@ in {
       group = "fetching";
     };
     users.groups.fetching = { };
-
-    systemd.tmpfiles.rules = [ "d /var/lib/fetching 0750 fetching fetching - -" ];
   };
 }

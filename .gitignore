@@ -2,3 +2,12 @@
 nixos-config.code-workspace
 .envrc
 .direnv
+.idea/copilot.data.migration.ask2agent.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/nixos-config.iml
+.idea/prettier.xml
+.idea/vcs.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/libraries/a.xml
+.idea/libraries/b.xml

@@ -11,6 +11,7 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     agenix.url = "github:ryantm/agenix";
+    fetching.url = "github:halfdane/fetching";
 
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
@@ -18,7 +19,7 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, agenix, plasma-manager, ... }:
+  outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, agenix, plasma-manager, fetching, ... }:
     let
       commonModules = [ 
         ./modules/common/configuration.nix 
@@ -76,10 +77,11 @@
 
         ada = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = { inherit inputs agenix; };
+          specialArgs = { inherit inputs agenix fetching; };
           modules = commonModules ++ [
             disko.nixosModules.disko
             ./hosts/ada/configuration.nix
+            ./modules/fetching.nix
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;

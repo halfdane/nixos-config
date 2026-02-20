@@ -9,6 +9,7 @@
     ./navidrome.nix
     ./homer
     # ./music-downloaders.nix
+    ../../modules/fetching.nix
   ];
   boot.initrd.luks.devices."luks-root".fallbackToPassword = true;
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
@@ -59,4 +60,6 @@
 
   # Timezone
   time.timeZone = "Europe/Berlin";
+
+  services.fetching.enable = true;
 }

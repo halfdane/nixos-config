@@ -91,7 +91,7 @@ in
 
   virtualisation.docker.enable = true;
   programs.fish.enable = true;
-  programs.firefox.enable = true;
+  programs.firefox.enable = true; 
   nixpkgs.config.allowUnfree = true;
   environment.sessionVariables.MOZ_GMP_PATH = [ "${pkgs.widevine-cdm-lacros}/gmp-widevinecdm/system-installed" ];
   environment.systemPackages = with pkgs; [
@@ -105,6 +105,8 @@ in
     file
     strawberry
     ffmpeg
+    jetbrains.idea
+    nodejs
   ];
   programs.git = {
     enable = true;
@@ -124,4 +126,10 @@ in
     settings.PermitRootLogin = "no";
     settings.PasswordAuthentication = false;
   };
+
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    gcc.cc.lib
+    zlib
+  ];
 }
