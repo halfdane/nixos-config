@@ -4,14 +4,13 @@ with lib;
 
 let
   cfg = config.services.fetching;
-  # Prefer ada package, fallback to default, allow override
-  package = cfg.package or inputs.fetching.packages.${pkgs.system}.ada or inputs.fetching.packages.${pkgs.system}.default;
+  package = cfg.package or inputs.fetching.packages.${pkgs.system}.default;
 in {
   options.services.fetching = {
     enable = mkEnableOption "fetching Spotify downloader";
     package = mkOption {
       type = types.package;
-      default = inputs.fetching.packages.${pkgs.system}.ada or inputs.fetching.packages.${pkgs.system}.default;
+      default = inputs.fetching.packages.${pkgs.system}.default;
       description = "fetching package derivation to use.";
     };
     port = mkOption {
@@ -31,16 +30,18 @@ in {
         Type = "simple";
         User = "fetching";
         Group = "fetching";
-        StateDirectory = "fetching";
-        WorkingDirectory = "%S/fetching";
+        #StateDirectory = "fetching";
+        WorkingDirectory = "/var/lib/fetching";
+        Environment = [ "HOME=/tmp" ];
+        ExecStartPre = "/bin/sh -c 'env > /tmp/fetching-env.txt'";
         ExecStart = "${package}/bin/fetching server --port ${toString cfg.port} --credentials-file %S/fetching/secrets.json";
 
         # Security
-        ProtectSystem = "strict";
-        ProtectHome = true;
-        PrivateTmp = true;
-        NoNewPrivileges = true;
-        LockPersonality = true;
+        # ProtectSystem = "strict";
+        # ProtectHome = true;
+        # PrivateTmp = true;
+        # NoNewPrivileges = true;
+        # LockPersonality = true;
         # Optional: add these for extra hardening if desired
         # ProtectKernelModules = true;
         # ProtectControlGroups = true;

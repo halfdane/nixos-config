@@ -11,7 +11,7 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     agenix.url = "github:ryantm/agenix";
-    fetching.url = "github:halfdane/fetching";
+    fetching.url = "github:halfdane/fetching/v0.1.17";
 
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
