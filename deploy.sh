@@ -25,9 +25,18 @@ nix flake update fetching
 
 # Local host? (check hostname)
 CURRENT_HOST="$(hostname)"
+
 if [[ "$HOST" == "$CURRENT_HOST" ]]; then
   echo "Deploying locally to $HOST..."
-  sudo nixos-rebuild switch --flake .#"$HOST" --no-reexec
+
+
+  today=$(date +%Y%m%d%H%M%S)
+  branch=$(git branch --show-current)
+  short_hash=$(git rev-parse --short HEAD)
+  NIXOS_LABEL_VERSION="$today.$branch-$short_hash"
+
+  sudo bash -c "NIXOS_LABEL_VERSION=\"$NIXOS_LABEL_VERSION\" nixos-rebuild switch --flake .#\"$HOST\" --no-reexec"
+
 else
   echo "Deploying remotely to $HOST via $LOGIN..."
   nixos-rebuild switch --flake .#"$HOST" \
