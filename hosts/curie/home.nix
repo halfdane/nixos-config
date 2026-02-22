@@ -6,7 +6,6 @@ let
 in
 
 {
-
   age = {
     identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
     secrets = {
@@ -36,12 +35,24 @@ in
     };
   };
 
+  programs.vscode = {
+    enable = true;
+    extensions = with pkgs.vscode-extensions; [
+      ms-python.python
+      jnoortheen.nix-ide
+      rust-lang.rust-analyzer
+      github.vscode-github-actions
+      ms-vscode.makefile-tools
+      mads-hartmann.bash-ide-vscode
+      ms-python.python
+    ];
+  };
+
 
   home.packages = with pkgs; [ 
     home-manager 
     kdePackages.kate
     kdePackages.kdeconnect-kde
-    vscode
     keepassxc
     chromium
     pkgs.maestral
