@@ -102,18 +102,6 @@ in
 
   virtualisation.docker.enable = true;
   programs.fish.enable = true;
-
-  programs.firefox = {
-    enable = true;
-    policies = {
-      Extensions = {
-        Install = [
-          "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/addon-607454-latest.xpi"
-          "https://addons.mozilla.org/firefox/downloads/latest/ghostery/addon-9609-latest.xpi"
-        ];
-      };
-    };
-  };
     
   nixpkgs.config.allowUnfree = true;
   environment.sessionVariables.MOZ_GMP_PATH = [ "${pkgs.widevine-cdm-lacros}/gmp-widevinecdm/system-installed" ];

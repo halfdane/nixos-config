@@ -16,6 +16,8 @@ in
   };
 
   programs.vscode.enable = true;
+  programs.firefox.enable = true;
+
 
   programs.plasma = {
     enable = true;
