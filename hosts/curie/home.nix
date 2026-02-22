@@ -16,16 +16,26 @@ in
     };
   };
 
-  programs.plasma.enable = true;
-  programs.plasma.kscreenlocker.autoLock = false;
-  programs.plasma.kscreenlocker.lockOnResume = false;
-  programs.plasma.kscreenlocker.lockOnStartup = false;
-  programs.plasma.kscreenlocker.passwordRequired = false;
-  programs.plasma.configFile.kscreenlockerrc = {
-    Daemon = {
+  programs.plasma = {
+    enable = true;
+    workspace = {
+      colorScheme = "BreezeDark";
+      theme = "breeze-dark";
+    };
+    kwin.virtualDesktops.number = 6;
+    kwin.virtualDesktops.rows = 2;
+
+    kscreenlocker.autoLock = false;
+    kscreenlocker.lockOnResume = false;
+    kscreenlocker.lockOnStartup = false;
+    kscreenlocker.passwordRequired = false;
+    configFile.kscreenlockerrc = {
+          Daemon = {
       Autolock = false;
+      };
     };
   };
+
 
   home.packages = with pkgs; [ 
     home-manager 
