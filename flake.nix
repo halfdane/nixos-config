@@ -33,6 +33,7 @@
         ./home/everyone.nix
         ./home/ssh-hosts.nix
         ./home/ssh-defaults.nix
+        ./home/vscode.nix 
       ];
     in {
       packages = {

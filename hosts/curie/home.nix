@@ -6,9 +6,6 @@ let
 in
 
 {
-  imports = [ 
-    ../../home/vscode.nix 
-  ];
 
   programs.vscode.enable = true;
 
