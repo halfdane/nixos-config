@@ -34,29 +34,4 @@
 
   # Version control
   programs.git.enable = true;
-
-  # Custom scripts
-  home.file."bin/nrs" = {
-    text = ''
-      #!/usr/bin/env bash
-      # Rebuild NixOS and commit changes
-      cd ~/nixos-config
-      git add .
-      sudo nixos-rebuild switch --flake .#laptop
-    '';
-    executable = true;
-  };
-
-  home.file."bin/nrst" = {
-    text = ''
-      #!/usr/bin/env bash
-      # Rebuild NixOS, then list .envrc files
-      cd ~/nixos-config
-      git add .
-      sudo nixos-rebuild switch --flake .#laptop
-      ls ~/work/.envrc
-      ls ~/halfdane/.envrc
-    '';
-    executable = true;
-  };
 }

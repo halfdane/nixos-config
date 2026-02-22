@@ -14,8 +14,6 @@ in
     ./hardware-configuration-laptop.nix
     ./qemu-vm.nix
     ./work-system.nix
-    ../../nixos/maestral.nix
-    ../../nixos/kde.nix
   ];
   services.maestral = {
     enable = true;
@@ -24,6 +22,11 @@ in
   services.kde = {
     enable = true;
     autoLogin = "${userConfig.username}";
+  };
+    # Use the reusable Tailscale module
+  tailscale = {
+    enable = true;
+    authKeyFile = config.age.secrets."tailscale-invite.age".path;
   };
 
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];

@@ -22,8 +22,11 @@
   outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, agenix, plasma-manager, fetching, ... }:
     let
       commonModules = [ 
-        ./modules/common/configuration.nix 
-        ./modules/tailscale.nix
+        ./nixos/nix_basics.nix
+        ./nixos/tailscale.nix
+        ./nixos/fetching.nix
+        ./nixos/maestral.nix
+        ./nixos/kde.nix
         agenix.nixosModules.default
       ];
     in {
@@ -44,7 +47,7 @@
               home-manager.sharedModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
               home-manager.users.tvollert = { config, pkgs, lib, ... }: {
                 imports = [
-                  ./modules/common/home.nix
+                  ./home/everyone.nix
                   ./hosts/laptop/home.nix
                   inputs.agenix.homeManagerModules.default
                 ];
@@ -65,7 +68,7 @@
               home-manager.sharedModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
               home-manager.users.user = { config, pkgs, lib, ... }: {
                 imports = [
-                  ./modules/common/home.nix
+                  ./home/everyone.nix
                   ./hosts/curie/home.nix
                   inputs.agenix.homeManagerModules.default
                 ];
@@ -87,7 +90,7 @@
               home-manager.useUserPackages = true;
               home-manager.users.halfdane = { config, pkgs, lib, ... }: {
                 imports = [
-                  ./modules/common/home.nix
+                  ./home/everyone.nix
                   ./hosts/ada/home.nix
                   inputs.agenix.homeManagerModules.default
                 ];

@@ -8,8 +8,14 @@
     ./disko.nix
     ./navidrome.nix
     ./homer
-    ../../nixos/fetching.nix
   ];
+
+    # Use the reusable Tailscale module
+  tailscale = {
+    enable = true;
+    authKeyFile = config.age.secrets."tailscale-invite.age".path;
+  };
+  
   boot.initrd.luks.devices."luks-root".fallbackToPassword = true;
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 

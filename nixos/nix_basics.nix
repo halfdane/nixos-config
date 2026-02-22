@@ -4,27 +4,14 @@
   environment.systemPackages = with pkgs; [
     agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
     jq
-    yq
-    python3
-    htop
     curl
     wget
     direnv
-    sqlite
-    fzf
-    rage
     vim
-    tailscale
     screen
   ];
 
   environment.variables.EDITOR = "vim";
-
-  # Use the reusable Tailscale module
-  tailscale = {
-    enable = true;
-    authKeyFile = config.age.secrets."tailscale-invite.age".path;
-  };
 
   nix = {
     package = pkgs.nix;
