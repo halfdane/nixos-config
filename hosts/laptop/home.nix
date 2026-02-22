@@ -66,29 +66,4 @@ in
   };
 
 
-  programs.ssh = {
-    enable = true;
-    enableDefaultConfig = false; 
-    matchBlocks = {
-      "*" = {  # Default für alle Hosts
-        forwardAgent = false;
-        identitiesOnly = false;
-        # Weitere Defaults aus Warning
-      };
-      
-      "github-personal" = {
-        hostname = "github.com";
-        user = "git";
-        identityFile = config.age.secrets."github-personal.age".path;
-        identitiesOnly = true;
-      };
-      "github-work" = {
-        hostname = "github.com";
-        user = "git";
-        identityFile = config.age.secrets."github-work.age".path;
-        identitiesOnly = true;
-      };
-    };
-  };
-
 }

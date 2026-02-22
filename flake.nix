@@ -21,13 +21,18 @@
 
   outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, agenix, plasma-manager, fetching, ... }:
     let
-      commonModules = [ 
+      nixosModules = [ 
         ./nixos/nix_basics.nix
         ./nixos/tailscale.nix
         ./nixos/fetching.nix
         ./nixos/maestral.nix
         ./nixos/kde.nix
         agenix.nixosModules.default
+      ];
+      homeModules = [
+        ./home/everyone.nix
+        ./home/ssh-hosts.nix
+        ./home/ssh-defaults.nix
       ];
     in {
       packages = {
@@ -39,15 +44,14 @@
         laptop = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
           specialArgs = { inherit inputs agenix; };
-          modules = commonModules ++ [
+          modules = nixosModules ++ [
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.sharedModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
               home-manager.users.tvollert = { config, pkgs, lib, ... }: {
-                imports = [
-                  ./home/everyone.nix
+                imports = homeModules ++ [
                   ./hosts/laptop/home.nix
                   inputs.agenix.homeManagerModules.default
                 ];
@@ -59,7 +63,7 @@
         curie = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
           specialArgs = { inherit inputs agenix; };
-          modules = commonModules ++ [
+          modules = nixosModules ++ [
             disko.nixosModules.disko
             home-manager.nixosModules.home-manager
             {
@@ -67,8 +71,7 @@
               home-manager.useUserPackages = true;
               home-manager.sharedModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
               home-manager.users.user = { config, pkgs, lib, ... }: {
-                imports = [
-                  ./home/everyone.nix
+                imports = homeModules ++ [
                   ./hosts/curie/home.nix
                   inputs.agenix.homeManagerModules.default
                 ];
@@ -81,7 +84,7 @@
         ada = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = { inherit inputs agenix fetching; };
-          modules = commonModules ++ [
+          modules = nixosModules ++ [
             disko.nixosModules.disko
             ./hosts/ada/configuration.nix
             home-manager.nixosModules.home-manager
@@ -89,8 +92,7 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.halfdane = { config, pkgs, lib, ... }: {
-                imports = [
-                  ./home/everyone.nix
+                imports = homeModules ++ [
                   ./hosts/ada/home.nix
                   inputs.agenix.homeManagerModules.default
                 ];

@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 {
   programs.vscode = lib.mkIf config.programs.vscode.enable {
-    extensions = with pkgs.vscode-extensions; [
+    profiles.default.extensions = with pkgs.vscode-extensions; [
       ms-python.python
       jnoortheen.nix-ide
       rust-lang.rust-analyzer
