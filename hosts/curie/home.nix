@@ -6,9 +6,6 @@ let
 in
 
 {
-
-  programs.vscode.enable = true;
-
   age = {
     identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
     secrets = {
@@ -17,6 +14,8 @@ in
       personal_ssh.file = ./../../secrets/personal_ssh.age;
     };
   };
+
+  programs.vscode.enable = true;
 
   programs.plasma = {
     enable = true;
@@ -32,21 +31,17 @@ in
     kscreenlocker.lockOnStartup = false;
     kscreenlocker.passwordRequired = false;
     configFile.kscreenlockerrc = {
-          Daemon = {
-      Autolock = false;
+      Daemon = {
+        Autolock = false;
       };
     };
   };
 
   home.packages = with pkgs; [ 
     home-manager 
-    kdePackages.kate
     kdePackages.kdeconnect-kde
     keepassxc
     chromium
-    pkgs.maestral
-    pkgs.maestral-gui
-    pkgs.gh
   ];
 
   home.username = userConfig.username;
