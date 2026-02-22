@@ -21,6 +21,10 @@ in
     options = [ "map=502/1000:@20/@100" "x-systemd.requires=/mnt/utm" "_netdev" "nofail" ];
   };
 
+  virtualisation.vmVariant = {
+    virtualisation.qemu.guestAgent.enable = true;
+  };
+
   # QEMU/SPICE guest agent for clipboard sharing
   services.qemuGuest.enable = true;
   services.spice-vdagentd.enable = true;
@@ -36,7 +40,5 @@ in
     };
   };
   
-  environment.systemPackages = with pkgs; [
-    spice-vdagent
-  ];
+  environment.systemPackages = with pkgs; [ spice-vdagent ];
 }
