@@ -14,7 +14,7 @@ in
     ./hardware-configuration-laptop.nix
     ./qemu-vm.nix
     ./work-system.nix
-    ../../modules/maestral.nix
+    ../../nixos/maestral.nix
     ../../nixos/kde.nix
   ];
   services.maestral = {

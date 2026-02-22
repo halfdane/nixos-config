@@ -81,7 +81,6 @@
           modules = commonModules ++ [
             disko.nixosModules.disko
             ./hosts/ada/configuration.nix
-            ./modules/fetching.nix
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;

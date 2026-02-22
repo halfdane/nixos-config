@@ -5,6 +5,7 @@ let
   userConfig = import ./user-config.nix;
 in
 {
+  age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
   age.secrets = {
     "tailscale-invite.age".file = ./../../secrets/tailscale-invite.age;
     laptop-test.file = ../../secrets/laptop-test.age;
@@ -15,7 +16,7 @@ in
     ./qemu-vm.nix
     ./work-system.nix
     ./disko.nix
-    ../../modules/maestral.nix
+    ../../nixos/maestral.nix
     ../../nixos/kde.nix
   ];
   services.maestral = {
@@ -27,7 +28,6 @@ in
     autoLogin = "${userConfig.username}";
   };
 
-  age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
   nix.settings.trusted-users = [ "user" "@wheel" ];
   nix.settings.substituters = [
     "https://halfdane-fetching.cachix.org"
