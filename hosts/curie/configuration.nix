@@ -29,6 +29,14 @@ in
 
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
   nix.settings.trusted-users = [ "user" "@wheel" ];
+  nix.settings.substituters = [
+    "https://halfdane-fetching.cachix.org"
+    "https://cache.nixos.org/"
+  ];
+  nix.settings.trusted-public-keys = [
+    "halfdane-fetching.cachix.org-1:47X7VUX6TAyHWa8IcE2a3wY9L4KGQUnScTGvrjE8Bvs="
+    "cache.nixos.org-1:6NCHGEq59XbeF9/C+hQ2oR815gPjX5F3U52B3p9C8/A="
+  ];
 
   # Enable x86_64 emulation on aarch64
   boot.binfmt.emulatedSystems = [ "x86_64-linux" ];
@@ -91,7 +99,19 @@ in
 
   virtualisation.docker.enable = true;
   programs.fish.enable = true;
-  programs.firefox.enable = true; 
+
+  programs.firefox = {
+    enable = true;
+    policies = {
+      Extensions = {
+        Install = [
+          "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/addon-607454-latest.xpi"
+          "https://addons.mozilla.org/firefox/downloads/latest/ghostery/addon-9609-latest.xpi"
+        ];
+      };
+    };
+  };
+    
   nixpkgs.config.allowUnfree = true;
   environment.sessionVariables.MOZ_GMP_PATH = [ "${pkgs.widevine-cdm-lacros}/gmp-widevinecdm/system-installed" ];
   environment.systemPackages = with pkgs; [
