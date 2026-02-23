@@ -14,6 +14,7 @@
       mkhl.direnv
       svelte.svelte-vscode
       bradlc.vscode-tailwindcss
+      k--kato.intellij-idea-keybindings
     ];
 
     profiles.default.userSettings = {
