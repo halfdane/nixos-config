@@ -1,6 +1,9 @@
 { config, pkgs, lib, ... }:
 {
   programs.vscode = lib.mkIf config.programs.vscode.enable {
+    profiles.default.enableUpdateCheck = false;
+    profiles.default.enableExtensionUpdateCheck = false;
+
     profiles.default.extensions = with pkgs.vscode-extensions; [
       ms-python.python
       jnoortheen.nix-ide
@@ -8,8 +11,17 @@
       github.vscode-github-actions
       ms-vscode.makefile-tools
       mads-hartmann.bash-ide-vscode
-      vue.vscode-typescript-vue-plugin
-      # Add or remove extensions as needed
+      mkhl.direnv
+      svelte.svelte-vscode
+      bradlc.vscode-tailwindcss
     ];
+
+    profiles.default.userSettings = {
+      "rust-analyzer.server.path" = "rust-analyzer";
+      "files.autoSave" = "afterDelay";
+      "chat.instructionsFilesLocations" = {
+        "~/global-instructions" = true;
+      };
+    };
   };
 }
