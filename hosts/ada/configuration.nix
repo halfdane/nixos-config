@@ -45,15 +45,6 @@
     wheelNeedsPassword = false;
   };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # Minimal packages
-  environment.systemPackages = with pkgs; [
-    # Is globally enabled in common
-    # keeping it here as example of how to enable programs host-specific
-    # vim
-  ];
-
   # Enable SSH (for remote access)
   services.openssh = {
     enable = true;
