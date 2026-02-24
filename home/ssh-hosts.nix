@@ -1,7 +1,6 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
-  programs.ssh = {
-    enable = true;
+  programs.ssh = lib.mkIf config.programs.ssh.enable {
     matchBlocks = {
       ada = {
         host = "ada";
