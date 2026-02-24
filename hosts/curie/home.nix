@@ -17,6 +17,7 @@ in
 
   programs.vscode.enable = true;
   programs.firefox.enable = true;
+  programs.ssh.enable = true;  
 
 
   programs.plasma = {
