@@ -23,6 +23,7 @@
       "chat.instructionsFilesLocations" = {
         "~/global-instructions" = true;
       };
+      "explorer.confirmDragAndDrop" = false;
     };
   };
 }
