@@ -26,6 +26,7 @@ in {
       description = "fetching - Spotify Downloader";
       wantedBy = [ "multi-user.target" ];
       after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
       serviceConfig = {
         Type = "simple";
         User = "fetching";
@@ -33,7 +34,6 @@ in {
         #StateDirectory = "fetching";
         WorkingDirectory = "/var/lib/fetching";
         Environment = [ "HOME=/tmp" ];
-        ExecStartPre = "/bin/sh -c 'env > /tmp/fetching-env.txt'";
         ExecStart = "${package}/bin/fetching server --port ${toString cfg.port} --credentials-file %S/fetching/secrets.json";
 
         # Security
