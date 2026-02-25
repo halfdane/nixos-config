@@ -24,6 +24,8 @@
         "~/global-instructions" = true;
       };
       "explorer.confirmDragAndDrop" = false;
+      "svelte.enable-ts-plugin" = true;
     };
   };
 }
+
