@@ -18,7 +18,7 @@ in
   programs.vscode.enable = true;
   programs.firefox.enable = true;
   programs.ssh.enable = true;  
-
+  programs.chromium.enable = true;
 
   programs.plasma = {
     enable = true;
@@ -44,7 +44,6 @@ in
     home-manager 
     kdePackages.kdeconnect-kde
     keepassxc
-    chromium
   ];
 
   home.username = userConfig.username;

@@ -35,6 +35,7 @@
         ./home/ssh-defaults.nix
         ./home/vscode.nix 
         ./home/firefox.nix
+        ./home/chrome.nix
       ];
     in {
       packages = {
