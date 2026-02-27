@@ -50,9 +50,9 @@
 
       nixosConfigurations = {
         laptop = nixpkgs.lib.nixosSystem {
-          system = "aarch64-linux";
           specialArgs = { inherit inputs agenix; };
           modules = nixosModules ++ [
+            { nixpkgs.hostPlatform = "aarch64-linux"; }
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
@@ -70,9 +70,9 @@
           ];
         };
         curie = nixpkgs.lib.nixosSystem {
-          system = "aarch64-linux";
           specialArgs = { inherit inputs agenix; };
           modules = nixosModules ++ [
+            { nixpkgs.hostPlatform = "aarch64-linux"; }
             disko.nixosModules.disko
             home-manager.nixosModules.home-manager
             {
@@ -92,9 +92,9 @@
         };
 
         ada = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
           specialArgs = { inherit inputs agenix fetching; nixpkgsNavidrome = nixpkgs-navidrome.legacyPackages.x86_64-linux; };
           modules = nixosModules ++ [
+            { nixpkgs.hostPlatform = "x86_64-linux"; }
             disko.nixosModules.disko
             ./hosts/ada/configuration.nix
             home-manager.nixosModules.home-manager
