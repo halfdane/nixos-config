@@ -1,5 +1,10 @@
 { config, pkgs, lib, ... }:
 {
+  # argv.json is managed by VSCode itself (it adds crash-reporter-id etc).
+  # The password-store setting is set once manually or by VSCode on first run.
+  # Do NOT manage this file via home.file — home-manager creates a read-only
+  # nix store symlink that VSCode cannot write back to.
+
   programs.vscode = lib.mkIf config.programs.vscode.enable {
     profiles.default.enableUpdateCheck = false;
     profiles.default.enableExtensionUpdateCheck = false;

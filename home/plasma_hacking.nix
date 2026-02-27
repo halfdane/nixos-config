@@ -30,6 +30,15 @@ in
       kwin.virtualDesktops.rows = 2;
 
       # ---------------------
+      # KWALLET
+      # ---------------------
+
+      # Disable KWallet — gnome-keyring is used instead as the Secret Service
+      # provider, so KWallet should not compete or prompt for its own password.
+      configFile."kwalletrc"."Wallet"."Enabled" = false;
+      configFile."kwalletrc"."Wallet"."First Use" = false;
+
+      # ---------------------
       # SHORTCUTS
       # ---------------------
 

@@ -39,6 +39,8 @@ in
     home-manager 
     kdePackages.kdeconnect-kde
     keepassxc
+    seahorse
+    libsecret
   ];
 
   home.username = userConfig.username;
