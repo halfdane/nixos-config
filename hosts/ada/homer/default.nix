@@ -28,11 +28,16 @@ in {
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
 
-    virtualHosts."ada" = {
+    virtualHosts."ada.micasaestu.casa" = {
+      # Use the wildcard cert issued by acme.nix.
+      useACMEHost = "micasaestu.casa";
+      # Redirect plain HTTP to HTTPS.
+      forceSSL = true;
       root = homer;
       locations."/" = { index = "index.html"; };
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  # No firewall rules needed here — tailscale0 is a trusted interface
+  # (see nixos/tailscale.nix), so nginx is reachable over tailnet automatically.
 }

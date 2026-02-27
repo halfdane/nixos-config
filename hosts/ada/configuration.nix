@@ -8,6 +8,7 @@
     ./disko.nix
     ./navidrome.nix
     ./homer
+    ./acme.nix
   ];
 
     # Use the reusable Tailscale module
@@ -33,10 +34,6 @@
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK10b+CmOMZsc4cLe7CmbSmibCIGA7KC3yY447e1qxtS tvollert@nixos"
     ];
-  };
-
-  users.users.root = {
-    hashedPassword = "!";  # Locked
   };
 
   # Enable sudo without pw
