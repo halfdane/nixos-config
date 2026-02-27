@@ -57,7 +57,7 @@
               home-manager.users.tvollert = { config, pkgs, lib, ... }: {
                 imports = homeModules ++ [
                   ./hosts/laptop/home.nix
-                  ./home/kde_keybindings.nix
+                  ./home/plasma_hacking.nix
                   inputs.agenix.homeManagerModules.default
                 ];
               };
@@ -78,7 +78,7 @@
               home-manager.users.user = { config, pkgs, lib, ... }: {
                 imports = homeModules ++ [
                   ./hosts/curie/home.nix
-                  ./home/kde_keybindings.nix
+                  ./home/plasma_hacking.nix
                   inputs.agenix.homeManagerModules.default
                 ];
               };

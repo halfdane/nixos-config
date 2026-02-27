@@ -19,17 +19,10 @@ in
   programs.firefox.enable = true;
   programs.ssh.enable = true;  
   programs.chromium.enable = true;
-  programs.kdeKeybindings.enable = true;
+  programs.plasma_hacking.enable = true;
 
   programs.plasma = {
     enable = true;
-    workspace = {
-      colorScheme = "BreezeDark";
-      theme = "breeze-dark";
-    };
-    kwin.virtualDesktops.number = 6;
-    kwin.virtualDesktops.rows = 2;
-
     kscreenlocker.autoLock = false;
     kscreenlocker.lockOnResume = false;
     kscreenlocker.lockOnStartup = false;
