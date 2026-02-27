@@ -1,23 +1,22 @@
 { config, pkgs, lib, nixpkgsNavidrome, ... }:
 let
-  # AES-256-GCM encrypted empty string using navidrome's default key
-  # ("just for obfuscation"). Key = SHA256(defaultKey), nonce = 12 zero bytes.
+  # AES-256-GCM encrypted passwords using navidrome's default key ("just for obfuscation").
+  # Key = SHA256(defaultKey), nonce = 12 zero bytes. Each user's password is their username.
   # Recompute with:
-  #   node -e "const c=require('crypto'); const k=c.createHash('sha256').update('just for obfuscation').digest(); const n=Buffer.alloc(12,0); const ci=c.createCipheriv('aes-256-gcm',k,n); ci.update(''); ci.final(); console.log(Buffer.concat([n,ci.getAuthTag()]).toString('base64'))"
-  encryptedEmptyPassword = "AAAAAAAAAAAAAAAAHWFjd8JAPit16M1vQCn0zQ==";
+  #   node -e "const c=require('crypto'),k=c.createHash('sha256').update('just for obfuscation').digest(),n=Buffer.alloc(12,0),ci=c.createCipheriv('aes-256-gcm',k,n);ci.update('<password>','utf8');ci.final();console.log(Buffer.concat([n,ci.getAuthTag()]).toString('base64'))"
 
-  # Users to seed. Passwords are all empty string (just press Enter to log in).
+  # Users to seed. Initial password = username (users should change after first login).
   initialUsers = [
-    { id = "4e6f727468506f6c654672656401"; userName = "tom";      name = "Tom";      email = "tom@navidrome.local";      isAdmin = false; }
-    { id = "4e6f727468506f6c654672656402"; userName = "deanie";   name = "Deanie";   email = "deanie@navidrome.local";   isAdmin = false; }
-    { id = "4e6f727468506f6c654672656403"; userName = "lea";      name = "Lea";      email = "lea@navidrome.local";      isAdmin = false; }
-    { id = "4e6f727468506f6c654672656404"; userName = "phillipp"; name = "Phillipp"; email = "phillipp@navidrome.local"; isAdmin = false; }
-    { id = "4e6f727468506f6c654672656405"; userName = "ben";      name = "Ben";      email = "ben@navidrome.local";      isAdmin = false; }
+    { id = "4e6f727468506f6c654672656401"; userName = "tom";      name = "Tom";      email = "tom@navidrome.local";      isAdmin = false; encPw = "AAAAAAAAAAAAAAAAMDIpn0tqUVDZ1oWoxEdW6/e6bA=="; }
+    { id = "4e6f727468506f6c654672656402"; userName = "deanie";   name = "Deanie";   email = "deanie@navidrome.local";   isAdmin = false; encPw = "AAAAAAAAAAAAAAAAIDgl3jB2/PUz35DkSWyLBYGXuK5iIA=="; }
+    { id = "4e6f727468506f6c654672656403"; userName = "lea";      name = "Lea";      email = "lea@navidrome.local";      isAdmin = false; encPw = "AAAAAAAAAAAAAAAAKDglcS/YP9ksI57qrDjaMCDlWA=="; }
+    { id = "4e6f727468506f6c654672656404"; userName = "phillipp"; name = "Phillipp"; email = "phillipp@navidrome.local"; isAdmin = false; encPw = "AAAAAAAAAAAAAAAANDUt3DV6u4HGmkprL3IWV+T6vhMknqmm"; }
+    { id = "4e6f727468506f6c654672656405"; userName = "ben";      name = "Ben";      email = "ben@navidrome.local";      isAdmin = false; encPw = "AAAAAAAAAAAAAAAAJjgq+a6pJL9gYf036NkuiCevYw=="; }
   ];
 
   insertStatements = lib.concatMapStringsSep "\n" (u: ''
     INSERT OR IGNORE INTO user (id, user_name, name, email, password, is_admin, created_at, updated_at)
-    VALUES ('${u.id}', '${u.userName}', '${u.name}', '${u.email}', '${encryptedEmptyPassword}', ${if u.isAdmin then "1" else "0"}, datetime('now'), datetime('now'));
+    VALUES ('${u.id}', '${u.userName}', '${u.name}', '${u.email}', '${u.encPw}', ${if u.isAdmin then "1" else "0"}, datetime('now'), datetime('now'));
   '') initialUsers;
 
   seedScript = pkgs.writeShellScript "navidrome-seed-users" ''
