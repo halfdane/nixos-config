@@ -41,6 +41,7 @@ else
   echo "Deploying remotely to $HOST via $LOGIN..."
   nixos-rebuild switch --flake .#"$HOST" \
     --target-host "$LOGIN" \
+    --build-host "$LOGIN" \
     --no-reexec \
     --sudo
 fi
