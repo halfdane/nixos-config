@@ -36,7 +36,6 @@
         ./home/vscode.nix 
         ./home/firefox.nix
         ./home/chrome.nix
-        ./home/kde_keybindings.nix
       ];
     in {
       packages = {
@@ -58,6 +57,7 @@
               home-manager.users.tvollert = { config, pkgs, lib, ... }: {
                 imports = homeModules ++ [
                   ./hosts/laptop/home.nix
+                  ./home/kde_keybindings.nix
                   inputs.agenix.homeManagerModules.default
                 ];
               };
@@ -78,6 +78,7 @@
               home-manager.users.user = { config, pkgs, lib, ... }: {
                 imports = homeModules ++ [
                   ./hosts/curie/home.nix
+                  ./home/kde_keybindings.nix
                   inputs.agenix.homeManagerModules.default
                 ];
               };
