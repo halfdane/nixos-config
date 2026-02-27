@@ -13,13 +13,17 @@
     agenix.url = "github:ryantm/agenix";
     fetching.url = "github:halfdane/fetching/v0.1.17";
 
+    # Pinned to the nixpkgs commit ada's working navidrome was built from.
+    # Update only once a navidrome build is confirmed working in a newer commit.
+    nixpkgs-navidrome.url = "github:NixOS/nixpkgs/0182a361324364ae3f436a63005877674cf45efb";
+
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";  # Pin to your nixpkgs
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, agenix, plasma-manager, fetching, ... }:
+  outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, agenix, plasma-manager, fetching, nixpkgs-navidrome, ... }:
     let
       nixosModules = [ 
         ./nixos/nix_basics.nix
@@ -89,7 +93,7 @@
 
         ada = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = { inherit inputs agenix fetching; };
+          specialArgs = { inherit inputs agenix fetching; nixpkgsNavidrome = nixpkgs-navidrome.legacyPackages.x86_64-linux; };
           modules = nixosModules ++ [
             disko.nixosModules.disko
             ./hosts/ada/configuration.nix
