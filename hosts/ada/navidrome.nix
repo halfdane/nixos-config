@@ -50,7 +50,16 @@ in
     # opening any public ports.
     settings = {
       MusicFolder = "/data/Music";
-      Address = "0.0.0.0";
+      Address = "127.0.0.1";
+    };
+  };
+
+  services.nginx.virtualHosts."music.micasaestu.casa" = {
+    useACMEHost = "micasaestu.casa";
+    forceSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:4533";
+      proxyWebsockets = true;
     };
   };
 

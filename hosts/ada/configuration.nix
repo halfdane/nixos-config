@@ -53,10 +53,23 @@
     settings.PasswordAuthentication = false;
   };
 
-  nix.settings.require-sigs = false;
+  nix.settings = {
+    require-sigs = false;
+    substituters = [ "https://halfdane-fetching.cachix.org" ];
+    trusted-public-keys = [ "halfdane-fetching.cachix.org-1:47X7VUX6TAyHWa8IcE2a3wY9L4KGQUnScTGvrjE8Bvs=" ];
+  };
 
   # Timezone
   time.timeZone = "Europe/Berlin";
 
   services.fetching.enable = true;
+
+  services.nginx.virtualHosts."fetching.micasaestu.casa" = {
+    useACMEHost = "micasaestu.casa";
+    forceSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:9733";
+      proxyWebsockets = true;
+    };
+  };
 }
