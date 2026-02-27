@@ -22,6 +22,16 @@ in
       # remove everything manual and let plasma-manager take care of it
       overrideConfig = true;
 
+      configFile = {
+        kscreenlockerrc.Daemon.Autolock = false;
+        kscreenlockerrc.Daemon.LockOnResume = false;
+        kscreenlockerrc.Daemon.LockOnStart = false;
+        kscreenlockerrc.Daemon.RequirePassword = false;
+        kscreenlockerrc.Daemon.Timeout = 0;
+        ksmserverrc.General.confirmLogout = false;
+        ksmserverrc.General.loginMode = "emptySession";
+      };
+
       workspace = {
         colorScheme = "BreezeDark";
         theme = "breeze-dark";
@@ -44,7 +54,7 @@ in
 
       # Prevent accidental launcher pop-ups: Meta alone should be a plain modifier,
       # not trigger anything on release.
-      configFile."kwinrc"."ModifierOnlyShortcuts"."Meta" = "";
+      configFile."kwinrc"."ModifierOnyShortcuts"."Meta" = "";
 
       # Meta+Return → terminal. Assumes konsole; adjust if needed.
       hotkeys.commands."launch-konsole" = {
