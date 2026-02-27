@@ -11,10 +11,14 @@
     ./acme.nix
   ];
 
-    # Use the reusable Tailscale module
+  # Use the reusable Tailscale module
   tailscale = {
     enable = true;
     authKeyFile = config.age.secrets."tailscale-invite.age".path;
+    # SSH is intentionally reachable on the public internet as a recovery path:
+    # if tailscale fails on this remote VPS, SSH is the only way back in without
+    # using the netcup rescue console. Mitigated by key-only auth, no root login.
+    allowedPublicTCPPorts = [ 22 ];
   };
   
   boot.initrd.luks.devices."luks-root".fallbackToPassword = true;
