@@ -36,6 +36,7 @@
         ./home/vscode.nix 
         ./home/firefox.nix
         ./home/chrome.nix
+        ./home/kde_keybindings.nix
       ];
     in {
       packages = {

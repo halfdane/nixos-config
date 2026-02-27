@@ -19,6 +19,7 @@ in
   programs.firefox.enable = true;
   programs.ssh.enable = true;  
   programs.chromium.enable = true;
+  programs.kdeKeybindings.enable = true;
 
   programs.plasma = {
     enable = true;
@@ -39,6 +40,7 @@ in
       };
     };
   };
+
 
   home.packages = with pkgs; [ 
     home-manager 
