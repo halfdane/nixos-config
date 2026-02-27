@@ -28,11 +28,13 @@ in {
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
 
-    virtualHosts."ada.micasaestu.casa" = {
+    virtualHosts."micasaestu.casa" = {
       # Use the wildcard cert issued by acme.nix.
       useACMEHost = "micasaestu.casa";
       # Redirect plain HTTP to HTTPS.
       forceSSL = true;
+      # Also respond to the host-specific subdomain.
+      serverAliases = [ "ada.micasaestu.casa" ];
       root = homer;
       locations."/" = { index = "index.html"; };
     };

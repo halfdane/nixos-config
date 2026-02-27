@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 {
   age.secrets = {
-    "tailscale-invite.age".file = ./../../secrets/tailscale-invite.age;
+    tailscale-invite.file = ./../../secrets/tailscale-invite.age;
   };
   imports = [
     ./hardware-configuration-ada.nix
@@ -14,7 +14,7 @@
   # Use the reusable Tailscale module
   tailscale = {
     enable = true;
-    authKeyFile = config.age.secrets."tailscale-invite.age".path;
+    authKeyFile = config.age.secrets.tailscale-invite.path;
     # SSH is intentionally reachable on the public internet as a recovery path:
     # if tailscale fails on this remote VPS, SSH is the only way back in without
     # using the netcup rescue console. Mitigated by key-only auth, no root login.
