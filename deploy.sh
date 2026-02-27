@@ -43,7 +43,9 @@ else
     --target-host "$LOGIN" \
     --build-host "$LOGIN" \
     --no-reexec \
-    --sudo
+    --sudo \
+    --option extra-substituters "https://halfdane-fetching.cachix.org" \
+    --option extra-trusted-public-keys "halfdane-fetching.cachix.org-1:47X7VUX6TAyHWa8IcE2a3wY9L4KGQUnScTGvrjE8Bvs="
 fi
 
 echo "✅ Deployed $HOST successfully!"
