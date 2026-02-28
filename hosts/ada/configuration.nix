@@ -99,10 +99,6 @@
     };
   };
 
-  systemd.tmpfiles.rules = [
-    "d /var/lib/ilias/charts 0755 ilias ilias -"
-  ];
-
   services.prometheus = {
     enable = true;
     scrapeConfigs = [{
