@@ -8,7 +8,7 @@ groups:
         display: assets/navidrome.png
         link: https://music.micasaestu.casa
         slots:
-          - name: "health"
+          - name: "healthy"
             check:
               type: "http"
               target: "https://music.micasaestu.casa"
@@ -23,7 +23,7 @@ groups:
         display: assets/fetching.svg
         link: https://fetching.micasaestu.casa
         slots:
-          - name: "health"
+          - name: "healthy"
             check:
               type: "http"
               target: "https://fetching.micasaestu.casa"
@@ -47,7 +47,7 @@ groups:
             rules:
               - match:
                   code: 0
-                status: { id: "ok", label: "✅ ada" }
+                status: { id: "ok", label: "✅" }
               - match: {}
                 status: { id: "error", label: "❌" }
           - name: "curie"
@@ -64,16 +64,16 @@ groups:
       - name: Nginx
         display: assets/nginx.svg
         slots:
-          - name: "status"
+          - name: "active"
             check:
               type: "command"
               target: "systemctl is-active nginx"
             rules:
               - match:
                   output: "^active$"
-                status: { id: "ok", label: "✅ active" }
+                status: { id: "ok", label: "✅" }
               - match: {}
-                status: { id: "error", label: "❌ not active" }
+                status: { id: "error", label: "❌" }
 
       - name: TLS cert
         display: assets/tls-cert.png
@@ -114,26 +114,52 @@ groups:
       - name: Navidrome service
         display: assets/systemd.svg
         slots:
-          - name: "status"
+          - name: "active"
             check:
               type: "command"
               target: "systemctl is-active navidrome"
             rules:
               - match:
                   output: "^active$"
-                status: { id: "ok", label: "✅ active" }
+                status: { id: "ok", label: "✅" }
               - match: {}
-                status: { id: "error", label: "❌ not active" }
+                status: { id: "error", label: "❌" }
       - name: Fetching service
         display: assets/systemd.svg
         slots:
-          - name: "status"
+          - name: "active"
             check:
               type: "command"
               target: "systemctl is-active fetching"
             rules:
               - match:
                   output: "^active$"
-                status: { id: "ok", label: "✅ active" }
+                status: { id: "ok", label: "✅" }
               - match: {}
-                status: { id: "error", label: "❌ not active" }
+                status: { id: "error", label: "❌" }
+
+  - name: Metrics
+    tiles:
+      - name: "CPU Usage"
+        display: "/var/lib/ilias/charts/cpu.png"
+        generate:
+          command: "prometheus-render --query 'sum(rate(node_cpu_seconds_total{mode!=\"idle\"}[5m])) * 100' --range 24h --title 'CPU %' --output /var/lib/ilias/charts/cpu.png"
+          timeout: "30s"
+
+      - name: "Memory Usage"
+        display: "/var/lib/ilias/charts/memory.png"
+        generate:
+          command: "prometheus-render --query '(1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100' --range 24h --title 'Memory %' --output /var/lib/ilias/charts/memory.png"
+          timeout: "30s"
+
+      - name: "Disk I/O"
+        display: "/var/lib/ilias/charts/diskio.png"
+        generate:
+          command: "prometheus-render --query 'rate(node_disk_read_bytes_total[5m]) + rate(node_disk_written_bytes_total[5m])' --range 24h --title 'Disk I/O (bytes/s)' --output /var/lib/ilias/charts/diskio.png"
+          timeout: "30s"
+
+      - name: "Network Traffic"
+        display: "/var/lib/ilias/charts/network.png"
+        generate:
+          command: "prometheus-render --query 'rate(node_network_receive_bytes_total{device!=\"lo\"}[5m])' --range 24h --title 'Network RX (bytes/s)' --output /var/lib/ilias/charts/network.png"
+          timeout: "30s"

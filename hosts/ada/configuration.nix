@@ -61,8 +61,14 @@
 
   nix.settings = {
     require-sigs = false;
-    substituters = [ "https://halfdane-fetching.cachix.org" ];
-    trusted-public-keys = [ "halfdane-fetching.cachix.org-1:47X7VUX6TAyHWa8IcE2a3wY9L4KGQUnScTGvrjE8Bvs=" ];
+    substituters = [
+      "https://halfdane-fetching.cachix.org"
+      "https://halfdane-prometheus-renderer.cachix.org"
+    ];
+    trusted-public-keys = [
+      "halfdane-fetching.cachix.org-1:47X7VUX6TAyHWa8IcE2a3wY9L4KGQUnScTGvrjE8Bvs="
+      "halfdane-prometheus-renderer.cachix.org-1:zm3ooc8nwjZZBJORT5ku5cZIppQzrnL7gCOdLQyW2qI="
+    ];
   };
 
   # Timezone
@@ -79,7 +85,6 @@
     };
   };
 
-
   services.ilias = {
     enable = true;
     configDir = ./ilias;
@@ -93,4 +98,19 @@
       acmeHost = "micasaestu.casa";
     };
   };
+
+  systemd.tmpfiles.rules = [
+    "d /var/lib/ilias/charts 0755 ilias ilias -"
+  ];
+
+  services.prometheus = {
+    enable = true;
+    scrapeConfigs = [{
+      job_name = "node";
+      static_configs = [{ targets = ["localhost:9100"]; }];
+    }];
+  };
+  services.prometheus.exporters.node.enable = true;
+
+  programs.prometheus-renderer.enable = true;
 }
