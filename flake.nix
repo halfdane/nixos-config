@@ -11,7 +11,8 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     agenix.url = "github:ryantm/agenix";
-    fetching.url = "github:halfdane/fetching/v1.0.5";
+    fetching.url = "github:halfdane/fetching/v1.0.3";
+    fetching.inputs.nixpkgs.follows = "nixpkgs";
 
     # Pinned to the nixpkgs commit ada's working navidrome was built from.
     # Update only once a navidrome build is confirmed working in a newer commit.

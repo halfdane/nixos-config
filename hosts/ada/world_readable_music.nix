@@ -1,39 +1,27 @@
-# host/modules/filesystem.nix
-{ config, lib, pkgs, ... }: 
-let
-  cfg = lib.mkOption {
-    type = lib.types.submodule {
-      options = {
-        dir = lib.mkOption {
-          type = lib.types.str;
-          example = "/data/Music";
-          description = "Music directory path";
-        };
-        group = lib.mkOption {
-          name = "music";
-          type = lib.types.str;
-          default = "music";
-          description = "Group name for music sharing";
-        };
-        members = lib.mkOption {
-          type = lib.types.listOf lib.types.str;
-          default = [ ];
-          description = "Users in music group";
-        };
-      };
+{ config, lib, pkgs, ... }: {
+  options.music = {
+    dir = lib.mkOption {
+      type = lib.types.str;
+      example = "/data/Music";
+    };
+    group = lib.mkOption {
+      type = lib.types.str;
+      default = "music";
+    };
+    members = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
     };
   };
-in {
-  options.music = cfg;
 
-  config = lib.mkIf (cfg.members != [ ]) {
-    users.groups.${cfg.group} = {
-      members = cfg.members;
+  config = {
+    users.groups.${config.music.group} = lib.mkIf (config.music.members != [ ]) {
+      members = config.music.members;
     };
 
-    systemd.tmpfiles.rules = [
-      "d ${cfg.dir} 0775 fetching ${cfg.group} - -"
-      "Z ${cfg.dir},fetching:${cfg.group} 2775"
+    systemd.tmpfiles.rules = lib.optionals (config.music.dir != "") [
+      "d ${config.music.dir} 0775 fetching ${config.music.group} - -"
+      "Z ${config.music.dir},fetching:${config.music.group} 2775"
     ];
   };
 }

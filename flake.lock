@@ -65,20 +65,22 @@
     },
     "fetching": {
       "inputs": {
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1772272971,
-        "narHash": "sha256-fKV/crl6mrLzp9FIgXfcrPmwRhQ3NYJsDvMU8+KE1LE=",
+        "lastModified": 1772218669,
+        "narHash": "sha256-aldhY7ysQE+Zhcr3jGkVPPWzjx6xPea+HR1WpELUGM0=",
         "owner": "halfdane",
         "repo": "fetching",
-        "rev": "70c41003066051724f1dd43d0333c38136af8977",
+        "rev": "5e301fb2fc0afbd701a495ab687b8586694393c9",
         "type": "github"
       },
       "original": {
         "owner": "halfdane",
-        "ref": "v1.0.5",
+        "ref": "v1.0.3",
         "repo": "fetching",
         "type": "github"
       }
@@ -148,7 +150,7 @@
     },
     "nixos-aarch64-widevine": {
       "inputs": {
-        "nixpkgs": "nixpkgs_4"
+        "nixpkgs": "nixpkgs_3"
       },
       "locked": {
         "lastModified": 1712816564,
@@ -198,22 +200,6 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1771369470,
-        "narHash": "sha256-0NBlEBKkN3lufyvFegY4TYv5mCNHbi5OmBDrzihbBMQ=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "0182a361324364ae3f436a63005877674cf45efb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_3": {
-      "locked": {
         "lastModified": 1744536153,
         "narHash": "sha256-awS2zRgF4uTwrOKwwiJcByDzDOdo3Q1rPZbiHQg/N38=",
         "owner": "NixOS",
@@ -228,7 +214,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_4": {
+    "nixpkgs_3": {
       "locked": {
         "lastModified": 1712122226,
         "narHash": "sha256-pmgwKs8Thu1WETMqCrWUm0CkN1nmCKX3b51+EXsAZyY=",
@@ -244,7 +230,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_5": {
+    "nixpkgs_4": {
       "locked": {
         "lastModified": 1771848320,
         "narHash": "sha256-0MAd+0mun3K/Ns8JATeHT1sX28faLII5hVLq0L3BdZU=",
@@ -288,14 +274,14 @@
         "fetching": "fetching",
         "home-manager": "home-manager_2",
         "nixos-aarch64-widevine": "nixos-aarch64-widevine",
-        "nixpkgs": "nixpkgs_5",
+        "nixpkgs": "nixpkgs_4",
         "nixpkgs-navidrome": "nixpkgs-navidrome",
         "plasma-manager": "plasma-manager"
       }
     },
     "rust-overlay": {
       "inputs": {
-        "nixpkgs": "nixpkgs_3"
+        "nixpkgs": "nixpkgs_2"
       },
       "locked": {
         "lastModified": 1771729765,
