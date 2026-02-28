@@ -9,6 +9,7 @@
     ./navidrome.nix
     ./homer
     ./acme.nix
+    ./world_readable_music.nix
   ];
 
   # Use the reusable Tailscale module
@@ -19,6 +20,12 @@
     # if tailscale fails on this remote VPS, SSH is the only way back in without
     # using the netcup rescue console. Mitigated by key-only auth, no root login.
     allowedPublicTCPPorts = [ 22 ];
+  };
+
+  music = {
+    dir = "/data/Music";
+    group = "music";
+    members = [ "navidrome" "fetching" ];
   };
   
   boot.initrd.luks.devices."luks-root".fallbackToPassword = true;

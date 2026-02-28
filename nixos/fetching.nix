@@ -31,21 +31,9 @@ in {
         Type = "simple";
         User = "fetching";
         Group = "fetching";
-        #StateDirectory = "fetching";
         WorkingDirectory = "/var/lib/fetching";
         Environment = [ "HOME=/tmp" ];
-        ExecStart = "${package}/bin/fetching server --port ${toString cfg.port} --credentials-file %S/fetching/secrets.json";
-
-        # Security
-        # ProtectSystem = "strict";
-        # ProtectHome = true;
-        # PrivateTmp = true;
-        # NoNewPrivileges = true;
-        # LockPersonality = true;
-        # Optional: add these for extra hardening if desired
-        # ProtectKernelModules = true;
-        # ProtectControlGroups = true;
-
+        ExecStart = "${package}/bin/fetching server --port ${toString cfg.port} --credentials-file %S/fetching/secrets.json -o /data/Music";
         Restart = "always";
         RestartSec = 10;
       };
