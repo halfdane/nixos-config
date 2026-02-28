@@ -5,7 +5,7 @@ groups:
   - name: Media
     tiles:
       - name: Navidrome
-        display: assets/navidrome.png
+        icon: assets/navidrome.png
         link: https://music.micasaestu.casa
         slots:
           - name: "healthy"
@@ -20,7 +20,7 @@ groups:
                 status: { id: "error", label: "❌" }
 
       - name: Fetching
-        display: assets/fetching.svg
+        icon: assets/fetching.svg
         link: https://fetching.micasaestu.casa
         slots:
           - name: "healthy"
@@ -37,7 +37,7 @@ groups:
   - name: Infrastructure
     tiles:
       - name: TailScale
-        display: assets/tailscale.png
+        icon: assets/tailscale.png
         link: https://login.tailscale.com/admin/machines
         slots:
           - name: "ada"
@@ -62,7 +62,7 @@ groups:
                 status: { id: "error", label: "❌" }
 
       - name: Nginx
-        display: assets/nginx.svg
+        icon: assets/nginx.svg
         slots:
           - name: "active"
             check:
@@ -76,7 +76,7 @@ groups:
                 status: { id: "error", label: "❌" }
 
       - name: TLS cert
-        display: assets/tls-cert.png
+        icon: assets/tls-cert.png
         slots:
           - name: "expiry"
             check:
@@ -89,7 +89,7 @@ groups:
               - match: {}
                 status: { id: "error", label: "🔴 expires soon!" }
       - name: Disk space (/data/Music)
-        display: assets/disk_free.png
+        icon: assets/disk_free.png
         slots:
           - name: "usage"
             check:
@@ -112,7 +112,7 @@ groups:
   - name: Systemd
     tiles:
       - name: Navidrome service
-        display: assets/systemd.svg
+        icon: assets/systemd.svg
         slots:
           - name: "active"
             check:
@@ -125,7 +125,7 @@ groups:
               - match: {}
                 status: { id: "error", label: "❌" }
       - name: Fetching service
-        display: assets/systemd.svg
+        icon: assets/systemd.svg
         slots:
           - name: "active"
             check:
@@ -141,25 +141,33 @@ groups:
   - name: Metrics
     tiles:
       - name: "CPU Usage"
-        display: "/var/lib/ilias/charts/cpu.png"
+        banner:
+          src: "/tmp/ilias_cpu.png"
+          type: image
         generate:
-          command: "prometheus-render --query 'sum(rate(node_cpu_seconds_total{mode!=\"idle\"}[5m])) * 100' --range 24h --title 'CPU %' --output /var/lib/ilias/charts/cpu.png"
+          command: "prometheus-render --query 'sum(rate(node_cpu_seconds_total{mode!=\"idle\"}[5m])) * 100' --range 24h --title 'CPU %' --output /tmp/ilias_cpu.png"
           timeout: "30s"
 
       - name: "Memory Usage"
-        display: "/var/lib/ilias/charts/memory.png"
+        banner:
+          src: "/tmp/ilias_memory.png"
+          type: image
         generate:
-          command: "prometheus-render --query '(1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100' --range 24h --title 'Memory %' --output /var/lib/ilias/charts/memory.png"
+          command: "prometheus-render --query '(1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100' --range 24h --title 'Memory %' --output /tmp/ilias_memory.png"
           timeout: "30s"
 
       - name: "Disk I/O"
-        display: "/var/lib/ilias/charts/diskio.png"
+        banner:
+          src: "/tmp/ilias_diskio.png"
+          type: image
         generate:
-          command: "prometheus-render --query 'rate(node_disk_read_bytes_total[5m]) + rate(node_disk_written_bytes_total[5m])' --range 24h --title 'Disk I/O (bytes/s)' --output /var/lib/ilias/charts/diskio.png"
+          command: "prometheus-render --query 'rate(node_disk_read_bytes_total[5m]) + rate(node_disk_written_bytes_total[5m])' --range 24h --title 'Disk I/O (bytes/s)' --output /tmp/ilias_diskio.png"
           timeout: "30s"
 
       - name: "Network Traffic"
-        display: "/var/lib/ilias/charts/network.png"
+        banner:
+          src: "/tmp/ilias_network.png"
+          type: image
         generate:
-          command: "prometheus-render --query 'rate(node_network_receive_bytes_total{device!=\"lo\"}[5m])' --range 24h --title 'Network RX (bytes/s)' --output /var/lib/ilias/charts/network.png"
+          command: "prometheus-render --query 'rate(node_network_receive_bytes_total{device!=\"lo\"}[5m])' --range 24h --title 'Network RX (bytes/s)' --output /tmp/ilias_network.png"
           timeout: "30s"
