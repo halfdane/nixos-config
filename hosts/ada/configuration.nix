@@ -7,7 +7,6 @@
     ./hardware-configuration-ada.nix
     ./disko.nix
     ./navidrome.nix
-    ./homer
     ./acme.nix
     ./world_readable_music.nix
   ];
@@ -77,6 +76,29 @@
     locations."/" = {
       proxyPass = "http://127.0.0.1:9733";
       proxyWebsockets = true;
+    };
+  };
+
+    # virtualHosts."micasaestu.casa" = {
+    #   # Use the wildcard cert issued by acme.nix.
+    #   useACMEHost = "micasaestu.casa";
+    #   # Redirect plain HTTP to HTTPS.
+    #   forceSSL = true;
+    #   # Also respond to the host-specific subdomain.
+    #   serverAliases = [ "ada.micasaestu.casa" ];
+    #   root = homer;
+    #   locations."/" = { index = "index.html"; };
+    # };
+
+  services.ilias = {
+    enable = true;
+    configDir = ./ilias;
+
+    nginx = {
+      enable = true;
+      hostName = "micasaestu.casa";
+      forceSSL = true;
+      acmeHost = "micasaestu.casa";
     };
   };
 }

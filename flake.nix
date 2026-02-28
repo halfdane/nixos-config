@@ -11,8 +11,10 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     agenix.url = "github:ryantm/agenix";
-    fetching.url = "github:halfdane/fetching/v1.0.3";
+    fetching.url = "github:halfdane/fetching/v1.0.6";
     fetching.inputs.nixpkgs.follows = "nixpkgs";
+    ilias.url = "github:halfdane/ilias";
+
 
     # Pinned to the nixpkgs commit ada's working navidrome was built from.
     # Update only once a navidrome build is confirmed working in a newer commit.
@@ -24,7 +26,7 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, agenix, plasma-manager, fetching, nixpkgs-navidrome, ... }:
+  outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, agenix, plasma-manager, fetching, nixpkgs-navidrome, ilias, ... }:
     let
       nixosModules = [ 
         ./nixos/nix_basics.nix
@@ -33,6 +35,7 @@
         ./nixos/maestral.nix
         ./nixos/kde.nix
         agenix.nixosModules.default
+        ilias.nixosModules.default
       ];
       homeModules = [
         ./home/everyone.nix

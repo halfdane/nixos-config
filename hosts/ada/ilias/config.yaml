@@ -1,0 +1,7 @@
+title: Dashboard
+groups:
+  - name: Media
+    tiles:
+      - name: Navidrome
+        display: assets/navidrome.png
+        link: https://music.micasaestu.casa
