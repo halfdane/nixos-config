@@ -1,7 +1,139 @@
 title: Dashboard
+theme: "dark"
+refresh: "10s"
 groups:
   - name: Media
     tiles:
       - name: Navidrome
         display: assets/navidrome.png
         link: https://music.micasaestu.casa
+        slots:
+          - name: "health"
+            check:
+              type: "http"
+              target: "https://music.micasaestu.casa"
+            rules:
+              - match:
+                  code: 200
+                status: { id: "ok", label: "✅" }
+              - match: {}
+                status: { id: "error", label: "❌" }
+
+      - name: Fetching
+        display: assets/fetching.svg
+        link: https://fetching.micasaestu.casa
+        slots:
+          - name: "health"
+            check:
+              type: "http"
+              target: "https://fetching.micasaestu.casa"
+            rules:
+              - match:
+                  code: 200
+                status: { id: "ok", label: "✅" }
+              - match: {}
+                status: { id: "error", label: "❌" }
+
+  - name: Infrastructure
+    tiles:
+      - name: TailScale
+        display: assets/tailscale.png
+        link: https://login.tailscale.com/admin/machines
+        slots:
+          - name: "ada"
+            check:
+              type: "command"
+              target: "tailscale status --json | jq -e '.Self.Online'"
+            rules:
+              - match:
+                  code: 0
+                status: { id: "ok", label: "✅ ada" }
+              - match: {}
+                status: { id: "error", label: "❌" }
+          - name: "curie"
+            check:
+              type: "command"
+              target: "tailscale status --json | jq -e '[.Peer[] | select(.HostName == \"curie\")] | first | .Online'"
+            rules:
+              - match:
+                  code: 0
+                status: { id: "ok", label: "✅" }
+              - match: {}
+                status: { id: "error", label: "❌" }
+
+      - name: Nginx
+        display: assets/nginx.svg
+        slots:
+          - name: "status"
+            check:
+              type: "command"
+              target: "systemctl is-active nginx"
+            rules:
+              - match:
+                  output: "^active$"
+                status: { id: "ok", label: "✅ active" }
+              - match: {}
+                status: { id: "error", label: "❌ not active" }
+
+      - name: TLS cert
+        display: assets/tls-cert.png
+        slots:
+          - name: "expiry"
+            check:
+              type: "command"
+              target: "openssl s_client -connect micasaestu.casa:443 -servername micasaestu.casa </dev/null 2>/dev/null | openssl x509 -noout -checkend 604800"
+            rules:
+              - match:
+                  code: 0
+                status: { id: "ok", label: "✅ valid 7d+" }
+              - match: {}
+                status: { id: "error", label: "🔴 expires soon!" }
+      - name: Disk space (/data/Music)
+        display: assets/disk_free.png
+        slots:
+          - name: "usage"
+            check:
+              type: "command"
+              target: "df /data/Music --output=pcent | tail -1"
+            rules:
+              - match:
+                  output: "^[0-9]%$|^[1-6][0-9]%$|^7[0-4]%$"
+                status: { id: "ok", label: "✅ <75%" }
+              - match:
+                  output: "^7[5-9]%$|^8[0-9]%$"
+                status: { id: "warn", label: "⚠️ 75–89%" }
+              - match:
+                  output: "^9[0-9]%$|^100%$"
+                status: { id: "error", label: "🔴 ≥90%" }
+              - match: {}
+                status: { id: "unknown", label: "❓" }
+
+
+  - name: Systemd
+    tiles:
+      - name: Navidrome service
+        display: assets/systemd.svg
+        slots:
+          - name: "status"
+            check:
+              type: "command"
+              target: "systemctl is-active navidrome"
+            rules:
+              - match:
+                  output: "^active$"
+                status: { id: "ok", label: "✅ active" }
+              - match: {}
+                status: { id: "error", label: "❌ not active" }
+      - name: Fetching service
+        display: assets/systemd.svg
+        slots:
+          - name: "status"
+            check:
+              type: "command"
+              target: "systemctl is-active fetching"
+            rules:
+              - match:
+                  output: "^active$"
+                status: { id: "ok", label: "✅ active" }
+              - match: {}
+                status: { id: "error", label: "❌ not active" }
