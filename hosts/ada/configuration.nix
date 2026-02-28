@@ -79,20 +79,12 @@
     };
   };
 
-    # virtualHosts."micasaestu.casa" = {
-    #   # Use the wildcard cert issued by acme.nix.
-    #   useACMEHost = "micasaestu.casa";
-    #   # Redirect plain HTTP to HTTPS.
-    #   forceSSL = true;
-    #   # Also respond to the host-specific subdomain.
-    #   serverAliases = [ "ada.micasaestu.casa" ];
-    #   root = homer;
-    #   locations."/" = { index = "index.html"; };
-    # };
 
   services.ilias = {
     enable = true;
     configDir = ./ilias;
+
+    extraPackages = [ pkgs.openssl ];
 
     nginx = {
       enable = true;

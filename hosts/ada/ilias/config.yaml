@@ -1,6 +1,6 @@
 title: Dashboard
 theme: "dark"
-refresh: "10s"
+refresh: "5m"
 groups:
   - name: Media
     tiles:
@@ -94,7 +94,7 @@ groups:
           - name: "usage"
             check:
               type: "command"
-              target: "df /data/Music --output=pcent | tail -1"
+              target: "df /data/Music --output=pcent | tail -1 | tr -d ' '"
             rules:
               - match:
                   output: "^[0-9]%$|^[1-6][0-9]%$|^7[0-4]%$"

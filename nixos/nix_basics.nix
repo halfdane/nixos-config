@@ -9,6 +9,7 @@
     direnv
     vim
     screen
+    watchexec
   ];
 
   environment.variables.EDITOR = "vim";
