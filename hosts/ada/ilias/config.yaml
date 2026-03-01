@@ -1,6 +1,29 @@
 title: Dashboard
 theme: "dark"
 refresh: "5m"
+
+# Defaults are used when nothing is defined at the slot level. They can be overridden by defining rules directly on a slot.
+defaults:
+  rules:
+    - match:
+        code: "^0|2\\d\\d$"
+      status: { id: ok, label: "✅" }
+    - match: {}
+      status: { id: error, label: "❌" }
+
+# YAML anchors: reusable fragments ilias doesn't interpret directly... 
+# it's all just yaml
+_anchors:
+  pct_rules: &pct_rules           # works for disk, memory, CPU …
+    - match:
+        output: "^[0-6]\\d%$|^[0-9]%$"
+      status: { id: ok, label: "✅ <70%" }
+    - match:
+        output: "^[7-8]\\d%$"
+      status: { id: warn, label: "⚠️ 70–89%" }
+    - match: {}
+      status: { id: critical, label: "🔴 ≥90%" }
+
 groups:
   - name: Media
     tiles:
@@ -9,79 +32,41 @@ groups:
         link: https://music.micasaestu.casa
         slots:
           - name: "healthy"
-            check:
-              type: "http"
-              target: "https://music.micasaestu.casa"
-            rules:
-              - match:
-                  code: 200
-                status: { id: "ok", label: "✅" }
-              - match: {}
-                status: { id: "error", label: "❌" }
+            check: "https://music.micasaestu.casa"
 
       - name: Fetching
         icon: assets/fetching.svg
         link: https://fetching.micasaestu.casa
         slots:
           - name: "healthy"
-            check:
-              type: "http"
-              target: "https://fetching.micasaestu.casa"
-            rules:
-              - match:
-                  code: 200
-                status: { id: "ok", label: "✅" }
-              - match: {}
-                status: { id: "error", label: "❌" }
+            check: "https://fetching.micasaestu.casa"
 
   - name: Infrastructure
     tiles:
+      - name: Prometheus
+        icon: assets/prometheus.svg
+        link: https://micasaestu.casa:9090/
+
       - name: TailScale
-        icon: assets/tailscale.png
+        icon: assets/tailscale.svg
         link: https://login.tailscale.com/admin/machines
         slots:
           - name: "ada"
-            check:
-              type: "command"
-              target: "tailscale status --json | jq -e '.Self.Online'"
-            rules:
-              - match:
-                  code: 0
-                status: { id: "ok", label: "✅" }
-              - match: {}
-                status: { id: "error", label: "❌" }
+            check: "tailscale status --json | jq -e '.Self.Online'"
           - name: "curie"
-            check:
-              type: "command"
-              target: "tailscale status --json | jq -e '[.Peer[] | select(.HostName == \"curie\")] | first | .Online'"
-            rules:
-              - match:
-                  code: 0
-                status: { id: "ok", label: "✅" }
-              - match: {}
-                status: { id: "error", label: "❌" }
+            check: "tailscale status --json | jq -e '[.Peer[] | select(.HostName == \"curie\")] | first | .Online'"
 
       - name: Nginx
         icon: assets/nginx.svg
         slots:
           - name: "active"
-            check:
-              type: "command"
-              target: "systemctl is-active nginx"
-            rules:
-              - match:
-                  output: "^active$"
-                status: { id: "ok", label: "✅" }
-              - match: {}
-                status: { id: "error", label: "❌" }
+            check: "systemctl is-active nginx"
 
       - name: TLS cert
         icon: assets/tls-cert.png
         slots:
           - name: "expiry"
-            check:
-              type: "command"
-              target: "openssl s_client -connect micasaestu.casa:443 -servername micasaestu.casa </dev/null 2>/dev/null | openssl x509 -noout -checkend 604800"
+            check: "openssl s_client -connect micasaestu.casa:443 -servername micasaestu.casa </dev/null 2>/dev/null | openssl x509 -noout -checkend 604800"
             rules:
               - match:
                   code: 0
@@ -92,21 +77,8 @@ groups:
         icon: assets/disk_free.png
         slots:
           - name: "usage"
-            check:
-              type: "command"
-              target: "df /data/Music --output=pcent | tail -1 | tr -d ' '"
-            rules:
-              - match:
-                  output: "^[0-9]%$|^[1-6][0-9]%$|^7[0-4]%$"
-                status: { id: "ok", label: "✅ <75%" }
-              - match:
-                  output: "^7[5-9]%$|^8[0-9]%$"
-                status: { id: "warn", label: "⚠️ 75–89%" }
-              - match:
-                  output: "^9[0-9]%$|^100%$"
-                status: { id: "error", label: "🔴 ≥90%" }
-              - match: {}
-                status: { id: "unknown", label: "❓" }
+            check: "df /data/Music --output=pcent | tail -1 | tr -d ' '"
+            rules: *pct_rules
 
 
   - name: Systemd
@@ -115,28 +87,13 @@ groups:
         icon: assets/systemd.svg
         slots:
           - name: "active"
-            check:
-              type: "command"
-              target: "systemctl is-active navidrome"
-            rules:
-              - match:
-                  output: "^active$"
-                status: { id: "ok", label: "✅" }
-              - match: {}
-                status: { id: "error", label: "❌" }
+            check: "systemctl is-active navidrome"
+
       - name: Fetching service
         icon: assets/systemd.svg
         slots:
           - name: "active"
-            check:
-              type: "command"
-              target: "systemctl is-active fetching"
-            rules:
-              - match:
-                  output: "^active$"
-                status: { id: "ok", label: "✅" }
-              - match: {}
-                status: { id: "error", label: "❌" }
+            check: "systemctl is-active fetching"
 
   - name: Metrics
     tiles:

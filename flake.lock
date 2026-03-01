@@ -190,11 +190,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1772303329,
-        "narHash": "sha256-AafO6+SWLtsbXwHHkR/ITKj2AQyIsBbSwOPNj7teetQ=",
+        "lastModified": 1772380239,
+        "narHash": "sha256-ZjmeQmduqktBZ/glIfimWS3emVDtAt1imy2SLu/BMV0=",
         "owner": "halfdane",
         "repo": "ilias",
-        "rev": "5cfc0782f61bafc9724a14da3a18ad98fdebaf7f",
+        "rev": "663df25fe58fbf8566b1e8d54a306e3060e92d8a",
         "type": "github"
       },
       "original": {

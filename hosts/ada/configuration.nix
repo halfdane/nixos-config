@@ -105,8 +105,20 @@
       job_name = "node";
       static_configs = [{ targets = ["localhost:9100"]; }];
     }];
-  };
-  services.prometheus.exporters.node.enable = true;
+    exporters.node = {
+      enable = true;
+      extraFlags = [ "--collector.textfile.directory=/var/lib/node_exporter/textfile_collector" ];
+    };
 
+  };
   programs.prometheus-renderer.enable = true;
+
+  # report deployment changes to node exporter
+  system.activationScripts.writeSystemVersion = {
+    text = ''
+      mkdir -p /var/lib/node_exporter/textfile_collector
+      echo "nixos_system_version{version=\"$(readlink -f /run/current-system | xargs basename)\"} 1" \
+        > /var/lib/node_exporter/textfile_collector/nixos_system_version.prom
+    '';
+  };
 }
