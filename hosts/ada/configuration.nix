@@ -90,7 +90,6 @@
     configDir = ./ilias;
 
     extraPackages = [ pkgs.openssl ];
-
     nginx = {
       enable = true;
       hostName = "micasaestu.casa";
