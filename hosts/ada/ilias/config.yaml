@@ -98,6 +98,7 @@ groups:
   - name: Metrics
     tiles:
       - name: "CPU Usage"
+        link: "http://micasaestu.casa:9090/graph?g0.expr=sum(rate(node_cpu_seconds_total%7Bmode!%3D%22idle%22%7D%5B5m%5D))%20*%20100&g0.tab=0&g0.range_input=24h"
         banner:
           src: "/tmp/ilias_cpu.png"
           type: image
@@ -112,6 +113,7 @@ groups:
           timeout: "30s"
 
       - name: "Memory Usage"
+        link: "http://micasaestu.casa:9090/graph?g0.expr=(1%20-%20node_memory_MemAvailable_bytes%20%2F%20node_memory_MemTotal_bytes)%20*%20100&g0.tab=0&g0.range_input=24h"
         banner:
           src: "/tmp/ilias_memory.png"
           type: image
@@ -126,6 +128,7 @@ groups:
           timeout: "30s"
 
       - name: "Disk I/O"
+        link: "http://micasaestu.casa:9090/graph?g0.expr=rate(node_disk_io_time_seconds_total%5B5m%5D)&g0.tab=0&g0.range_input=24h"
         banner:
           src: "/tmp/ilias_diskio.png"
           type: image
@@ -140,6 +143,7 @@ groups:
           timeout: "30s"
 
       - name: "Network Traffic"
+        link: "http://micasaestu.casa:9090/graph?g0.expr=rate(node_network_receive_bytes_total%7Bdevice!%3D%22lo%22%7D%5B5m%5D)&g0.tab=0&g0.range_input=24h"
         banner:
           src: "/tmp/ilias_network.png"
           type: image
