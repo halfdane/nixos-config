@@ -330,11 +330,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1772385022,
-        "narHash": "sha256-F4vtLIhIzCcGRq9rDVATHhWy+4tVVL5ref8j+3PMZkU=",
+        "lastModified": 1772650862,
+        "narHash": "sha256-m8UiR2t27XzeL2/p1CFnWJ54tGRRyc9vR/IKhZn93Cs=",
         "owner": "halfdane",
         "repo": "prometheus-renderer",
-        "rev": "08887ab2f8e9e8a7e1b701a79261301d2bc01162",
+        "rev": "da82282347a2a7a4f900e9ac529e9a52b45e7bc9",
         "type": "github"
       },
       "original": {

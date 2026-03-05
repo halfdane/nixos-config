@@ -102,6 +102,7 @@ in
 
   virtualisation.docker.enable = true;
   programs.fish.enable = true;
+  programs.prometheus-renderer.enable = true;
     
   nixpkgs.config.allowUnfree = true;
   environment.sessionVariables.MOZ_GMP_PATH = [ "${pkgs.widevine-cdm-lacros}/gmp-widevinecdm/system-installed" ];
