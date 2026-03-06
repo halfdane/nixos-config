@@ -11,7 +11,7 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     agenix.url = "github:ryantm/agenix";
-    fetching.url = "github:halfdane/fetching/v1.0.6";
+    fetching.url = "github:halfdane/fetching";
     fetching.inputs.nixpkgs.follows = "nixpkgs";
     ilias.url = "github:halfdane/ilias";
     prometheus-renderer.url = "github:halfdane/prometheus-renderer";
