@@ -74,14 +74,16 @@
   # Timezone
   time.timeZone = "Europe/Berlin";
 
-  services.fetching.enable = true;
-
-  services.nginx.virtualHosts."fetching.micasaestu.casa" = {
-    useACMEHost = "micasaestu.casa";
-    forceSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:9733";
-      proxyWebsockets = true;
+  services.fetching = {
+    enable = true;
+    port = 9733;
+    credentialsFile = "/var/lib/fetching/secrets.json";
+    outputDir = "/data/Music";
+    nginx = {
+      enable = true;
+      hostName = "fetching.micasaestu.casa";
+      forceSSL = true;
+      acmeHost = "micasaestu.casa";
     };
   };
 

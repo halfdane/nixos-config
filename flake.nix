@@ -32,7 +32,7 @@
       nixosModules = [ 
         ./nixos/nix_basics.nix
         ./nixos/tailscale.nix
-        ./nixos/fetching.nix
+        inputs.fetching.nixosModules.default
         ./nixos/maestral.nix
         ./nixos/kde.nix
         agenix.nixosModules.default
