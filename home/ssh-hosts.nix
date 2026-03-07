@@ -4,7 +4,7 @@
     matchBlocks = {
       ada = {
         host = "ada";
-        hostname = "152.53.176.47";
+        hostname = "10.100.0.1";
         user = "halfdane";
       };
       curie = {

@@ -43,9 +43,15 @@
     wheelNeedsPassword = false;
   };
 
-  # Enable SSH (for remote access)
+  # Enable SSH — accessible only through the WireGuard tunnel (wg0 is a
+  # trusted interface, so no explicit port needed). Not exposed publicly.
+  # Recovery path if WireGuard config breaks: 
+  # - netcup KVM rescue console and:
+  #   sudo nix-env -p /nix/var/nix/profiles/system --rollback
+  #   sudo /nix/var/nix/profiles/system/bin/switch-to-configuration switch
   services.openssh = {
     enable = true;
+    openFirewall = false;
     settings.PermitRootLogin = "no";
     settings.PasswordAuthentication = false;
   };
@@ -111,6 +117,7 @@
     }];
     exporters.node = {
       enable = true;
+      enabledCollectors = [ "wireguard" ];
       extraFlags = [ "--collector.textfile.directory=/var/lib/node_exporter/textfile_collector" ];
     };
 
