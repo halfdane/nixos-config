@@ -83,9 +83,27 @@ DNS_LINE="${SERVER_DNS}${DNS_ROUTE_DOMAINS:+, ${DNS_ROUTE_DOMAINS}}"
 PRIVATE_KEY=$(wg genkey)
 PUBLIC_KEY=$(echo "$PRIVATE_KEY" | wg pubkey)
 
-# ── build client config ──────────────────────────────────────────────────────
+# ── build client configs ─────────────────────────────────────────────────────
 
-CONFIG=$(cat <<EOF
+# Mobile config: plain DNS IP only — the WireGuard app on Android/iOS does not
+# understand the ~domain routing-hint syntax used by systemd-resolved.
+MOBILE_CONFIG=$(cat <<EOF
+[Interface]
+PrivateKey = ${PRIVATE_KEY}
+Address = ${PEER_IP}/24
+DNS = ${SERVER_DNS}
+
+[Peer]
+PublicKey = ${SERVER_PUBKEY}
+Endpoint = ${SERVER_ENDPOINT}
+AllowedIPs = 10.100.0.0/24
+PersistentKeepalive = 25
+EOF
+)
+
+# Linux config: includes ~domain routing hints so systemd-resolved only sends
+# VPN-domain queries through the tunnel (split DNS — no global DNS takeover).
+LINUX_CONFIG=$(cat <<EOF
 [Interface]
 PrivateKey = ${PRIVATE_KEY}
 Address = ${PEER_IP}/24
@@ -113,13 +131,13 @@ echo ""
 echo "  { name = \"${NAME}\"; publicKey = \"${PUBLIC_KEY}\"; ip = \"${PEER_IP}\"; }"
 echo ""
 echo "──────────────────────────────────────────────────────────────"
-echo "QR code for WireGuard app:"
+echo "QR code for WireGuard app (Android / iOS):"
 echo "──────────────────────────────────────────────────────────────"
 echo ""
-echo "$CONFIG" | qrencode -t ansiutf8
+echo "$MOBILE_CONFIG" | qrencode -t ansiutf8
 echo ""
 echo "──────────────────────────────────────────────────────────────"
-echo "Raw config (save as ${NAME}.conf if needed):"
+echo "Linux config (save as ${NAME}.conf, import with nmcli):"
 echo "──────────────────────────────────────────────────────────────"
 echo ""
-echo "$CONFIG"
+echo "$LINUX_CONFIG"
