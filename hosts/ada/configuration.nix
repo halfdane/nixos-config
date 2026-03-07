@@ -83,6 +83,7 @@
     peers = [
       # Add peers here after running scripts/wg-add-peer to generate their keys.
       { name = "curie"; publicKey = "qMIIXDuMy813aF/fvHs7jW8TyDqunlPtkk29zCWwKnI="; ip = "10.100.0.2"; }
+      { name = "halfdane_phone"; publicKey = "d+pnZufuTJrUgNV3ssmqYGwmtlv2F2JwWBRa2Jh2tWs="; ip = "10.100.0.3"; }
     ];
   };
 
