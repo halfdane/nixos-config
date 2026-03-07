@@ -72,11 +72,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1772562334,
-        "narHash": "sha256-2mZo/sUrCcteQlonj0LJ6mmT8dnoL6gJ1YZ7uIDBD3o=",
+        "lastModified": 1772886258,
+        "narHash": "sha256-9lj8vC0CiYJiKGItmE2dPTuYFBgkd0024bQzG6xKYkU=",
         "owner": "halfdane",
         "repo": "fetching",
-        "rev": "a4d87cb7c4e1e43864d17627bb936d312820921b",
+        "rev": "0bccd1fe8ee928001252d9ce930d5d40508aa97b",
         "type": "github"
       },
       "original": {
@@ -92,11 +92,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1772440706,
-        "narHash": "sha256-9VvdD+vp+gQSNq+lJQmi9xg+y5C1OzotY9WClNIbTTo=",
+        "lastModified": 1772647914,
+        "narHash": "sha256-GxG88JaS6OBB8lexyrNSYboYIJh25DHh/o48mHJrpr8=",
         "owner": "halfdane",
         "repo": "fetching-cli",
-        "rev": "4016ed1e512f281dbd598ad43737f0a4ca7322d6",
+        "rev": "8c05a0d8673b52efce285843aea802a98f28b6e2",
         "type": "github"
       },
       "original": {
@@ -402,11 +402,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1772650862,
-        "narHash": "sha256-m8UiR2t27XzeL2/p1CFnWJ54tGRRyc9vR/IKhZn93Cs=",
+        "lastModified": 1772882125,
+        "narHash": "sha256-rIZGWQ9IEUau/imDr4tpUahpoCye1mE+30GbCMAs7XM=",
         "owner": "halfdane",
         "repo": "prometheus-renderer",
-        "rev": "da82282347a2a7a4f900e9ac529e9a52b45e7bc9",
+        "rev": "9bcf1dbd0e5f81008cd2be4518f2a4333d9ba59a",
         "type": "github"
       },
       "original": {

@@ -87,6 +87,7 @@
     enable = true;
     port = 9733;
     outputDir = "/data/Music";
+    trackTemplate = "{artist}/{year}-{album}/{track_number}-{title}";
     nginx = {
       enable = true;
       hostName = "fetching.micasaestu.casa";
