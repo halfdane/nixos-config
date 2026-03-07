@@ -105,7 +105,7 @@ in
     };
 
     # Trust all traffic that has already been cryptographically verified by
-    # WireGuard — same pattern as trustedInterfaces = [ "tailscale0" ].
+    # WireGuard — same pattern as trustedInterfaces for other overlay networks.
     networking.firewall.trustedInterfaces = [ "wg0" ];
 
     # WireGuard's only public-facing surface: one UDP port.

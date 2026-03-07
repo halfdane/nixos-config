@@ -115,15 +115,6 @@ agenix.secrets = {
 Reference them in other modules as `config.age.secrets."secrets/my-secret.age".path`.
 
 
-### Tailscale Module
-Enable Tailscale in your config:
-```nix
-tailscale = {
-   enable = true;
-   authKeyFile = config.age.secrets."secrets/tailscale-invite.age".path;
-};
-```
-
 ## Building
 
 For QEMU VM:

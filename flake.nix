@@ -31,7 +31,6 @@
     let
       nixosModules = [ 
         ./nixos/nix_basics.nix
-        ./nixos/tailscale.nix
         ./nixos/wireguard.nix
         inputs.fetching.nixosModules.default
         ./nixos/maestral.nix

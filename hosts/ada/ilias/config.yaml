@@ -47,15 +47,6 @@ groups:
         icon: assets/prometheus.svg
         link: https://micasaestu.casa:9090/
 
-      - name: TailScale
-        icon: assets/tailscale.svg
-        link: https://login.tailscale.com/admin/machines
-        slots:
-          - name: "ada"
-            check: "tailscale status --json | jq -e '.Self.Online'"
-          - name: "curie"
-            check: "tailscale status --json | jq -e '[.Peer[] | select(.HostName == \"curie\")] | first | .Online'"
-
       - name: Nginx
         icon: assets/nginx.svg
         slots:
