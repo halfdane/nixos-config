@@ -86,7 +86,6 @@
   services.fetching = {
     enable = true;
     port = 9733;
-    credentialsFile = "/var/lib/fetching/secrets.json";
     outputDir = "/data/Music";
     nginx = {
       enable = true;
@@ -117,7 +116,6 @@
     }];
     exporters.node = {
       enable = true;
-      enabledCollectors = [ "wireguard" ];
       extraFlags = [ "--collector.textfile.directory=/var/lib/node_exporter/textfile_collector" ];
     };
 
