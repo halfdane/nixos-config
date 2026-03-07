@@ -1,32 +1,27 @@
-# Deployment steps for ada (netcup VPS)
+# Ada (netcup VPS)
 
-1. Boot ada into rescue mode (Media > Rescue System).
-2. Use nixos-anywhere from your local machine:
-   ```bash
-   nix run github:nix-community/nixos-anywhere -- root@152.53.176.47 --flake .#ada --print-build-logs
-   ```
+**SSH requires WireGuard active.** Ada's SSH port is not publicly reachable.
 
-3. After install, update `hardware-configuration-ada.nix` with the generated config from ada.
-4. Re-deploy as needed using nixos-anywhere.
-
-# Notes
-- Log in with: `ssh halfdane@152.53.176.47`
-
-## Updating configuration for ada (recommended)
-
-From your local machine, run:
 ```bash
-nixos-rebuild switch --flake .#ada --target-host halfdane@152.53.176.47 --sudo
+ssh ada          # alias → halfdane@10.100.0.1, defined in home/ssh-hosts.nix
 ```
-- This builds locally and deploys to ada using SSH and passwordless sudo.
-- No need to rsync or manually rebuild on the server.
 
-## (Legacy) Manual update
+## Day-to-day deploy
 
-If needed, you can still:
 ```bash
-rsync -av --delete ~/nixos-config/ halfdane@152.53.176.47:/home/halfdane/nixos-config/
-ssh halfdane@152.53.176.47
-cd ~/nixos-config
-sudo nixos-rebuild switch --flake ./#ada
+./deploy.sh ada  # builds on ada, switches — VPN must be active
 ```
+
+## First install / full wipe
+
+See [docs/disaster-recovery.md](../../docs/disaster-recovery.md) — requires netcup rescue mode and nixos-anywhere.
+
+## If ada is unreachable via SSH
+
+See [docs/disaster-recovery.md](../../docs/disaster-recovery.md):
+- WireGuard broken → netcup KVM console → rollback
+- Completely broken → rescue mode → nixos-anywhere
+
+## Services running on ada
+
+See [docs/architecture.md](../../docs/architecture.md) for the full list and URLs.

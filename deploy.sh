@@ -6,10 +6,11 @@ set -euo pipefail
 
 HOST="${1-$(hostname)}"
 
-# Host -> login map (update IPs/users)
+# Host -> login map
+# ada is only reachable via WireGuard tunnel (SSH not publicly exposed).
 declare -A LOGINS=(
   [curie]="user@192.168.64.6"
-  [ada]="halfdane@152.53.176.47"
+  [ada]="halfdane@10.100.0.1"
   [laptop]="tvollert@laptop"
 )
 
