@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+# wg-add-peer: generate a WireGuard peer keypair and display onboarding QR code.
+#
+# Run this ON ADA after WireGuard is active (i.e. after nixos-rebuild switch
+# with at least an empty peers list). The wg0 interface must be up.
+#
+# Usage:
+#   wg-add-peer <name> [tunnel-ip]
+#
+# Example:
+#   wg-add-peer curie          # auto-assigns next available IP
+#   wg-add-peer mama 10.100.0.10  # explicit IP (useful for reserving specific addresses)
+#
+# After running:
+#   1. Copy the displayed peer line into hosts/ada/configuration.nix
+#   2. Deploy (./deploy.sh)
+#   3. Show the QR code to the new peer to scan in the WireGuard app
+#      (or use the raw config text if QR is not practical)
+#
+# The peer's private key is printed once and then discarded — it is never
+# stored on the server. If a device is lost, remove its public key from
+# configuration.nix and redeploy.
+
+set -euo pipefail
+
+# ── argument validation ──────────────────────────────────────────────────────
+
+if [ $# -lt 1 ] || [ $# -gt 2 ]; then
+  echo "Usage: wg-add-peer <name> [tunnel-ip]" >&2
+  echo "Example: wg-add-peer curie" >&2
+  echo "         wg-add-peer mama 10.100.0.10" >&2
+  exit 1
+fi
+
+NAME="$1"
+WG_PORT="${WG_PORT:-51820}"
+
+# ── require root ────────────────────────────────────────────────────────────
+
+if [ "$(id -u)" -ne 0 ]; then
+  exec sudo "$0" "$@"
+fi
+
+# ── read server state ────────────────────────────────────────────────────────
+
+SERVER_PUBKEY=$(wg show wg0 public-key 2>/dev/null) || {
+  echo "Error: wg0 interface not found." >&2
+  echo "Deploy the WireGuard config first (nixos-rebuild switch), then re-run." >&2
+  exit 1
+}
+
+# Public endpoint must be provided by the NixOS module wrapper.
+: "${SERVER_HOST:?SERVER_HOST is not set. Configure wireguard.endpointHost on the server.}"
+SERVER_ENDPOINT="${SERVER_HOST}:${WG_PORT}"
+
+# Auto-assign the next available tunnel IP if not given explicitly.
+# Reads currently assigned /32 peer IPs from wg0, finds the highest last octet,
+# and increments it. Server is always .1, so peers start at .2.
+if [ $# -eq 2 ]; then
+  PEER_IP="$2"
+else
+  HIGHEST=$(wg show wg0 allowed-ips 2>/dev/null \
+    | grep -oP '10\.100\.0\.\K[0-9]+(?=/32)' \
+    | sort -n | tail -1 || true)
+  NEXT=$(( ${HIGHEST:-1} + 1 ))
+  PEER_IP="10.100.0.${NEXT}"
+  echo "Auto-assigned tunnel IP: ${PEER_IP}"
+fi
+
+# Derive the server's tunnel IP from the peer subnet (always .1).
+# Used as the DNS server in the client config so hostnames resolve correctly
+# inside the VPN tunnel.
+SERVER_DNS="${PEER_IP%.*}.1"
+
+# Append routing domains (injected by the NixOS wrapper) to the DNS line so
+# that systemd-resolved on NixOS clients (split-tunnel) sends queries for
+# VPN-served domains through the VPN DNS instead of the default system DNS.
+# Example result:  DNS = 10.100.0.1, ~micasaestu.casa
+DNS_LINE="${SERVER_DNS}${DNS_ROUTE_DOMAINS:+, ${DNS_ROUTE_DOMAINS}}"
+
+# ── generate peer keypair ────────────────────────────────────────────────────
+
+PRIVATE_KEY=$(wg genkey)
+PUBLIC_KEY=$(echo "$PRIVATE_KEY" | wg pubkey)
+
+# ── build client config ──────────────────────────────────────────────────────
+
+CONFIG=$(cat <<EOF
+[Interface]
+PrivateKey = ${PRIVATE_KEY}
+Address = ${PEER_IP}/24
+DNS = ${DNS_LINE}
+
+[Peer]
+PublicKey = ${SERVER_PUBKEY}
+Endpoint = ${SERVER_ENDPOINT}
+# Route only VPN-internal traffic through the tunnel (split tunnel).
+# Change to 0.0.0.0/0 to route ALL traffic through ada (full tunnel).
+AllowedIPs = 10.100.0.0/24
+PersistentKeepalive = 25
+EOF
+)
+
+# ── output ───────────────────────────────────────────────────────────────────
+
+echo ""
+echo "╔══════════════════════════════════════════════════════════╗"
+echo "  Peer: ${NAME}  (${PEER_IP})"
+echo "╚══════════════════════════════════════════════════════════╝"
+echo ""
+echo "Add this line to hosts/ada/configuration.nix → wireguard.peers, then deploy:"
+echo ""
+echo "  { name = \"${NAME}\"; publicKey = \"${PUBLIC_KEY}\"; ip = \"${PEER_IP}\"; }"
+echo ""
+echo "──────────────────────────────────────────────────────────────"
+echo "QR code for WireGuard app:"
+echo "──────────────────────────────────────────────────────────────"
+echo ""
+echo "$CONFIG" | qrencode -t ansiutf8
+echo ""
+echo "──────────────────────────────────────────────────────────────"
+echo "Raw config (save as ${NAME}.conf if needed):"
+echo "──────────────────────────────────────────────────────────────"
+echo ""
+echo "$CONFIG"

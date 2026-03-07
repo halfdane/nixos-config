@@ -32,12 +32,14 @@
       nixosModules = [ 
         ./nixos/nix_basics.nix
         ./nixos/tailscale.nix
+        ./nixos/wireguard.nix
         inputs.fetching.nixosModules.default
         ./nixos/maestral.nix
         ./nixos/kde.nix
         agenix.nixosModules.default
         ilias.nixosModules.default
         inputs.prometheus-renderer.nixosModules.default
+        ./nixos/networking.nix
       ];
       homeModules = [
         ./home/everyone.nix

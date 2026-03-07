@@ -2,6 +2,7 @@
 {
   age.secrets = {
     tailscale-invite.file = ./../../secrets/tailscale-invite.age;
+    wg-server.file = ./../../secrets/wg-server.age;
   };
   imports = [
     ./hardware-configuration-ada.nix
@@ -73,6 +74,17 @@
 
   # Timezone
   time.timeZone = "Europe/Berlin";
+
+  wireguard = {
+    enable = true;
+    endpointHost = "152.53.176.47";
+    privateKeyFile = config.age.secrets.wg-server.path;
+    dns.domains = [ "micasaestu.casa" ];
+    peers = [
+      # Add peers here after running scripts/wg-add-peer to generate their keys.
+      { name = "curie"; publicKey = "qMIIXDuMy813aF/fvHs7jW8TyDqunlPtkk29zCWwKnI="; ip = "10.100.0.2"; }
+    ];
+  };
 
   services.fetching = {
     enable = true;
