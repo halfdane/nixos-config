@@ -102,6 +102,7 @@ groups:
             --title 'CPU %' 
             --vlines-query 'nixos_system_version' 
             --output /tmp/ilias_cpu.svg
+            --smooth
           timeout: "30s"
 
       - name: "Memory Usage"
@@ -118,6 +119,7 @@ groups:
             --title 'Memory %' 
             --vlines-query 'nixos_system_version' 
             --output /tmp/ilias_memory.svg
+            --smooth
           timeout: "30s"
 
       - name: "Disk I/O"
@@ -134,6 +136,7 @@ groups:
             --title 'Disk I/O (s/s)' 
             --vlines-query 'nixos_system_version' 
             --output /tmp/ilias_diskio.svg
+            --smooth
           timeout: "30s"
 
       - name: "Network Traffic"
@@ -150,4 +153,5 @@ groups:
             --title 'Network RX (bytes/s)' 
             --vlines-query 'nixos_system_version' 
             --output /tmp/ilias_network.svg
+            --smooth
           timeout: "30s"
