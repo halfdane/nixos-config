@@ -85,7 +85,7 @@ in
       wantedBy = [ "timers.target" ];
       timerConfig = {
         OnBootSec = "1min";
-        OnUnitActiveSec = "5min";
+        OnActiveSec = "5min";
         Unit = "node-exporter-btrfs-usage.service";
       };
     };
