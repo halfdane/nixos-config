@@ -43,16 +43,6 @@ groups:
 
   - name: Infrastructure
     tiles:
-      - name: Prometheus
-        icon: assets/prometheus.svg
-        link: https://micasaestu.casa:9090/
-
-      - name: Nginx
-        icon: assets/nginx.svg
-        slots:
-          - name: "active"
-            check: "systemctl is-active nginx"
-
       - name: TLS cert
         icon: assets/tls-cert.png
         slots:
@@ -64,13 +54,6 @@ groups:
                 status: { id: "ok", label: "✅ valid 7d+" }
               - match: {}
                 status: { id: "error", label: "🔴 expires soon!" }
-      - name: Disk space (/data/Music)
-        icon: assets/disk_free.png
-        slots:
-          - name: "usage"
-            check: "df /data/Music --output=pcent | tail -1 | tr -d ' '"
-            rules: *pct_rules
-
 
   - name: Systemd
     tiles:
@@ -89,14 +72,14 @@ groups:
   - name: Metrics
     tiles:
       - name: "CPU Usage"
-        link: "http://micasaestu.casa:9090/graph?g0.expr=sum(rate(node_cpu_seconds_total%7Bmode!%3D%22idle%22%7D%5B5m%5D))%20*%20100&g0.tab=0&g0.range_input=24h"
+        link: "https://prometheus.micasaestu.casa/graph?g0.expr=sum(rate(node_cpu_seconds_total%7Bmode!%3D%22idle%22%7D%5B5m%5D))%20*%20100&g0.tab=0&g0.range_input=24h"
         banner:
           src: "/tmp/ilias_cpu.svg"
           type: image
         generate:
           command: >-
             prometheus-render 
-            --url http://micasaestu.casa:9090
+            --url https://prometheus.micasaestu.casa
             --query 'sum(rate(node_cpu_seconds_total{mode!="idle"}[5m])) * 100' 
             --range 24h 
             --title 'CPU %' 
@@ -106,14 +89,14 @@ groups:
           timeout: "30s"
 
       - name: "Memory Usage"
-        link: "http://micasaestu.casa:9090/graph?g0.expr=(1%20-%20node_memory_MemAvailable_bytes%20%2F%20node_memory_MemTotal_bytes)%20*%20100&g0.tab=0&g0.range_input=24h"
+        link: "https://prometheus.micasaestu.casa/graph?g0.expr=(1%20-%20node_memory_MemAvailable_bytes%20%2F%20node_memory_MemTotal_bytes)%20*%20100&g0.tab=0&g0.range_input=24h"
         banner:
           src: "/tmp/ilias_memory.svg"
           type: image
         generate:
           command: >- 
             prometheus-render 
-            --url http://micasaestu.casa:9090
+            --url https://prometheus.micasaestu.casa
             --query '(1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100' 
             --range 24h 
             --title 'Memory %' 
@@ -123,14 +106,14 @@ groups:
           timeout: "30s"
 
       - name: "Disk I/O"
-        link: "http://micasaestu.casa:9090/graph?g0.expr=rate(node_disk_io_time_seconds_total%5B5m%5D)&g0.tab=0&g0.range_input=24h"
+        link: "https://prometheus.micasaestu.casa/graph?g0.expr=rate(node_disk_io_time_seconds_total%5B5m%5D)&g0.tab=0&g0.range_input=24h"
         banner:
           src: "/tmp/ilias_diskio.svg"
           type: image
         generate:
           command: >-
             prometheus-render 
-            --url http://micasaestu.casa:9090
+            --url https://prometheus.micasaestu.casa
             --query 'rate(node_disk_io_time_seconds_total[5m])' 
             --range 24h 
             --title 'Disk I/O (s/s)' 
@@ -140,14 +123,14 @@ groups:
           timeout: "30s"
 
       - name: "Network Traffic"
-        link: "http://micasaestu.casa:9090/graph?g0.expr=rate(node_network_receive_bytes_total%7Bdevice!%3D%22lo%22%7D%5B5m%5D)&g0.tab=0&g0.range_input=24h"
+        link: "https://prometheus.micasaestu.casa/graph?g0.expr=rate(node_network_receive_bytes_total%7Bdevice!%3D%22lo%22%7D%5B5m%5D)&g0.tab=0&g0.range_input=24h"
         banner:
           src: "/tmp/ilias_network.svg"
           type: image
         generate:
           command: >-
             prometheus-render 
-            --url http://micasaestu.casa:9090
+            --url https://prometheus.micasaestu.casa
             --query 'rate(node_network_receive_bytes_total{device!="lo"}[5m])' 
             --range 24h 
             --title 'Network RX (bytes/s)' 
@@ -155,3 +138,37 @@ groups:
             --output /tmp/ilias_network.svg
             --smooth
           timeout: "30s"
+      - name: "Disk Usage (Root)"
+        banner:
+          src: "/tmp/ilias_disk.svg"
+          type: "image"
+        generate:
+          command: >-
+            prometheus-render 
+            --url https://prometheus.micasaestu.casa
+            --query '100 * (1 - node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"})'
+            --range 24h --title "Disk % Used/Free" 
+            --vlines-query 'nixos_system_version' 
+            --output /tmp/ilias_disk.svg 
+            --smooth
+          timeout: "30s"
+      - name: "Disk Usage (Music)"
+        banner:
+          src: "/tmp/ilias_disk_music.svg"
+          type: "image"
+        generate:
+          command: >-
+            prometheus-render 
+            --url https://prometheus.micasaestu.casa
+            --query '100 * (1 - node_filesystem_avail_bytes{mountpoint="/data"} / node_filesystem_size_bytes{mountpoint="/data"})'
+            --range 24h --title "Music % Used/Free" 
+            --vlines-query 'nixos_system_version' 
+            --output /tmp/ilias_disk_music.svg 
+            --smooth
+          timeout: "30s"
+        slots:
+          - name: "usage"
+            check: "df /data/Music --output=pcent | tail -1 | tr -d ' '"
+            rules: *pct_rules
+
+

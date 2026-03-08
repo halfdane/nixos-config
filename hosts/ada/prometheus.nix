@@ -9,11 +9,12 @@ let
       
       BTRFS_USAGE_REPORT=$(for DIR in "$@"; do
         USED_BYTES=$(btrfs filesystem du --raw -s "$DIR" | tail -1 | awk '{print $1}')
-        SAFE_DIR=$(echo "$DIR" | tr "/" "_")
+        SAFE_DIR=$(echo "$DIR" | sed 's|^/||; s|/|_|g')
+        echo "$DIR -> $SAFE_DIR: $USED_BYTES bytes used" >&2
         cat << EOF
-# HELP btrfs_''${SAFE_DIR}_used_bytes Btrfs $DIR subvol usage
-# TYPE btrfs_''${SAFE_DIR}_used_bytes gauge
-btrfs_''${SAFE_DIR}_used_bytes $USED_BYTES
+# HELP btrfs_used_bytes BTRFS subvolume usage in bytes
+# TYPE btrfs_used_bytes gauge
+btrfs_used_bytes{dir="''${SAFE_DIR}"} $USED_BYTES
 EOF
       done)
 
@@ -86,6 +87,15 @@ in
         OnBootSec = "1min";
         OnUnitActiveSec = "5min";
         Unit = "node-exporter-btrfs-usage.service";
+      };
+    };
+
+    services.nginx.virtualHosts."prometheus.micasaestu.casa" = {
+      useACMEHost = "micasaestu.casa";
+      forceSSL = true;
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:9090";
+        proxyWebsockets = true;
       };
     };
   };
