@@ -89,20 +89,6 @@
     '';
   };
 
-  # Hourly Snapper on /home (prunes aggressively)
-  services.snapper.configs.home = {
-    SUBVOLUME = "/home";
-    FSTYPE = "btrfs";
-    ALLOW_USERS = [ "yourusername" ];  # Replace
-    TIMELINE_CREATE = true;
-    TIMELINE_CLEANUP = true;
-    TIMELINE_MIN_AGE = "1800";
-    TIMELINE_LIMIT_HOURLY = "5";
-    TIMELINE_LIMIT_DAILY = "7";
-    TIMELINE_LIMIT_WEEKLY = "4";
-    TIMELINE_LIMIT_MONTHLY = "3";
-  };
-
   # /home quota (50GB)
   # systemd.services.btrfs-home-quota = {
   #   description = "Set BTRFS quota for /home";
