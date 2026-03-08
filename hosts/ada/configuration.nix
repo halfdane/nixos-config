@@ -8,12 +8,13 @@
     ./disko.nix
     ./navidrome.nix
     ./acme.nix
-    ./world_readable_music.nix
+    ./fix_data_dir.nix
+    ./prometheus.nix
   ];
 
 
   music = {
-    dir = "/data/Music";
+    dir = "/data";
     group = "music";
     members = [ "navidrome" "fetching" ];
   };
@@ -110,26 +111,12 @@
     };
   };
 
-  services.prometheus = {
+  prometheus = {
     enable = true;
-    scrapeConfigs = [{
-      job_name = "node";
-      static_configs = [{ targets = ["localhost:9100"]; }];
-    }];
-    exporters.node = {
-      enable = true;
-      extraFlags = [ "--collector.textfile.directory=/var/lib/node_exporter/textfile_collector" ];
-    };
-
+    node-exporter-btrfs.enable = true;
+    node-exporter-btrfs.directoriesToReport = [ "/data" ];
   };
+
   programs.prometheus-renderer.enable = true;
 
-  # report deployment changes to node exporter
-  system.activationScripts.writeSystemVersion = {
-    text = ''
-      mkdir -p /var/lib/node_exporter/textfile_collector
-      echo "nixos_system_version{version=\"$(readlink -f /run/current-system | xargs basename)\"} 1" \
-        > /var/lib/node_exporter/textfile_collector/nixos_system_version.prom
-    '';
-  };
 }
