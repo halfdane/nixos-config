@@ -51,6 +51,7 @@ in
     settings = {
       MusicFolder = "/data/Music";
       Address = "127.0.0.1";
+      ND_DEFAULTPLAYLISTPUBLICVISIBILITY = true;
     };
   };
 
