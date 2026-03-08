@@ -72,11 +72,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1772886258,
-        "narHash": "sha256-9lj8vC0CiYJiKGItmE2dPTuYFBgkd0024bQzG6xKYkU=",
+        "lastModified": 1772900045,
+        "narHash": "sha256-5py58XQ6+lFsSgN9MlXgcoUBWWmawJCr9lsMV0SlkWY=",
         "owner": "halfdane",
         "repo": "fetching",
-        "rev": "0bccd1fe8ee928001252d9ce930d5d40508aa97b",
+        "rev": "1004ab4a95e9a495f2d2246c5afb60dc2ed6c9c3",
         "type": "github"
       },
       "original": {
