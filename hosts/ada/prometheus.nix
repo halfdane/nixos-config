@@ -67,7 +67,6 @@ in
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
         Type = "oneshot";
-        RemainAfterExit = true;
         User = "node-exporter";
         Group = "node-exporter";
         ExecStart = "${node-exporter-btrfs}/bin/node-exporter-btrfs ${lib.concatStringsSep " " config.prometheus.node-exporter-btrfs.directoriesToReport}";
@@ -85,7 +84,7 @@ in
       wantedBy = [ "timers.target" ];
       timerConfig = {
         OnBootSec = "1min";
-        OnActiveSec = "5min";
+        OnUnitActiveSec = "5min";
         Unit = "node-exporter-btrfs-usage.service";
       };
     };
