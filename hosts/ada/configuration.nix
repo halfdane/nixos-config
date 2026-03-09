@@ -12,12 +12,7 @@
     ./prometheus.nix
   ];
 
-
-  music = {
-    dir = "/data";
-    group = "music";
-    members = [ "navidrome" "fetching" ];
-  };
+  music.dir = "/data";
   
   boot.initrd.luks.devices."luks-root".fallbackToPassword = true;
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
@@ -31,7 +26,7 @@
   users.groups.halfdane = {};
   users.users.halfdane = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "music" ];
     group = "halfdane";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK10b+CmOMZsc4cLe7CmbSmibCIGA7KC3yY447e1qxtS tvollert@nixos"
@@ -90,6 +85,8 @@
     port = 9733;
     outputDir = "/data/Music";
     trackTemplate = "{artist}/{year}-{album}/{track_number}-{title}";
+    user = "fetching";
+    group = "music";
     nginx = {
       enable = true;
       hostName = "fetching.micasaestu.casa";

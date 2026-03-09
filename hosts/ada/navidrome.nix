@@ -48,6 +48,7 @@ in
     # openFirewall is intentionally omitted — wg0 is a trusted interface
     # (see nixos/wireguard.nix), so navidrome is reachable over the WireGuard
     # tunnel without opening any public ports.
+    group = "music";
     settings = {
       MusicFolder = "/data/Music";
       Address = "127.0.0.1";
