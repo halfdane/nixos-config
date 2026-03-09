@@ -4,7 +4,12 @@
   home.username = "halfdane";
   home.homeDirectory = "/home/halfdane";
 
-  # Is globally enabled in common
-  # keeping it here as example of how to enable programs host-specific
-  # programs.vim.enable = true;
+  programs.beets = {
+    enable = true;
+    settings = {
+      directory = "/data/Music";
+      library = "/data/Music/library.db";
+      plugins = [ "web" "spotify" ];
+    };
+  };
 }
