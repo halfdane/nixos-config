@@ -32,6 +32,14 @@ in
         ksmserverrc.General.loginMode = "emptySession";
       };
 
+      powerdevil = {
+        AC = {
+          turnOffDisplay = {
+            idleTimeout = "never";
+          };
+        };
+      };
+
       workspace = {
         colorScheme = "BreezeDark";
         theme = "breeze-dark";
@@ -83,7 +91,7 @@ in
 
           # Window management (i3-style)
           "Window Close"      = "Meta+Shift+Q";
-          "Window Fullscreen" = "Meta+F";
+          "Window Maximize" = "Meta+F";
           "Show Desktop"      = [];  # clear Meta+D; reassigned to launcher below
         };
 
