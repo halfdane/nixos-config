@@ -1,0 +1,9 @@
+{
+    "rust-analyzer.server.path": "rust-analyzer",
+    "chat.instructionsFilesLocations": {
+      "~/global-instructions": true
+    },
+    "explorer.confirmDragAndDrop": false,
+    "svelte.enable-ts-plugin": true,
+    "files.autoSave": "afterDelay"
+  }
