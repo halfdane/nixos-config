@@ -11,6 +11,7 @@
     screen
     watchexec
     wireguard-tools
+    tree
   ];
 
   environment.variables.EDITOR = "vim";
