@@ -7,5 +7,6 @@
     "svelte.enable-ts-plugin": true,
     "files.autoSave": "afterDelay",
     "workbench.colorTheme": "Visual Studio Dark",
-    "git.confirmSync": false
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true
   }
