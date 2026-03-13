@@ -8,5 +8,6 @@
     "files.autoSave": "afterDelay",
     "workbench.colorTheme": "Visual Studio Dark",
     "git.confirmSync": false,
-    "git.enableSmartCommit": true
+    "git.enableSmartCommit": true,
+    "explorer.confirmDelete": false
   }
