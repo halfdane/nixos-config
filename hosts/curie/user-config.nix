@@ -6,7 +6,11 @@ let
     directory = "halfdane";
     repos = [
       "halfdane/duality_keyboard"
-      "halfdane/spotify-player"
+      "halfdane/fetching"
+      "halfdane/fetching-cli"
+      "halfdane/ilias"
+      "halfdane/prometheus-renderer"
+      "halfdane/diffie_hellman"
     ];
   };
 in
