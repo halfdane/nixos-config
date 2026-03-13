@@ -12,9 +12,14 @@
         hostname = "192.168.64.6";
         user = "user";
       };
-      laptop = {
-        host = "laptop";
-        hostname = "laptop";
+      leguin = {
+        host = "leguin";
+        hostname = "192.168.178.103";
+        user = "tom";
+      };
+      old = {
+        host = "old";
+        hostname = "192.168.178.110";
         user = "tvollert";
       };
     };
