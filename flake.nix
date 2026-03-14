@@ -39,6 +39,7 @@
         ilias.nixosModules.default
         inputs.prometheus-renderer.nixosModules.default
         ./nixos/networking.nix
+        ./secrets/pubkeys.nix
       ];
       homeModules = [
         ./home/everyone.nix

@@ -6,9 +6,6 @@ let
 in
 {
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-  age.secrets = {
-    laptop-test.file = ../../secrets/laptop-test.age;
-  };
   nixpkgs.overlays = [ inputs.nixos-aarch64-widevine.overlays.default ];
   imports = [
     ./hardware-configuration.nix
@@ -83,9 +80,7 @@ in
     description = userConfig.fullName;
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.fish;
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK10b+CmOMZsc4cLe7CmbSmibCIGA7KC3yY447e1qxtS"
-    ];
+    openssh.authorizedKeys.keys = [ config.my.sshPubKeys.personal ];
   };
 
   security.sudo = {

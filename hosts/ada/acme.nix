@@ -13,7 +13,7 @@
   #   NETCUP_API_PASSWORD=<your API password>
   # ---------------------------------------------------------------------------
 
-  age.secrets."netcup.age" = {
+  age.secrets.netcup = {
     file = ./../../secrets/netcup.age;
     # The acme user (created by security.acme) must be able to read this file.
     owner = "acme";
@@ -33,7 +33,7 @@
       extraDomainNames = [ "micasaestu.casa" ];
 
       dnsProvider = "netcup";
-      credentialsFile = config.age.secrets."netcup.age".path;
+      credentialsFile = config.age.secrets.netcup.path;
 
       # Allow nginx to read the issued cert files.
       group = config.services.nginx.group;

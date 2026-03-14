@@ -11,7 +11,6 @@ in
     secrets = {
       github-personal.file = ./../../secrets/github-personal.age;
       github-work.file = ./../../secrets/github-work.age;
-      personal_ssh.file = ./../../secrets/personal_ssh.age;
     };
   };
 

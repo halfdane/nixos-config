@@ -30,9 +30,7 @@
     isNormalUser = true;
     extraGroups = [ "wheel" "music" ];
     group = "halfdane";
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK10b+CmOMZsc4cLe7CmbSmibCIGA7KC3yY447e1qxtS tvollert@nixos"
-    ];
+    openssh.authorizedKeys.keys = [ config.my.sshPubKeys.personal ];
   };
 
   # Enable sudo without pw
