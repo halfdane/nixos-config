@@ -7,6 +7,8 @@
     ./hardware-configuration-ada.nix
     ./disko.nix
     ./navidrome.nix
+    ./jellyfin.nix
+    ./arr_stack.nix
     ./acme.nix
     ./fix_data_dir.nix
     ./prometheus.nix

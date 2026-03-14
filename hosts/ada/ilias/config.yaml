@@ -27,12 +27,26 @@ _anchors:
 groups:
   - name: Media
     tiles:
-      - name: Navidrome
+      - name: Music (Navidrome)
         icon: assets/navidrome.png
         link: https://music.micasaestu.casa
         slots:
           - name: "healthy"
             check: "https://music.micasaestu.casa"
+
+      - name: Video (Jellyfin)
+        icon: assets/jellyfin.svg
+        link: https://video.micasaestu.casa
+        slots:
+          - name: "healthy"
+            check: "https://video.micasaestu.casa"
+      
+      - name: Requests (Jellyseerr)
+        icon: assets/jellyseerr.svg
+        link: https://jellyseerr.micasaestu.casa
+        slots:
+          - name: "healthy"
+            check: "https://jellyseerr.micasaestu.casa"
 
       - name: Fetching
         icon: assets/fetching.svg
