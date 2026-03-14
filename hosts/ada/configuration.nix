@@ -1,6 +1,5 @@
 { config, lib, pkgs, ... }:
 {
-  
   age.secrets = {
     wg-server.file = ./../../secrets/wg-server.age;
   };
@@ -15,11 +14,9 @@
     ./prometheus.nix
   ];
 
-
   music.dir = "/data";
   
   boot.initrd.luks.devices."luks-root".fallbackToPassword = true;
-  age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
   # Basic networking (systemd-networkd, ens3 DHCP)
   networking.hostName = "ada";
@@ -31,14 +28,8 @@
   users.users.halfdane = {
     isNormalUser = true;
     extraGroups = [ "wheel" "music" ];
-    group = "halfdane";
+    shell = pkgs.fish;
     openssh.authorizedKeys.keys = [ config.my.sshPubKeys.personal ];
-  };
-
-  # Enable sudo without pw
-  security.sudo = {
-    enable = true;
-    wheelNeedsPassword = false;
   };
 
   # Enable SSH — accessible only through the WireGuard tunnel (wg0 is a
@@ -47,27 +38,7 @@
   # - netcup KVM rescue console and:
   #   sudo nix-env -p /nix/var/nix/profiles/system --rollback
   #   sudo /nix/var/nix/profiles/system/bin/switch-to-configuration switch
-  services.openssh = {
-    enable = true;
-    openFirewall = false;
-    settings.PermitRootLogin = "no";
-    settings.PasswordAuthentication = false;
-  };
-
-  nix.settings = {
-    require-sigs = false;
-    substituters = [
-      "https://halfdane-fetching.cachix.org"
-      "https://halfdane-prometheus-renderer.cachix.org"
-    ];
-    trusted-public-keys = [
-      "halfdane-fetching.cachix.org-1:47X7VUX6TAyHWa8IcE2a3wY9L4KGQUnScTGvrjE8Bvs="
-      "halfdane-prometheus-renderer.cachix.org-1:zm3ooc8nwjZZBJORT5ku5cZIppQzrnL7gCOdLQyW2qI="
-    ];
-  };
-
-  # Timezone
-  time.timeZone = "Europe/Berlin";
+  services.openssh.enable = true;
 
   wireguard = {
     enable = true;
@@ -115,7 +86,6 @@
     node-exporter-btrfs.enable = true;
     node-exporter-btrfs.directoriesToReport = [ "/data" ];
   };
-
   programs.prometheus-renderer.enable = true;
 
     # Hourly Snapper on /home (prunes aggressively)

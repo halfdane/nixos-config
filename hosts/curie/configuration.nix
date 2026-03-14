@@ -5,7 +5,6 @@ let
   userConfig = import ./user-config.nix;
 in
 {
-  age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
   nixpkgs.overlays = [ inputs.nixos-aarch64-widevine.overlays.default ];
   imports = [
     ./hardware-configuration.nix
@@ -22,16 +21,6 @@ in
     autoLogin = "${userConfig.username}";
   };
 
-  nix.settings.trusted-users = [ "user" "@wheel" ];
-  nix.settings.substituters = [
-    "https://halfdane-fetching.cachix.org"
-    "https://cache.nixos.org/"
-  ];
-  nix.settings.trusted-public-keys = [
-    "halfdane-fetching.cachix.org-1:47X7VUX6TAyHWa8IcE2a3wY9L4KGQUnScTGvrjE8Bvs="
-    "cache.nixos.org-1:6NCHGEq59XbeF9/C+hQ2oR815gPjX5F3U52B3p9C8/A="
-  ];
-
   # Enable x86_64 emulation on aarch64
   boot.binfmt.emulatedSystems = [ "x86_64-linux" ];
 
@@ -39,15 +28,10 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
   networking.hostName = "curie";
   networking.networkmanager.enable = true;
 
-  time.timeZone = "Europe/Berlin";
-
-  i18n.defaultLocale = "en_US.UTF-8";
+  # despite using en_us, I still want German locale settings for things like date formatting, measurement units, etc.
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "de_DE.UTF-8";
     LC_IDENTIFICATION = "de_DE.UTF-8";
@@ -77,21 +61,12 @@ in
 
   users.users.${userConfig.username} = {
     isNormalUser = true;
-    description = userConfig.fullName;
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [ config.my.sshPubKeys.personal ];
   };
 
-  security.sudo = {
-    enable = true;
-    # Sudo no pw
-    wheelNeedsPassword = false;
-  };
-
   virtualisation.docker.enable = true;
-  programs.fish.enable = true;
-  programs.prometheus-renderer.enable = true;
     
   nixpkgs.config.allowUnfree = true;
   environment.sessionVariables.MOZ_GMP_PATH = [ "${pkgs.widevine-cdm-lacros}/gmp-widevinecdm/system-installed" ];
@@ -107,7 +82,6 @@ in
     strawberry
     ffmpeg
     jetbrains.idea
-    nodejs
   ];
   programs.git = {
     enable = true;
@@ -116,24 +90,17 @@ in
     };
   };
 
+  # allow kde connect
   networking.firewall = {
     allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
     allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
   };
 
-    # Enable SSH (for remote access)
-
-  programs.nix-ld.enable = true;
-  programs.nix-ld.libraries = with pkgs; [
-    gcc.cc.lib
-    zlib
-  ];
-
-      # Hourly Snapper on /home (prunes aggressively)
+  # Hourly Snapper on /home (prunes aggressively)
   services.snapper.configs.home = {
     SUBVOLUME = "/home";
     FSTYPE = "btrfs";
-    ALLOW_USERS = [ "yourusername" ];  # Replace
+    ALLOW_USERS = [ "${userConfig.username}" ];
     TIMELINE_CREATE = true;
     TIMELINE_CLEANUP = true;
     TIMELINE_MIN_AGE = "1800";

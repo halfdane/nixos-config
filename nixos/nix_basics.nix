@@ -1,6 +1,9 @@
 { config, pkgs, lib, agenix, ... }:
 
 {
+  # host key is usually a safe bet for decrypting secrets
+  age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+
   environment.systemPackages = with pkgs; [
     agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
     jq
@@ -15,6 +18,7 @@
   ];
 
   environment.variables.EDITOR = "vim";
+  programs.fish.enable = true;
 
   nix = {
     package = pkgs.nix;
@@ -33,6 +37,26 @@
   # Lock the root account on all hosts. There is no legitimate reason to log
   # in as root directly — use sudo from a wheel user instead.
   users.users.root.hashedPassword = lib.mkDefault "!";
+  # Timezone
+  time.timeZone = "Europe/Berlin";
+  i18n.defaultLocale = "en_US.UTF-8";
+  # Use latest kernel.
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  # in case anyone enables ssh, the default config is 
+  # to allow only key-based auth and prohibit root login
+  services.openssh = {
+    openFirewall = false;
+    settings.PermitRootLogin = "no";
+    settings.PasswordAuthentication = false;
+  };
+
+  # Enable sudo without pw
+  security.sudo = {
+    enable = true;
+    wheelNeedsPassword = false;
+  };
+  nix.settings.trusted-users = [ "@wheel" ];
 
   # Safety net: rootful podman/docker bypass the NixOS firewall via iptables
   # DNAT. Port bindings must always include an explicit host IP to avoid
