@@ -21,9 +21,6 @@ else
   exit 1
 fi
 
-echo "Updating flake for FETCHing..."
-nix flake update fetching
-
 # Local host? (check hostname)
 CURRENT_HOST="$(hostname)"
 
