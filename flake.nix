@@ -29,26 +29,34 @@
 
   outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, agenix, plasma-manager, fetching, nixpkgs-navidrome, ilias, ... }:
     let
-      nixosModules = [ 
-        ./nixos/nix_basics.nix
-        ./nixos/wireguard.nix
-        inputs.fetching.nixosModules.default
-        ./nixos/maestral.nix
-        ./nixos/kde.nix
-        agenix.nixosModules.default
-        ilias.nixosModules.default
-        inputs.prometheus-renderer.nixosModules.default
-        ./nixos/networking.nix
-        ./secrets/pubkeys.nix
-      ];
-      homeModules = [
-        ./home/everyone.nix
-        ./home/ssh-hosts.nix
-        ./home/ssh-defaults.nix
-        ./home/vscode.nix 
-        ./home/firefox.nix
-        ./home/chrome.nix
-      ];
+      nixosModules =
+        (import ./nixos)
+        ++ [
+          ./secrets/pubkeys.nix
+          inputs.fetching.nixosModules.default
+          agenix.nixosModules.default
+          ilias.nixosModules.default
+          inputs.prometheus-renderer.nixosModules.default
+        ];
+      homeModules = (import ./home);
+      mkHost = import ./lib/mkHost.nix {
+        inherit nixpkgs nixosModules homeModules disko agenix home-manager inputs;
+      };
+      hosts = {
+        curie = {
+          platform = "aarch64-linux";
+            nixosModules = import ./nixos;
+            homeModules = import ./home;
+          username = "user";
+          specialArgs = { inherit inputs agenix; };
+          extraHomeManagerModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
+        };
+        ada = {
+          platform = "x86_64-linux";
+          username = "halfdane";
+          specialArgs = { inherit inputs agenix fetching; nixpkgsNavidrome = nixpkgs-navidrome.legacyPackages.x86_64-linux; };
+        };
+      };
     in {
       packages = {
         x86_64-linux.default = agenix.packages.x86_64-linux.default;
@@ -56,48 +64,16 @@
       };
       nix.channel.enable = false;
 
-      nixosConfigurations = {
-        curie = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs agenix; };
-          modules = nixosModules ++ [
-            { nixpkgs.hostPlatform = "aarch64-linux"; }
-            disko.nixosModules.disko
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.sharedModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
-              home-manager.users.user = { config, pkgs, lib, ... }: {
-                imports = homeModules ++ [
-                  ./hosts/curie/home.nix
-                  ./home/plasma_hacking.nix
-                  inputs.agenix.homeManagerModules.default
-                ];
-              };
-            }
-            ./hosts/curie/configuration.nix
-          ];
-        };
-
-        ada = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs agenix fetching; nixpkgsNavidrome = nixpkgs-navidrome.legacyPackages.x86_64-linux; };
-          modules = nixosModules ++ [
-            { nixpkgs.hostPlatform = "x86_64-linux"; }
-            disko.nixosModules.disko
-            ./hosts/ada/configuration.nix
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.halfdane = { config, pkgs, lib, ... }: {
-                imports = homeModules ++ [
-                  ./hosts/ada/home.nix
-                  inputs.agenix.homeManagerModules.default
-                ];
-              };
-            }
-          ];
-        };
-      };
+      nixosConfigurations = nixpkgs.lib.mapAttrs (name: cfg:
+        mkHost {
+          hostname = name;
+          hostPlatform = cfg.platform;
+          specialArgs = cfg.specialArgs;
+          extraModules = [ ./hosts/${name}/configuration.nix ];
+          homeManagerUser = cfg.username;
+          homeImports = [ ./hosts/${name}/home.nix inputs.agenix.homeManagerModules.default ];
+          extraHomeManagerModules = cfg.extraHomeManagerModules or [];
+        }
+      ) hosts;
     };
 }

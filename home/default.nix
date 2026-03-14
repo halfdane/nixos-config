@@ -1,0 +1,9 @@
+[
+  ./everyone.nix
+  ./ssh-hosts.nix
+  ./ssh-defaults.nix
+  ./vscode.nix
+  ./firefox.nix
+  ./chrome.nix
+  ./plasma_hacking.nix
+]
