@@ -1,5 +1,6 @@
 { config, lib, pkgs, ... }:
 {
+  
   age.secrets = {
     wg-server.file = ./../../secrets/wg-server.age;
   };
@@ -13,6 +14,7 @@
     ./fix_data_dir.nix
     ./prometheus.nix
   ];
+
 
   music.dir = "/data";
   
@@ -130,5 +132,14 @@
     TIMELINE_LIMIT_MONTHLY = "3";
   };
 
-
+  # default route for random subdomains: just refuse connection
+  services.nginx = {
+    enable = true;
+    virtualHosts.default = {
+      serverName = "_";
+      default = true;
+      rejectSSL = true;
+      locations."/".return = "444";
+    };
+  };
 }
