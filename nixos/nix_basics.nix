@@ -6,6 +6,7 @@
 
   environment.systemPackages = with pkgs; [
     agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
+    bashInteractive
     jq
     curl
     wget
