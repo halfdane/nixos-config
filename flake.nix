@@ -57,26 +57,6 @@
       nix.channel.enable = false;
 
       nixosConfigurations = {
-        laptop = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs agenix; };
-          modules = nixosModules ++ [
-            { nixpkgs.hostPlatform = "aarch64-linux"; }
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.sharedModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
-              home-manager.users.tvollert = { config, pkgs, lib, ... }: {
-                imports = homeModules ++ [
-                  ./hosts/laptop/home.nix
-                  ./home/plasma_hacking.nix
-                  inputs.agenix.homeManagerModules.default
-                ];
-              };
-            }
-            ./hosts/laptop/configuration.nix
-          ];
-        };
         curie = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs agenix; };
           modules = nixosModules ++ [
