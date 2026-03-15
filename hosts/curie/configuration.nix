@@ -20,6 +20,7 @@ in
     enable = true;
     autoLogin = "${userConfig.username}";
   };
+  programs.nix-ld.enable = true;
 
   # Enable x86_64 emulation on aarch64
   boot.binfmt.emulatedSystems = [ "x86_64-linux" ];
