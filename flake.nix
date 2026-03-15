@@ -57,6 +57,8 @@
           specialArgs = { inherit inputs agenix fetching; nixpkgsNavidrome = nixpkgs-navidrome.legacyPackages.x86_64-linux; };
         };
       };
+      system = "aarch64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
     in {
       packages = {
         x86_64-linux.default = agenix.packages.x86_64-linux.default;
@@ -75,5 +77,12 @@
           extraHomeManagerModules = cfg.extraHomeManagerModules or [];
         }
       ) hosts;
+
+      devShells.default = pkgs.mkShell {
+        packages = with pkgs; [ pkgs.go-task ];
+        shellHook = ''
+          task --list --sort none
+        '';
+      };
     };
 }

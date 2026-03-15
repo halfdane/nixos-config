@@ -16,6 +16,7 @@
     watchexec
     wireguard-tools
     tree
+    go-task
   ];
 
   environment.variables.EDITOR = "vim";

@@ -1,0 +1,70 @@
+version: '3'
+
+vars:
+  HOST: curie
+  FLAKE_PATH: ".#{{.HOST}}"
+
+tasks:
+  default:
+    cmds:
+      - task --list --sort none
+  
+  curie:
+    desc: Deploy to curie
+    vars:
+      HOST: curie
+    cmds:
+      - task: local
+  
+  ada:
+    desc: Deploy to ada
+    vars:
+      HOST: ada
+    cmds:
+      - task: remote
+
+  local:
+    internal: true
+    requires:
+      vars: [HOST]
+    cmds:
+      - sudo nixos-rebuild switch --flake .#$HOST --no-reexec
+  
+  remote:
+    internal: true
+    requires:
+      vars: [HOST]
+    cmds:
+      - nixos-rebuild switch --flake .#$HOST --no-reexec --target-host "$HOST" --build-host "$HOST" --sudo
+
+  update:
+    desc: Full system update
+    prompt: This will update *everything* in your systems. Do you want to continue?
+    cmds:
+      - nix flake update
+
+  clean:
+    desc: Remove older generations and unused packages
+    cmds:
+      # Delete all generations older than 7 days
+      - sudo nix profile wipe-history --older-than 7d --profile /nix/var/nix/profiles/system
+      # Garbage collect unused packages
+      - sudo nix-collect-garbage --delete-old
+      # Optional: Clean home-manager generations
+      - nix-collect-garbage --delete-old
+    
+  upgrade:
+    desc: Update, Switch, and Clean
+    cmds:
+      - task: update
+      - task: clean
+      - task: curie
+      - task: ada
+
+  kwin_restart:
+    desc: Restart KWin && Plasma
+    prompt: This will probably disrupt your current session... Do you want to continue?
+    cmds:
+      - kwin_wayland --replace &
+      - systemctl --user restart plasma-plasmashell
+
