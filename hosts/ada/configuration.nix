@@ -2,6 +2,7 @@
 {
   age.secrets = {
     wg-server.file = ./../../secrets/wg-server.age;
+    privado-wg.file = ./../../secrets/privado-wg.age;
   };
   imports = [
     ./hardware-configuration-ada.nix
@@ -12,6 +13,7 @@
     ./acme.nix
     ./fix_data_dir.nix
     ./prometheus.nix
+    ./usenet_vpn.nix
   ];
 
   music.dir = "/data";
@@ -51,6 +53,11 @@
       { name = "halfdane_phone"; publicKey = "d+pnZufuTJrUgNV3ssmqYGwmtlv2F2JwWBRa2Jh2tWs="; ip = "10.100.0.3"; }
       { name = "tv_fritzbox"; publicKey = "dsmmCyBb+3By4OC4MHQOPiL/z0nOp5SnN85h8wR1Cz8="; ip = "10.100.0.4"; }
     ];
+  };
+
+  usenet = {
+    enable = true;
+    privateKeyFile = config.age.secrets.privado-wg.path;
   };
 
   services.fetching = {
