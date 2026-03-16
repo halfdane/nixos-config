@@ -93,6 +93,8 @@ in
           "Window Close"      = "Meta+Shift+Q";
           "Window Maximize" = "Meta+F";
           "Show Desktop"      = [];  # clear Meta+D; reassigned to launcher below
+
+          "Activate Window Demanding Attention" = "Meta+U";
         };
 
         # Meta+D → app launcher (replaces dmenu/rofi muscle memory)
