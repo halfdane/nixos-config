@@ -3,6 +3,7 @@
   age.secrets = {
     wg-server.file = ./../../secrets/wg-server.age;
     privado-wg.file = ./../../secrets/privado-wg.age;
+    eweka.file = ./../../secrets/eweka.age;
   };
   imports = [
     ./hardware-configuration-ada.nix
@@ -58,6 +59,11 @@
   usenet = {
     enable = true;
     privateKeyFile = config.age.secrets.privado-wg.path;
+  };
+
+  arr = {
+    enable = true;
+    password = config.age.secrets.eweka;
   };
 
   services.fetching = {

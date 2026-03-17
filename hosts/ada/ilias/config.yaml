@@ -55,6 +55,43 @@ groups:
           - name: "healthy"
             check: "https://fetching.micasaestu.casa"
 
+  - name: "*Arr"
+    tiles:
+      - name: Sonarr
+        icon: assets/sonarr.svg
+        link: https://sonarr.micasaestu.casa
+        slots:
+          - name: "healthy"
+            check: "https://sonarr.micasaestu.casa"
+
+      - name: Radarr
+        icon: assets/radarr.svg
+        link: https://radarr.micasaestu.casa
+        slots:
+          - name: "healthy"
+            check: "https://radarr.micasaestu.casa"
+
+      - name: Prowlarr
+        icon: assets/prowlarr.svg
+        link: https://prowlarr.micasaestu.casa
+        slots:
+          - name: "healthy"
+            check: "https://prowlarr.micasaestu.casa"
+
+      - name: Sabnzbd
+        icon: assets/sabnzbd.svg
+        link: https://sabnzbd.micasaestu.casa
+        slots:
+          - name: "healthy"
+            check: "https://sabnzbd.micasaestu.casa"
+
+      - name: Bazarr
+        icon: assets/bazarr.svg
+        link: https://bazarr.micasaestu.casa
+        slots:
+          - name: "healthy"
+            check: "https://bazarr.micasaestu.casa"
+
   - name: Infrastructure
     tiles:
       - name: TLS cert
