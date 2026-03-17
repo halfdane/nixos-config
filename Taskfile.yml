@@ -1,41 +1,37 @@
 version: '3'
 
-vars:
-  HOST: curie
-  FLAKE_PATH: ".#{{.HOST}}"
-
+silent: true
+ 
 tasks:
   default:
     cmds:
-      - task --list --sort none
-  
-  curie:
-    desc: Deploy to curie
-    vars:
-      HOST: curie
-    cmds:
-      - task: local
-  
-  ada:
-    desc: Deploy to ada
-    vars:
-      HOST: ada
-    cmds:
-      - task: remote
+      - task: deploy:curie
 
-  local:
-    internal: true
-    requires:
-      vars: [HOST]
+  deploy:* :
+    desc: Deploy to a specific target
+    vars:
+      TARGET: '{{index .MATCH 0}}'
+      HOSTNAME:
+        sh: "hostname"
+      ALLOWED_TARGETS: # Dynamically get allowed targets to use in precondition
+        sh: "nix flake show --json 2>/dev/null | jq -r '.nixosConfigurations | keys[]'"
+      NIX_REBUILD_CMD: nixos-rebuild switch --flake .#{{.TARGET}} --no-reexec
+    preconditions:
+      - sh: echo '{{.ALLOWED_TARGETS}}' | grep -q '^{{.TARGET}}$'
+        msg: "Target [{{.TARGET}}] is not in the list of allowed targets: [{{.ALLOWED_TARGETS}}]"
     cmds:
-      - sudo nixos-rebuild switch --flake .#$HOST --no-reexec
+      - echo "    🚀 Deploying to {{.TARGET}}..."
+      - cmd: sudo {{.NIX_REBUILD_CMD}}
+        if: '{{eq .TARGET .HOSTNAME}}'
+      - cmd: '{{.NIX_REBUILD_CMD}} --target-host "{{.TARGET}}" --build-host "{{.TARGET}}" --sudo'
+        if: '{{ne .TARGET .HOSTNAME}}'
+      - cmd: echo "🎉 Deployment to {{.TARGET}} completed successfully! 🎉"
   
-  remote:
-    internal: true
-    requires:
-      vars: [HOST]
-    cmds:
-      - nixos-rebuild switch --flake .#$HOST --no-reexec --target-host "$HOST" --build-host "$HOST" --sudo
+  deploy:all:
+    desc: Deploy to all targets
+    deps:
+      - for: [curie, ada]
+        task: deploy:{{.ITEM}}
 
   update:
     desc: Full system update
@@ -55,11 +51,12 @@ tasks:
     
   upgrade:
     desc: Update, Switch, and Clean
+    output: 'prefixed'
+    deps:
+      - update
     cmds:
-      - task: update
       - task: clean
-      - task: curie
-      - task: ada
+      - task: deploy:all
 
   kwin_restart:
     desc: Restart KWin && Plasma
