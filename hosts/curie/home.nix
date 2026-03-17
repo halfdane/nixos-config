@@ -38,8 +38,8 @@ in
     home-manager 
     kdePackages.kdeconnect-kde
     keepassxc
-    seahorse
     libsecret
+    supersonic
   ];
 
   home.username = userConfig.username;
