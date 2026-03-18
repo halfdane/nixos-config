@@ -90,6 +90,11 @@ in
     };
   };
 
+  hardware.bluetooth = {
+    enable = true; # Aktiviert den Bluetooth-Dienst
+    powerOnBoot = true; # Schaltet Bluetooth beim Systemstart ein
+  };
+
   # allow kde connect
   networking.firewall = {
     allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
