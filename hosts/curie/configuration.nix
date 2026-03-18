@@ -1,9 +1,5 @@
 # Laptop host configuration
-{ config, pkgs, lib, inputs, ... }:
-
-let
-  userConfig = import ./user-config.nix;
-in
+{ config, pkgs, lib, inputs, username, ... }:
 {
   nixpkgs.overlays = [ inputs.nixos-aarch64-widevine.overlays.default ];
   imports = [
@@ -14,11 +10,11 @@ in
   ];
   services.maestral = {
     enable = true;
-    user = "${userConfig.username}";
+    user = "${username}";
   };
   services.kde = {
     enable = true;
-    autoLogin = "${userConfig.username}";
+    autoLogin = "${username}";
   };
   programs.nix-ld.enable = true;
 
@@ -60,7 +56,7 @@ in
     pulse.enable = true;
   };
 
-  users.users.${userConfig.username} = {
+  users.users.${username} = {
     isNormalUser = true;
     extraGroups = [ "networkmanager" "wheel" "docker" "media" ];
     shell = pkgs.fish;
@@ -111,8 +107,8 @@ in
 
   age.secrets.user-ssh-key = {
     file = ./../../secrets/personal_ssh.age;
-    path = "/home/${userConfig.username}/.ssh/id_ed25519";
-    owner = "${userConfig.username}";
+    path = "/home/${username}/.ssh/id_ed25519";
+    owner = "${username}";
     mode = "600";
   };
 

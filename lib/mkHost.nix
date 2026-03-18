@@ -1,7 +1,16 @@
 { nixpkgs, nixosModules, homeModules, disko, agenix, home-manager, inputs, ... }:
-{ hostname, hostPlatform, extraModules ? [], specialArgs ? {}, homeManagerUser, homeImports, extraHomeManagerArgs ? {}, extraHomeManagerModules ? [], ... }:
+{ hostname, 
+  hostPlatform, 
+  extraModules ? [], 
+  specialArgs ? {}, 
+  username, 
+  homeImports, 
+  extraHomeManagerArgs ? {}, 
+  extraHomeManagerModules ? [], 
+  ... 
+}:
   nixpkgs.lib.nixosSystem {
-    inherit specialArgs;
+    specialArgs = specialArgs // { username = username; };
     modules = nixosModules ++ [
       { nixpkgs.hostPlatform = hostPlatform; }
       disko.nixosModules.disko
@@ -12,7 +21,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.sharedModules = extraHomeManagerModules ++ [inputs.plasma-manager.homeModules.plasma-manager];
-          home-manager.users.${homeManagerUser} = { config, pkgs, lib, ... }:
+          home-manager.users.${username} = { config, pkgs, lib, ... }:
             {
               imports = homeModules ++ homeImports;
             } // extraHomeManagerArgs;

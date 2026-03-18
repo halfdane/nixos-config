@@ -72,7 +72,7 @@
           hostPlatform = cfg.platform;
           specialArgs = cfg.specialArgs;
           extraModules = [ ./hosts/${name}/configuration.nix ];
-          homeManagerUser = cfg.username;
+          username = cfg.username;
           homeImports = [ ./hosts/${name}/home.nix inputs.agenix.homeManagerModules.default ];
           extraHomeManagerModules = cfg.extraHomeManagerModules or [];
         }
