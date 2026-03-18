@@ -62,7 +62,7 @@ in
 
   users.users.${userConfig.username} = {
     isNormalUser = true;
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "media" ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [ config.my.sshPubKeys.personal ];
   };
@@ -101,17 +101,10 @@ in
     allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
   };
 
-  # Hourly Snapper on /home (prunes aggressively)
-  services.snapper.configs.home = {
-    SUBVOLUME = "/home";
-    FSTYPE = "btrfs";
-    ALLOW_USERS = [ "${userConfig.username}" ];
-    TIMELINE_CREATE = true;
-    TIMELINE_CLEANUP = true;
-    TIMELINE_MIN_AGE = "1800";
-    TIMELINE_LIMIT_HOURLY = "5";
-    TIMELINE_LIMIT_DAILY = "7";
-    TIMELINE_LIMIT_WEEKLY = "4";
-    TIMELINE_LIMIT_MONTHLY = "3";
-  };
+  # Media group for perms
+  users.groups.media = { };
+  systemd.tmpfiles.rules = [
+    "d /data 2775 root media - -"
+  ];
+
 }

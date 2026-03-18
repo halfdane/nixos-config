@@ -21,15 +21,10 @@ in
     options = [ "map=502/1000:@20/@100" "x-systemd.requires=/mnt/utm" "_netdev" "nofail" ];
   };
 
-  virtualisation.vmVariant = {
-    virtualisation.qemu.guestAgent.enable = true;
-  };
-
   # QEMU/SPICE guest agent for clipboard sharing
   services.qemuGuest.enable = true;
+  virtualisation.vmVariant.virtualisation.qemu.guestAgent.enable = true;
   services.spice-vdagentd.enable = true;
-  
-  # Auto-start spice-vdagent in user session for clipboard support
   systemd.user.services.spice-vdagent = {
     description = "SPICE guest session agent";
     wantedBy = [ "graphical-session.target" ];
@@ -39,6 +34,5 @@ in
       Restart = "always";
     };
   };
-  
   environment.systemPackages = with pkgs; [ spice-vdagent ];
 }
