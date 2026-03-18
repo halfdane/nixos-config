@@ -60,8 +60,18 @@ tasks:
 
   kwin_restart:
     desc: Restart KWin && Plasma
-    prompt: This will probably disrupt your current session... Do you want to continue?
     cmds:
       - kwin_wayland --replace &
       - systemctl --user restart plasma-plasmashell
 
+  new_install:
+    desc: Fresh install on a new machine
+    requires:
+      vars:
+        - name: TARGET_HOST_ROOT_ACCESSIBLE
+    cmds:
+      - "nix run github:nix-community/nixos-anywhere -- root@{{.TARGET_HOST_ROOT_ACCESSIBLE}} --flake .#curie --print-build-logs"
+      - ssh user@{{.TARGET_HOST_ROOT_ACCESSIBLE}} "sudo nixos-generate-config --show-hardware-config" > hosts/curie/hardware-configuration.nix
+      - ssh user@{{.TARGET_HOST_ROOT_ACCESSIBLE}} 'cat /etc/ssh/ssh_host_ed25519_key.pub'
+      - echo "Add the above SSH host key as pubkey to the secrets.nix and rekey the secrets with `cd secrets && agenix -r`"
+      - echo "afterwards just deploy to the new machine and the secrets should be in place"

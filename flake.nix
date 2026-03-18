@@ -77,12 +77,5 @@
           extraHomeManagerModules = cfg.extraHomeManagerModules or [];
         }
       ) hosts;
-
-      devShells.default = pkgs.mkShell {
-        packages = with pkgs; [ pkgs.go-task ];
-        shellHook = ''
-          task --list --sort none
-        '';
-      };
     };
 }

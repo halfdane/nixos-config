@@ -68,6 +68,8 @@ in
   };
 
   virtualisation.docker.enable = true;
+  services.openssh.enable = true;
+  networking.firewall.allowedTCPPorts = [ 22 ];
   
   environment.sessionVariables.MOZ_GMP_PATH = [ "${pkgs.widevine-cdm-lacros}/gmp-widevinecdm/system-installed" ];
   environment.systemPackages = with pkgs; [
@@ -106,5 +108,12 @@ in
   systemd.tmpfiles.rules = [
     "d /data 2775 root media - -"
   ];
+
+  age.secrets.user-ssh-key = {
+    file = ./../../secrets/personal_ssh.age;
+    path = "/home/${userConfig.username}/.ssh/id_ed25519";
+    owner = "${userConfig.username}";
+    mode = "600";
+  };
 
 }
