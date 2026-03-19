@@ -135,7 +135,7 @@ users.groups.media = { };
   
   age.secrets.user-ssh-key = {
     file = ./../../secrets/personal_ssh.age;
-    path = "/home/${username}/.ssh/id_ed25519";
+    path = "/run/agenix/user-ssh-key";
     owner = "${username}";
     mode = "600";
   };

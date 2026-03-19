@@ -45,9 +45,7 @@ in {
       preStart = ''
         echo "Checking if maestral is prepared..."
         ${pkgs.maestral}/bin/maestral auth status 2>/dev/null || {
-          set -x
-          ls -la /run/agenix/maestral
-          whoami
+          rm -rf ~/.config/maestral/maestral.ini
           echo "Not authenticated, so starting initial setup - fetching secrets..."
           [ -r /run/agenix/maestral ] || { echo "Missing secrets"; exit 1; }
           . /run/agenix/maestral

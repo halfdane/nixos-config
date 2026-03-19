@@ -1,6 +1,9 @@
 { config, pkgs, lib, ... }:
 {
   programs.ssh = lib.mkIf config.programs.ssh.enable {
+    extraConfig = ''
+      IdentityFile /run/agenix/user-ssh-key
+    '';
     matchBlocks = {
       ada = {
         host = "ada";

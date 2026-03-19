@@ -7,7 +7,7 @@ in
 
 {
   age = {
-    identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
+    identityPaths = [ "/run/agenix/user-ssh-key" ];
     secrets = {
       github-personal.file = ./../../secrets/github-personal.age;
       github-work.file = ./../../secrets/github-work.age;

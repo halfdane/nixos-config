@@ -88,4 +88,6 @@ tasks:
       - read -p "Hit enter after you added the above SSH host key to the secrets.nix " -r;
       - cd secrets && agenix -r
       - nixos-rebuild switch --flake .#{{.CONFIG_NAME}} --no-reexec --target-host "{{.TARGET_HOST_IP_ROOT_ACCESSIBLE}}" --build-host "{{.TARGET_HOST_IP_ROOT_ACCESSIBLE}}" --sudo 
+      - echo "enter your user password for the fresh keyring"
+      - ssh user@{{.TARGET_HOST_IP_ROOT_ACCESSIBLE}} "systemctl --user restart maestral"
       - echo "nmcli connection import type wireguard file /path/to/your/wg0.conf"

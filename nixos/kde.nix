@@ -30,7 +30,5 @@ in {
     # with autoLogin enabled the PAM password path is skipped entirely, so
     # it provides no benefit and causes sysinit-reactivation.target to hang
     # during nixos-rebuild switch.
-    # To avoid a keyring password prompt on first use, set an empty keyring
-    # password once via `seahorse`.
   };
 }
