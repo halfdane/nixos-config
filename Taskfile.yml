@@ -64,14 +64,28 @@ tasks:
       - kwin_wayland --replace &
       - systemctl --user restart plasma-plasmashell
 
+  lol_test:
+    desc: Just a test task
+    cmds:
+      - echo "This is a test task. Nothing to see here."
+      - echo "continuing"
+
   new_install:
     desc: Fresh install on a new machine
     requires:
       vars:
-        - name: TARGET_HOST_ROOT_ACCESSIBLE
+        - name: TARGET_HOST_IP_ROOT_ACCESSIBLE
+        - name: CONFIG_NAME
+        - name: SKIP_ACTUAL_INSTALL
+          enum: [y,n]
     cmds:
-      - "nix run github:nix-community/nixos-anywhere -- root@{{.TARGET_HOST_ROOT_ACCESSIBLE}} --flake .#curie --print-build-logs"
-      - ssh user@{{.TARGET_HOST_ROOT_ACCESSIBLE}} "sudo nixos-generate-config --show-hardware-config" > hosts/curie/hardware-configuration.nix
-      - ssh user@{{.TARGET_HOST_ROOT_ACCESSIBLE}} 'cat /etc/ssh/ssh_host_ed25519_key.pub'
-      - echo "Add the above SSH host key as pubkey to the secrets.nix and rekey the secrets with `cd secrets && agenix -r`"
-      - echo "afterwards just deploy to the new machine and the secrets should be in place"
+      - cmd: "nix run github:nix-community/nixos-anywhere -- root@{{.TARGET_HOST_IP_ROOT_ACCESSIBLE}} --flake .#{{.CONFIG_NAME}} --print-build-logs"
+        if: '[ "{{.SKIP_ACTUAL_INSTALL}}" != "y" ]'
+      - read -p "Hit enter after you booted into the fresh installation " -r;
+      - ssh user@{{.TARGET_HOST_IP_ROOT_ACCESSIBLE}} "sudo nixos-generate-config --show-hardware-config" > ./hosts/{{.CONFIG_NAME}}/hardware-configuration.nix
+      - read -p "Hit enter after you removed the filesystem entries from ./hosts/{{.CONFIG_NAME}}/hardware-configuration.nix " -r;
+      - ssh user@{{.TARGET_HOST_IP_ROOT_ACCESSIBLE}} 'cat /etc/ssh/ssh_host_ed25519_key.pub'
+      - read -p "Hit enter after you added the above SSH host key to the secrets.nix " -r;
+      - cd secrets && agenix -r
+      - nixos-rebuild switch --flake .#{{.CONFIG_NAME}} --no-reexec --target-host "{{.TARGET_HOST_IP_ROOT_ACCESSIBLE}}" --build-host "{{.TARGET_HOST_IP_ROOT_ACCESSIBLE}}" --sudo 
+      - echo "nmcli connection import type wireguard file /path/to/your/wg0.conf"

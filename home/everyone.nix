@@ -42,4 +42,9 @@
 
   # Version control
   programs.git.enable = true;
+
+  home.file.".taskrc.yml".text = ''
+  "interactive: true"
+'';
+
 }
