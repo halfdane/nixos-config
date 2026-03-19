@@ -5,6 +5,12 @@ in
 {
   options.programs.plasma_hacking = {
     enable = lib.mkEnableOption "Plasma configuration and hotkey overrides for hacking productivity";
+    virtualDesktopsCount = lib.mkOption {
+      type = lib.types.int;
+      default = "1";
+      description = "Username for auto-login (empty = disabled)";
+      example = "halfdane";
+    };
   };
 
   config = lib.mkIf cfg.enable {

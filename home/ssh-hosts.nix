@@ -12,7 +12,7 @@
       };
       curie = {
         host = "curie";
-        hostname = "192.168.64.6";
+        hostname = "192.168.64.8";
         user = "user";
       };
       leguin = {
@@ -20,11 +20,12 @@
         hostname = "192.168.178.103";
         user = "tom";
       };
-      old = {
-        host = "old";
-        hostname = "192.168.178.110";
-        user = "tvollert";
+      tubman = {
+        host = "tubman";
+        hostname = "192.168.178.145";
+        user = "user";
       };
+
     };
   };
 }

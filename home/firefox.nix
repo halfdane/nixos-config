@@ -9,7 +9,27 @@
           "https://addons.mozilla.org/firefox/downloads/latest/multi-account-containers/addon-654046-latest.xpi"
         ];
       };
+
+      PasswordManagerEnabled = false;
+      OfferToSaveLogins = false;
+      OfferToSaveLoginsDefault = false;
+
+      # Show the bookmarks bar by default
+      DisplayBookmarksToolbar = "always";
+
+      # Add bookmarks
+      Bookmarks = [
+        {
+          Title = "OG GPT";
+          URL = "https://oggpt.ottogroup.com/";
+          Placement = "toolbar";
+        }
+        {
+          Title = "Ada";
+          URL = "https://micasaestu.casa";
+          Placement = "toolbar";
+        }
+      ];
     };
   };
 }
-
