@@ -2,6 +2,22 @@
 { config, pkgs, lib, inputs, username, ... }:
 {
   nixpkgs.overlays = [ inputs.nixos-aarch64-widevine.overlays.default ];
+
+  age.secrets = {
+    user-ssh-key = {
+      file = ./../../secrets/personal_ssh.age;
+      path = "/run/agenix/user-ssh-key";
+      owner = "${username}";
+      mode = "600";
+    };
+    "ada_vpn_curie.conf" = {
+      file = ./../../secrets/ada_vpn_curie.age;
+      path = "/run/agenix/ada_vpn_curie.conf";
+      owner = "${username}";
+      mode = "600";
+    };
+  };
+
   imports = [
     ./hardware-configuration.nix
     ./qemu-vm.nix
@@ -132,12 +148,5 @@ users.groups.media = { };
     "d /data/arr/config/prowlarr 2775 root media - -"
     "d /data/arr/config/nzbget 2775 root media - -"
   ];
-  
-  age.secrets.user-ssh-key = {
-    file = ./../../secrets/personal_ssh.age;
-    path = "/run/agenix/user-ssh-key";
-    owner = "${username}";
-    mode = "600";
-  };
 
 }
