@@ -4,6 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ./disko.nix
+    ./arr_stack.nix
   ];
   hardware.enableRedistributableFirmware = true;
 
@@ -20,6 +21,12 @@
     user-ssh-key = {
       file = ./../../secrets/personal_ssh.age;
       path = "/run/agenix/user-ssh-key";
+      owner = "${username}";
+      mode = "600";
+    };
+    "privado_config.conf" = {
+      file = ./../../secrets/privado_config.age;
+      path = "/run/agenix/privado_config.conf";
       owner = "${username}";
       mode = "600";
     };
@@ -93,6 +100,11 @@
   networking.firewall = {
     allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
     allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
+  };
+
+  arr = {
+    enable = true;
+    password = config.age.secrets.eweka;
   };
 
   # Media group for perms

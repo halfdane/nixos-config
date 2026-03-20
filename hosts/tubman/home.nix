@@ -13,6 +13,8 @@
   };
 
   programs.firefox.enable = true;
+
+
   programs.ssh.enable = true;  
   programs.chromium.enable = true;
   programs.plasma_hacking.enable = true;
