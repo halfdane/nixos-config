@@ -1,0 +1,138 @@
+{
+    "guid": "root________",
+    "title": "",
+    "index": 0,
+    "dateAdded": 1773985303016000,
+    "lastModified": 1773985654661000,
+    "id": 1,
+    "typeCode": 2,
+    "type": "text/x-moz-place-container",
+    "root": "placesRoot",
+    "children": [
+        {
+            "guid": "toolbar_____",
+            "title": "toolbar",
+            "index": 1,
+            "dateAdded": 1773985303016000,
+            "lastModified": 1773985654661000,
+            "id": 3,
+            "typeCode": 2,
+            "type": "text/x-moz-place-container",
+            "root": "toolbarFolder",
+            "children": [
+                {
+                    "guid": "PolB-2FtYC9z",
+                    "title": "OG GPT",
+                    "index": 0,
+                    "dateAdded": 1773915688986000,
+                    "lastModified": 1773915688986000,
+                    "id": 12,
+                    "typeCode": 1,
+                    "type": "text/x-moz-place",
+                    "uri": "https://oggpt.ottogroup.com/"
+                },
+                {
+                    "guid": "PolB-_dOsN0o",
+                    "title": "Ada",
+                    "index": 1,
+                    "dateAdded": 1773915689113000,
+                    "lastModified": 1773915689113000,
+                    "id": 13,
+                    "typeCode": 1,
+                    "type": "text/x-moz-place",
+                    "uri": "https://micasaestu.casa/"
+                },
+                {
+                    "guid": "rXbRJuLGN-VO",
+                    "title": "Arr Stack",
+                    "index": 2,
+                    "dateAdded": 1773985635054000,
+                    "lastModified": 1773985654661000,
+                    "id": 18,
+                    "typeCode": 2,
+                    "type": "text/x-moz-place-container",
+                    "children": [
+                        {
+                            "guid": "Zm8g5cOoymbD",
+                            "title": "sonarr",
+                            "index": 0,
+                            "dateAdded": 1773985635054000,
+                            "lastModified": 1773985635054000,
+                            "id": 19,
+                            "typeCode": 1,
+                            "iconUri": "http://tubman:8989/Content/Images/Icons/favicon-16x16.png?h=wksVbPqhKGB2B5P0O0h8IQ",
+                            "type": "text/x-moz-place",
+                            "uri": "http://tubman:8989/"
+                        },
+                        {
+                            "guid": "Ytzij9WkQNO2",
+                            "title": "radarr",
+                            "index": 1,
+                            "dateAdded": 1773985635054000,
+                            "lastModified": 1773985635054000,
+                            "id": 20,
+                            "typeCode": 1,
+                            "type": "text/x-moz-place",
+                            "uri": "http://tubman:7878/"
+                        },
+                        {
+                            "guid": "dOu_nIJ7ebDD",
+                            "title": "prowlarr",
+                            "index": 2,
+                            "dateAdded": 1773985635054000,
+                            "lastModified": 1773985635054000,
+                            "id": 21,
+                            "typeCode": 1,
+                            "type": "text/x-moz-place",
+                            "uri": "http://tubman:9696/"
+                        },
+                        {
+                            "guid": "al2eW707ACPY",
+                            "title": "bazarr",
+                            "index": 3,
+                            "dateAdded": 1773985635054000,
+                            "lastModified": 1773985635054000,
+                            "id": 22,
+                            "typeCode": 1,
+                            "type": "text/x-moz-place",
+                            "uri": "http://tubman:6767/"
+                        },
+                        {
+                            "guid": "I3X5CIGTuu1A",
+                            "title": "sabnzbd",
+                            "index": 4,
+                            "dateAdded": 1773985635054000,
+                            "lastModified": 1773985635054000,
+                            "id": 23,
+                            "typeCode": 1,
+                            "type": "text/x-moz-place",
+                            "uri": "http://tubman:8080/"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "guid": "unfiled_____",
+            "title": "unfiled",
+            "index": 3,
+            "dateAdded": 1773985303016000,
+            "lastModified": 1773985303145000,
+            "id": 5,
+            "typeCode": 2,
+            "type": "text/x-moz-place-container",
+            "root": "unfiledBookmarksFolder"
+        },
+        {
+            "guid": "mobile______",
+            "title": "mobile",
+            "index": 4,
+            "dateAdded": 1773985303023000,
+            "lastModified": 1773985303145000,
+            "id": 6,
+            "typeCode": 2,
+            "type": "text/x-moz-place-container",
+            "root": "mobileFolder"
+        }
+    ]
+}

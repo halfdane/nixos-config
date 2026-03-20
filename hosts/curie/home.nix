@@ -15,7 +15,10 @@ in
   };
 
   programs.vscode.enable = true;
-  programs.firefox.enable = true;
+  programs.firefox = { 
+    enable = true; 
+    bookmarksfile = ./bookmarks.json;
+  };
   programs.ssh.enable = true;  
   programs.chromium.enable = true;
   programs.plasma_hacking.enable = true;
