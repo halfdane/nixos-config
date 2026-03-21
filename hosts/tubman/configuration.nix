@@ -5,6 +5,8 @@
     ./hardware-configuration.nix
     ./disko.nix
     ./arr_stack.nix
+    ./prometheus.nix
+    ./dyndns.nix
   ];
   hardware.enableRedistributableFirmware = true;
 
@@ -30,6 +32,13 @@
       owner = "${username}";
       mode = "600";
     };
+    wg-server = {
+      file = ./../../secrets/wg-server.age;
+      path = "/run/agenix/wg-server";
+      owner = "${username}";
+      mode = "600";
+    };
+    dyndns.file = ./../../secrets/dyndns.age;
   };
   services.maestral = {
     enable = true;
@@ -78,8 +87,9 @@
 
   virtualisation.docker.enable = true;
   services.openssh.enable = true;
-  networking.firewall.allowedTCPPorts = [ 22 ];
-  
+  networking.firewall.allowedTCPPorts = [ 22 53 ];
+  networking.firewall.allowedUDPPorts = [ 53 ];
+
   environment.systemPackages = with pkgs; [
     bindfs
     gst_all_1.gst-plugins-good
@@ -107,38 +117,59 @@
     password = config.age.secrets.eweka;
   };
 
-  # Media group for perms
-  users.groups.media = { };
+  dyndns = {
+    enable = true;
+    secretTokenPath = config.age.secrets.dyndns.path;
+    domain = "micasaestu.dedyn.io";
+  };
 
-  systemd.tmpfiles.rules = [
-    # Top-level /data: 2775 root:media (new files/subdirs inherit media group)
-    "d /data 2775 root media - -"
+  services.ilias = {
+    enable = true;
+    configDir = ./ilias;
+    extraPackages = [ pkgs.openssl ];
+  };
 
-    # Usenet flow
-    "d /data/usenet 2775 root media - -"
-    "d /data/usenet/incomplete 2775 root media - -"
-    "d /data/usenet/complete 2775 root media - -"
-    "d /data/usenet/complete/movies 2775 root media - -"
-    "d /data/usenet/complete/tv 2775 root media - -"
-    "d /data/usenet/complete/music 2775 root media - -"
+  services.prometheus.enable = true;
+  programs.prometheus-renderer.enable = true;
+    services.nginx.virtualHosts."prometheus.tubman" = {
+      serverName = "prometheus.tubman";
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:9090";
+        proxyWebsockets = true;
+      };
+    };
 
-    # Media libraries (Jellyfin/Navidrome scan)
-    "d /data/media 2775 root media - -"
-    "d /data/media/Movies 2775 root media - -"
-    "d /data/media/TV 2775 root media - -"
-    "d /data/media/Music 2775 root media - -"
+  services.nginx.virtualHosts."tubman" = {
+    serverName = "_";
+    default = true;
+    root = builtins.dirOf config.services.ilias.outputPath;
+    locations."/" = {
+      index = builtins.baseNameOf config.services.ilias.outputPath;
+    };
+  };
 
-    # Music manual/beets
-    "d /data/music-incoming 2775 root media - -"
-    "d /data/music-library 2775 root media - -"
+  
+  wireguard = {
+    enable = true;
+    endpointHost = "94.134.111.167";
+    privateKeyFile = config.age.secrets.wg-server.path;
+    dns.domains = [ "micasaestu.dedyn.io" ];
+    peers = [
+      # Add peers here after running scripts/wg-add-peer to generate their keys.
+      { name = "halfdane_phone"; publicKey = "C00UYrkTcB8bsAbdgG0Gx+N0FzXvBBjhAQBduMqRzzQ="; ip = "10.100.0.6"; }
+      { name = "curie"; publicKey = "pg6gxLgNG1Kmq5VqzYlRaL+VSost7Wfx4to/IepaLjg="; ip = "10.100.0.6"; }
+    ];
+  };
 
-    # Configs (separate, tighter perms)
-    "d /data/arr/config 2775 root media - -"
-    "d /data/arr/config/radarr 2775 root media - -"
-    "d /data/arr/config/sonarr 2775 root media - -"
-    "d /data/arr/config/lidarr 2775 root media - -"
-    "d /data/arr/config/prowlarr 2775 root media - -"
-    "d /data/arr/config/nzbget 2775 root media - -"
-  ];
+  services.dnsmasq = {
+    enable = true;
+    settings = {
+      listen-address = [ "127.0.0.1" "192.168.178.145" ];
+      address = [ "/tubman/192.168.178.145" ];
+
+      server = [ "8.8.8.8" "8.8.4.4" "94.140.14.14" "94.140.15.15" ];
+      no-hosts = true;
+    };
+  };
 
 }

@@ -17,6 +17,8 @@
     wireguard-tools
     tree
     go-task
+    dig
+    htop
   ];
 
   environment.variables.EDITOR = "vim";

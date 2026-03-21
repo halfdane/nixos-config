@@ -60,9 +60,9 @@
                             "lastModified": 1773985635054000,
                             "id": 19,
                             "typeCode": 1,
-                            "iconUri": "http://tubman:8989/Content/Images/Icons/favicon-16x16.png?h=wksVbPqhKGB2B5P0O0h8IQ",
+                            "iconUri": "http://sonarr.tubman/Content/Images/Icons/favicon-16x16.png?h=wksVbPqhKGB2B5P0O0h8IQ",
                             "type": "text/x-moz-place",
-                            "uri": "http://tubman:8989/"
+                            "uri": "http://sonarr.tubman/"
                         },
                         {
                             "guid": "Ytzij9WkQNO2",
@@ -72,8 +72,9 @@
                             "lastModified": 1773985635054000,
                             "id": 20,
                             "typeCode": 1,
+                            "iconUri": "http://radarr.tubman/Content/Images/Icons/favicon-16x16.png?h=wksVbPqhKGB2B5P0O0h8IQ",
                             "type": "text/x-moz-place",
-                            "uri": "http://tubman:7878/"
+                            "uri": "http://radarr.tubman/"
                         },
                         {
                             "guid": "dOu_nIJ7ebDD",
@@ -84,7 +85,7 @@
                             "id": 21,
                             "typeCode": 1,
                             "type": "text/x-moz-place",
-                            "uri": "http://tubman:9696/"
+                            "uri": "http://prowlarr.tubman/"
                         },
                         {
                             "guid": "al2eW707ACPY",
@@ -95,7 +96,7 @@
                             "id": 22,
                             "typeCode": 1,
                             "type": "text/x-moz-place",
-                            "uri": "http://tubman:6767/"
+                            "uri": "http://bazarr.tubman/"
                         },
                         {
                             "guid": "I3X5CIGTuu1A",
@@ -106,7 +107,7 @@
                             "id": 23,
                             "typeCode": 1,
                             "type": "text/x-moz-place",
-                            "uri": "http://tubman:8080/"
+                            "uri": "http://sabnzbd.tubman/"
                         }
                     ]
                 }

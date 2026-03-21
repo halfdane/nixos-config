@@ -1,0 +1,192 @@
+title: Welcome to Tubman
+theme: "dark"
+refresh: "5m"
+
+# Defaults are used when nothing is defined at the slot level. They can be overridden by defining rules directly on a slot.
+defaults:
+  rules:
+    - match:
+        code: "^0|2\\d\\d$"
+      status: { id: ok, label: "✅" }
+    - match: {}
+      status: { id: error, label: "❌" }
+
+# YAML anchors: reusable fragments ilias doesn't interpret directly... 
+# it's all just yaml
+_anchors:
+  pct_rules: &pct_rules           # works for disk, memory, CPU …
+    - match:
+        output: "^[0-6]\\d%$|^[0-9]%$"
+      status: { id: ok, label: "✅ <70%" }
+    - match:
+        output: "^[7-8]\\d%$"
+      status: { id: warn, label: "⚠️ 70–89%" }
+    - match: {}
+      status: { id: critical, label: "🔴 ≥90%" }
+
+groups:
+  - name: Media
+    tiles:
+      - name: Music (Navidrome)
+        icon: assets/navidrome.png
+        link: http://music.tubman
+        slots:
+          - name: "healthy"
+            check: "http://music.tubman"
+
+      - name: Video (Jellyfin)
+        icon: assets/jellyfin.svg
+        link: http://jellyfin.tubman
+        slots:
+          - name: "healthy"
+            check: "http://jellyfin.tubman"
+      
+      - name: Requests (Jellyseerr)
+        icon: assets/jellyseerr.svg
+        link: http://jellyseerr.tubman
+        slots:
+          - name: "healthy"
+            check: "http://jellyseerr.tubman"
+
+      - name: Fetching
+        icon: assets/fetching.svg
+        link: http://fetching.tubman
+        slots:
+          - name: "healthy"
+            check: "http://fetching.tubman"
+
+  - name: "*Arr"
+    tiles:
+      - name: Sonarr
+        icon: assets/sonarr.svg
+        link: http://sonarr.tubman
+        slots:
+          - name: "healthy"
+            check: "http://localhost:8989"
+
+      - name: Radarr
+        icon: assets/radarr.svg
+        link: http://radarr.tubman
+        slots:
+          - name: "healthy"
+            check: "http://localhost:7878"
+
+      - name: Prowlarr
+        icon: assets/prowlarr.svg
+        link: http://prowlarr.tubman
+        slots:
+          - name: "healthy"
+            check: "http://localhost:9696"
+
+      - name: Sabnzbd
+        icon: assets/sabnzbd.svg
+        link: http://sabnzbd.tubman
+        slots:
+          - name: "healthy"
+            check: "http://localhost:8080"
+
+      - name: Bazarr
+        icon: assets/bazarr.svg
+        link: http://bazarr.tubman
+        slots:
+          - name: "healthy"
+            check: "http://localhost:6767"
+
+  - name: Systemd
+    tiles:
+      - name: Navidrome service
+        icon: assets/systemd.svg
+        slots:
+          - name: "active"
+            check: "systemctl is-active navidrome"
+
+      - name: Fetching service
+        icon: assets/systemd.svg
+        slots:
+          - name: "active"
+            check: "systemctl is-active fetching"
+
+  - name: Metrics
+    tiles:
+      - name: "CPU Usage"
+        link: "http://prometheus.tubman/graph?g0.expr=sum(rate(node_cpu_seconds_total%7Bmode!%3D%22idle%22%7D%5B5m%5D))%20*%20100&g0.tab=0&g0.range_input=24h"
+        banner:
+          src: "/tmp/ilias_cpu.svg"
+          type: image
+        generate:
+          command: >-
+            prometheus-render 
+            --url http://localhost:9090
+            --query 'sum(rate(node_cpu_seconds_total{mode!="idle"}[5m])) * 100' 
+            --range 24h 
+            --title 'CPU %' 
+            --vlines-query 'nixos_system_version' 
+            --output /tmp/ilias_cpu.svg
+            --smooth
+          timeout: "30s"
+
+      - name: "Memory Usage"
+        link: "http://prometheus.tubman/graph?g0.expr=(1%20-%20node_memory_MemAvailable_bytes%20%2F%20node_memory_MemTotal_bytes)%20*%20100&g0.tab=0&g0.range_input=24h"
+        banner:
+          src: "/tmp/ilias_memory.svg"
+          type: image
+        generate:
+          command: >- 
+            prometheus-render 
+            --url http://localhost:9090
+            --query '(1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100' 
+            --range 24h 
+            --title 'Memory %' 
+            --vlines-query 'nixos_system_version' 
+            --output /tmp/ilias_memory.svg
+            --smooth
+          timeout: "30s"
+
+      - name: "Disk I/O"
+        link: "http://prometheus.tubman/graph?g0.expr=rate(node_disk_io_time_seconds_total%5B5m%5D)&g0.tab=0&g0.range_input=24h"
+        banner:
+          src: "/tmp/ilias_diskio.svg"
+          type: image
+        generate:
+          command: >-
+            prometheus-render 
+            --url http://localhost:9090
+            --query 'rate(node_disk_io_time_seconds_total[5m])' 
+            --range 24h 
+            --title 'Disk I/O (s/s)' 
+            --vlines-query 'nixos_system_version' 
+            --output /tmp/ilias_diskio.svg
+            --smooth
+          timeout: "30s"
+
+      - name: "Network Traffic"
+        link: "http://prometheus.tubman/graph?g0.expr=rate(node_network_receive_bytes_total%7Bdevice!%3D%22lo%22%7D%5B5m%5D)&g0.tab=0&g0.range_input=24h"
+        banner:
+          src: "/tmp/ilias_network.svg"
+          type: image
+        generate:
+          command: >-
+            prometheus-render 
+            --url http://localhost:9090
+            --query 'rate(node_network_receive_bytes_total{device!="lo"}[5m])' 
+            --range 24h 
+            --title 'Network RX (bytes/s)' 
+            --vlines-query 'nixos_system_version' 
+            --output /tmp/ilias_network.svg
+            --smooth
+          timeout: "30s"
+      - name: "Disk Usage (Root)"
+        banner:
+          src: "/tmp/ilias_disk.svg"
+          type: "image"
+        generate:
+          command: >-
+            prometheus-render 
+            --url http://localhost:9090
+            --query '100 * (1 - node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"})'
+            --range 24h --title "Disk % Used/Free" 
+            --vlines-query 'nixos_system_version' 
+            --output /tmp/ilias_disk.svg 
+            --smooth
+          timeout: "30s"
+
