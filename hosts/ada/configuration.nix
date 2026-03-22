@@ -4,6 +4,7 @@
     wg-server.file = ./../../secrets/wg-server.age;
     privado-wg.file = ./../../secrets/privado-wg.age;
     eweka.file = ./../../secrets/eweka.age;
+    hetzner_storage.file = ./../../secrets/hetzner_storage.age;
   };
   imports = [
     ./hardware-configuration-ada.nix
@@ -126,4 +127,13 @@
       locations."/".return = "444";
     };
   };
+
+  services.storagebox = {
+    enable = true;
+    mountpoint = "/mnt/storagebox";
+    sshKeyPath = config.age.secrets.hetzner_storage.path;
+    server     = "u564954.your-storagebox.de";
+    username   = "u564954";
+  };
+
 }

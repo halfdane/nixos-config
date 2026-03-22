@@ -44,7 +44,6 @@ in
       fsType = "fuse.sshfs";
       options = [
         "allow_other"
-        "_netdev"
 
         # Makes mount automatically reconnect on network drop
         "reconnect"
