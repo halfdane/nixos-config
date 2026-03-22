@@ -3,12 +3,8 @@
   services.navidrome = {
     enable = true;
     package = nixpkgsNavidrome.navidrome;
-    # openFirewall is intentionally omitted — wg0 is a trusted interface
-    # (see nixos/wireguard.nix), so navidrome is reachable over the WireGuard
-    # tunnel without opening any public ports.
-    group = "music";
     settings = {
-      MusicFolder = "/data/Music";
+      MusicFolder = "/mnt/storagebox/media/music/";
       Address = "127.0.0.1";
       ND_DEFAULTPLAYLISTPUBLICVISIBILITY = true;
     };

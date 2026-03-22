@@ -71,10 +71,9 @@
   services.fetching = {
     enable = true;
     port = 9733;
-    outputDir = "/data/Music";
+    outputDir = "/mnt/storagebox/music-incoming/";
     trackTemplate = "{artist}/{year}-{album}/{track_number}-{title}";
     user = "fetching";
-    group = "music";
     nginx = {
       enable = true;
       hostName = "fetching.micasaestu.casa";

@@ -7,8 +7,8 @@
   programs.beets = {
     enable = true;
     settings = {
-      directory = "/data/Music";
-      library = "/data/Music/library.db";
+      directory = "/mnt/storagebox/media/music/";
+      library = "/mnt/storagebox/media/music/library.db";
       plugins = [ "info" "scrub" "missing" "duplicates" "ftintitle" "fetchart" "musicbrainz" "spotify" "lyrics" "lastgenre" ];
       import = {
         move = true;
