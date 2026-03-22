@@ -4,4 +4,5 @@
   ./maestral.nix
   ./kde.nix
   ./networking.nix
+  ./storagebox.nix
 ]

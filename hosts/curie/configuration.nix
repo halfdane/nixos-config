@@ -16,6 +16,7 @@
       owner = "${username}";
       mode = "600";
     };
+    hetzner_storage.file = ./../../secrets/hetzner_storage.age;
   };
 
   imports = [
@@ -74,7 +75,7 @@
 
   users.users.${username} = {
     isNormalUser = true;
-    extraGroups = [ "networkmanager" "wheel" "docker" "media" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [ config.my.sshPubKeys.personal ];
   };
@@ -115,38 +116,11 @@
     allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
   };
 
-  # Media group for perms
-users.groups.media = { };
-
-  systemd.tmpfiles.rules = [
-    # Top-level /data: 2775 root:media (new files/subdirs inherit media group)
-    "d /data 2775 root media - -"
-
-    # Usenet flow
-    "d /data/usenet 2775 root media - -"
-    "d /data/usenet/incomplete 2775 root media - -"
-    "d /data/usenet/complete 2775 root media - -"
-    "d /data/usenet/complete/movies 2775 root media - -"
-    "d /data/usenet/complete/tv 2775 root media - -"
-    "d /data/usenet/complete/music 2775 root media - -"
-
-    # Media libraries (Jellyfin/Navidrome scan)
-    "d /data/media 2775 root media - -"
-    "d /data/media/Movies 2775 root media - -"
-    "d /data/media/TV 2775 root media - -"
-    "d /data/media/Music 2775 root media - -"
-
-    # Music manual/beets
-    "d /data/music-incoming 2775 root media - -"
-    "d /data/music-library 2775 root media - -"
-
-    # Configs (separate, tighter perms)
-    "d /data/arr/config 2775 root media - -"
-    "d /data/arr/config/radarr 2775 root media - -"
-    "d /data/arr/config/sonarr 2775 root media - -"
-    "d /data/arr/config/lidarr 2775 root media - -"
-    "d /data/arr/config/prowlarr 2775 root media - -"
-    "d /data/arr/config/nzbget 2775 root media - -"
-  ];
-
+  services.storagebox = {
+    enable = true;
+    mountpoint = "/mnt/storagebox";
+    sshKeyPath = config.age.secrets.hetzner_storage.path;
+    server     = "u564954.your-storagebox.de";
+    username   = "u564954";
+  };
 }
