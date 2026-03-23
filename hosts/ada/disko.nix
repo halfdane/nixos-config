@@ -46,23 +46,12 @@
     };
   };
 
-  # Swapfile (8GB example)
-  swapDevices = [{
-    device = "/swapfile/swapfile";
-    size = 8192;
-    randomEncryption.enable = true;
-  }];
-
-  # Swapfile setup (now on ext4: disable CoW not needed, but truncate/mkswap)
-  systemd.services.initrd-setup-swapfile = {
-    wantedBy = [ "initrd-setup.service" ];
-    before = [ "initrd-setup.service" ];
-    script = ''
-      mkdir -p /swapfile
-      truncate -s 8G /swapfile/swapfile
-      chattr +C /swapfile/swapfile
-      mkswap /swapfile/swapfile
-      chmod 600 /swapfile/swapfile
-    '';
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 100;  # Max 3.8G compressed
+    priority = 100;
   };
+  boot.kernel.sysctl."vm.swappiness" = 180;  # Aggressively use zram
+
 }

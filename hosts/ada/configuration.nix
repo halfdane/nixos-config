@@ -2,7 +2,7 @@
 {
   age.secrets = {
     wg-server.file = ./../../secrets/wg-server.age;
-    privado-wg.file = ./../../secrets/privado-wg.age;
+    privado_config.file = ./../../secrets/privado_config.age;
     eweka.file = ./../../secrets/eweka.age;
     hetzner_storage.file = ./../../secrets/hetzner_storage.age;
   };
@@ -10,17 +10,14 @@
     ./hardware-configuration.nix
     ./disko.nix
     ./navidrome.nix
-    ./jellyfin.nix
-    ./arr_stack.nix
+    ./nixarr.nix
     ./acme.nix
     ./prometheus.nix
-    ./usenet_vpn.nix
   ];
   
   boot.initrd.availableKernelModules = [ "virtio_scsi" "virtio_blk" "virtio_pci" "ata_piix" ];
   boot.initrd.kernelModules = [ "dm-crypt" "cryptd" ];
   boot.initrd.luks.devices."luks-root".fallbackToPassword = true;
-
 
   # Basic networking (systemd-networkd, ens3 DHCP)
   networking.hostName = "ada";
@@ -59,10 +56,11 @@
     ];
   };
 
-  # usenet = {
-  #   enable = true;
-  #   privateKeyFile = config.age.secrets.privado-wg.path;
-  # };
+  nixarr = {
+    enable = true;
+    wgConfigPath = config.age.secrets.privado_config.path;
+  };
+
 
   # arr = {
   #   enable = true;

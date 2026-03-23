@@ -89,9 +89,9 @@ in
 
   config = lib.mkIf config.wireguard.enable {
     # Allow packets to be forwarded between peers (hub-and-spoke routing).
-    boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
+    boot.kernel.sysctl."net.ipv4.ip_forward" = lib.mkDefault 1;
 
-    networking.wireguard.interfaces.wg0 = {
+    networking.wireguard.interfaces."wg-server" = {
       ips = [ "${config.wireguard.serverIp}/24" ];
       listenPort = config.wireguard.listenPort;
       privateKeyFile = config.wireguard.privateKeyFile;
@@ -106,7 +106,7 @@ in
 
     # Trust all traffic that has already been cryptographically verified by
     # WireGuard — same pattern as trustedInterfaces for other overlay networks.
-    networking.firewall.trustedInterfaces = [ "wg0" ];
+    networking.firewall.trustedInterfaces = [ "wg-server" ];
 
     # WireGuard's only public-facing surface: one UDP port.
     networking.firewall.allowedUDPPorts = [ config.wireguard.listenPort ];

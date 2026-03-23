@@ -25,9 +25,13 @@
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";  # Pin to your nixpkgs
     };
+
+    nixarr.url = "github:nix-media-server/nixarr";
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, disko, agenix, plasma-manager, fetching, nixpkgs-navidrome, ilias, ... }:
+  outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, 
+                      disko, agenix, plasma-manager, fetching, 
+                      nixpkgs-navidrome, ilias, nixarr, ... }:
     let
       nixosModules =
         (import ./nixos)
@@ -37,6 +41,7 @@
           agenix.nixosModules.default
           ilias.nixosModules.default
           inputs.prometheus-renderer.nixosModules.default
+          nixarr.nixosModules.default
         ];
       homeModules = (import ./home);
       mkHost = import ./lib/mkHost.nix {

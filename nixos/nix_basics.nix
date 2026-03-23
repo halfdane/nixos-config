@@ -62,6 +62,15 @@
   };
   nix.settings.trusted-users = [ "@wheel" ];
 
+  # let oom killer become active earlier: before the whole machine crashes and burns!
+  services.earlyoom = {
+    enable = true;
+    freeMemThreshold = 3;  # Kill at 3% RAM
+    freeSwapThreshold = 10;
+    extraArgs = [ "-g" ];  # GPU ignore if any
+  };
+
+
   # Safety net: rootful podman/docker bypass the NixOS firewall via iptables
   # DNAT. Port bindings must always include an explicit host IP to avoid
   # binding to 0.0.0.0 and becoming publicly reachable.
