@@ -61,25 +61,19 @@
     wgConfigPath = config.age.secrets.privado_config.path;
   };
 
-
-  # arr = {
-  #   enable = true;
-  #   password = config.age.secrets.eweka;
-  # };
-
-  # services.fetching = {
-  #   enable = true;
-  #   port = 9733;
-  #   outputDir = "/mnt/storagebox/music-incoming/";
-  #   trackTemplate = "{artist}/{year}-{album}/{track_number}-{title}";
-  #   user = "fetching";
-  #   nginx = {
-  #     enable = true;
-  #     hostName = "fetching.micasaestu.casa";
-  #     forceSSL = true;
-  #     acmeHost = "micasaestu.casa";
-  #   };
-  # };
+  services.fetching = {
+    enable = true;
+    port = 9733;
+    outputDir = "/mnt/storagebox/media/fetching";
+    trackTemplate = "{artist}/{year}-{album}/{track_number}-{title}";
+    user = "fetching";
+    nginx = {
+      enable = true;
+      hostName = "fetching.micasaestu.casa";
+      forceSSL = true;
+      acmeHost = "micasaestu.casa";
+    };
+  };
 
   services.ilias = {
     enable = true;
