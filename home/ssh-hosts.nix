@@ -8,7 +8,7 @@
       ada = {
         host = "ada";
         hostname = "10.100.0.1";
-        user = "halfdane";
+        user = "user";
       };
       curie = {
         host = "curie";

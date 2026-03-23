@@ -2,10 +2,13 @@
   boot.loader = {
     systemd-boot.enable = true;
     efi = {
-      canTouchEfiVariables = false;  # VPS firmware no vars
+      canTouchEfiVariables = false;
       efiSysMountPoint = "/boot";
     };
   };
+  boot.initrd.availableKernelModules = [ "virtio_scsi" "virtio_blk" "virtio_pci" ];
+  boot.initrd.kernelModules = [ "dm-crypt" "cryptd" ];
+  boot.initrd.luks.devices."luks-root".fallbackToPassword = true;
 
   disko.devices = {
     disk.vda = {
@@ -22,6 +25,7 @@
               type = "filesystem";
               format = "vfat";
               mountpoint = "/boot";
+              mountOptions = [ "umask=0077" ];
             };
           };
           luks = {
@@ -30,40 +34,11 @@
               type = "luks";
               name = "luks-root";
               settings.allowDiscards = true;
-              content = {
-                type = "btrfs";
-                extraArgs = [ "-f" ];
-                subvolumes = {
-                  "@" = {
-                    mountpoint = "/";
-                    mountOptions = [ "noatime" "compress=zstd:1" "space_cache=v2" ];
-                  };
-                  "@home" = {
-                    mountpoint = "/home";
-                    mountOptions = [ "noatime" "compress=zstd:1" "space_cache=v2" ];
-                  };
-                  "@nix" = {
-                    mountpoint = "/nix";
-                    mountOptions = [ "noatime" "compress=zstd:1" "space_cache=v2" ];
-                  };
-                  "@varlog" = {
-                    mountpoint = "/var/log";
-                    mountOptions = [ "noatime" "compress=zstd:1" "space_cache=v2" ];
-                  };
-                  "@persist" = {
-                    mountpoint = "/persist";
-                    mountOptions = [ "noatime" "compress=zstd:1" "space_cache=v2" ];
-                  };
-                  "@swapfile" = {
-                    mountpoint = "/swapfile";
-                    mountOptions = [ "noatime" "nodatacow" "nodatasum" "space_cache=v2" ];
-                  };
-                  "@data" = {
-                    mountpoint = "/data";
-                    mountOptions = [ "noatime" "compress=zstd:1" "space_cache=v2" ];
-                  };
+                content = {
+                  type = "filesystem";
+                  format = "ext4";
+                  mountpoint = "/";
                 };
-              };
             };
           };
         };
@@ -78,36 +53,16 @@
     randomEncryption.enable = true;
   }];
 
-  # Swapfile setup (disable CoW, create file)
+  # Swapfile setup (now on ext4: disable CoW not needed, but truncate/mkswap)
   systemd.services.initrd-setup-swapfile = {
     wantedBy = [ "initrd-setup.service" ];
     before = [ "initrd-setup.service" ];
     script = ''
-      chattr +C /swapfile
+      mkdir -p /swapfile
       truncate -s 8G /swapfile/swapfile
+      chattr +C /swapfile/swapfile
       mkswap /swapfile/swapfile
+      chmod 600 /swapfile/swapfile
     '';
   };
-
-  # /home quota (50GB)
-  # systemd.services.btrfs-home-quota = {
-  #   description = "Set BTRFS quota for /home";
-  #   after = [ "local-fs.target" ];
-  #   wantedBy = [ "multi-user.target" ];
-  #   serviceConfig.Type = "oneshot";
-  #   script = ''
-  #     btrfs quota enable /
-  #     HOME_QGROUP=$(btrfs qgroup show /home | grep -o '0/[0-9]*' | head -1)
-  #     btrfs qgroup create $HOME_QGROUP /
-  #     btrfs qgroup limit 50G $HOME_QGROUP /
-  #   '';
-  # };
-
-  # Optional: Impermanence (@persist for state)
-  # Uncomment + add environment.persistence."/persist" for your files
-  # fileSystems."/persist" needs UUID or label reference if needed
-  # environment.persistence."/persist" = {
-  #   directories = [ "/var/lib" ];
-  #   files = [ "/etc/machine-id" ];
-  # };
 }

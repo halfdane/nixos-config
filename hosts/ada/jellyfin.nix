@@ -1,23 +1,10 @@
 { config, pkgs, lib, ... }:
 let
   domain = "micasaestu.casa";
-  mediaDir = "/data/Videos";  # Put Ted Lasso here post-setup
 in
 {
-  # Media group for perms
-  users.groups.media = { };
-
-  services.jellyfin = {
-    enable = true;
-    group = "media";
-    # Data in persist/home/data for your LUKS setup
-    dataDir = "/var/lib/jellyfin";
-  };
-
-  services.jellyseerr = {
-    enable = true;
-    configDir = "/var/lib/jellyseerr/config";  # Avoid module bugs [web:70][web:82]
-  };
+  services.jellyfin.enable = true;
+  services.jellyseerr.enable = true;
 
   services.nginx.virtualHosts."video.${domain}" = {
     useACMEHost = domain;
@@ -45,8 +32,4 @@ in
     };
   };
 
-  # Perms for media dir (run once or via activation)
-  systemd.tmpfiles.rules = [
-    "Z ${mediaDir} media:media 0775"
-  ];
 }

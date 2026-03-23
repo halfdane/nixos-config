@@ -53,7 +53,7 @@
         };
         ada = {
           platform = "x86_64-linux";
-          username = "halfdane";
+          username = "user";
           specialArgs = { inherit inputs agenix fetching; nixpkgsNavidrome = nixpkgs-navidrome.legacyPackages.x86_64-linux; };
         };
         tubman = {

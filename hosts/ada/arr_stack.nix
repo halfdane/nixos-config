@@ -13,30 +13,10 @@ let domain = "micasaestu.casa"; in {
   config = lib.mkIf config.arr.enable {
 
     services.prowlarr.enable = true;
-    services.sonarr = { enable = true; group = "media"; };
-    services.radarr = { enable = true; group = "media"; };
-    services.bazarr = { enable = true; group = "media"; };
-
-    services.sabnzbd = {
-      enable = true;
-      group = "media";
-      user = "sabnzbd";
-      settings = {
-        misc.port = 8080;
-        servers = [
-          {
-            name = "eweka";
-            host = "news.eweka.nl";
-            port = 563;  # SSL
-            username = "c09545ddc163deac";
-            password = config.age.secrets.eweka;
-            connections = 20;
-            ssl = true;
-            priority = 1;
-          }
-        ];
-      };
-    };
+    services.sonarr.enable = true;
+    services.radarr.enable = true;
+    services.bazarr.enable = true;
+    services.sabnzbd.enable = true;
 
     services.nginx.virtualHosts."prowlarr.${domain}" = {
       useACMEHost = domain;

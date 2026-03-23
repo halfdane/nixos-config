@@ -7,20 +7,20 @@
     hetzner_storage.file = ./../../secrets/hetzner_storage.age;
   };
   imports = [
-    ./hardware-configuration-ada.nix
+    ./hardware-configuration.nix
     ./disko.nix
     ./navidrome.nix
     ./jellyfin.nix
     ./arr_stack.nix
     ./acme.nix
-    ./fix_data_dir.nix
     ./prometheus.nix
     ./usenet_vpn.nix
   ];
-
-  music.dir = "/data";
   
+  boot.initrd.availableKernelModules = [ "virtio_scsi" "virtio_blk" "virtio_pci" "ata_piix" ];
+  boot.initrd.kernelModules = [ "dm-crypt" "cryptd" ];
   boot.initrd.luks.devices."luks-root".fallbackToPassword = true;
+
 
   # Basic networking (systemd-networkd, ens3 DHCP)
   networking.hostName = "ada";
@@ -28,8 +28,8 @@
   systemd.network.enable = true;
   networking.interfaces.ens3.useDHCP = true;
 
-  users.groups.halfdane = {};
-  users.users.halfdane = {
+  users.groups.user = {};
+  users.users.user = {
     isNormalUser = true;
     extraGroups = [ "wheel" "music" ];
     shell = pkgs.fish;
@@ -43,6 +43,7 @@
   #   sudo nix-env -p /nix/var/nix/profiles/system --rollback
   #   sudo /nix/var/nix/profiles/system/bin/switch-to-configuration switch
   services.openssh.enable = true;
+  networking.firewall.allowedTCPPorts = [ 22 ];
 
   wireguard = {
     enable = true;
@@ -58,29 +59,29 @@
     ];
   };
 
-  usenet = {
-    enable = true;
-    privateKeyFile = config.age.secrets.privado-wg.path;
-  };
+  # usenet = {
+  #   enable = true;
+  #   privateKeyFile = config.age.secrets.privado-wg.path;
+  # };
 
-  arr = {
-    enable = true;
-    password = config.age.secrets.eweka;
-  };
+  # arr = {
+  #   enable = true;
+  #   password = config.age.secrets.eweka;
+  # };
 
-  services.fetching = {
-    enable = true;
-    port = 9733;
-    outputDir = "/mnt/storagebox/music-incoming/";
-    trackTemplate = "{artist}/{year}-{album}/{track_number}-{title}";
-    user = "fetching";
-    nginx = {
-      enable = true;
-      hostName = "fetching.micasaestu.casa";
-      forceSSL = true;
-      acmeHost = "micasaestu.casa";
-    };
-  };
+  # services.fetching = {
+  #   enable = true;
+  #   port = 9733;
+  #   outputDir = "/mnt/storagebox/music-incoming/";
+  #   trackTemplate = "{artist}/{year}-{album}/{track_number}-{title}";
+  #   user = "fetching";
+  #   nginx = {
+  #     enable = true;
+  #     hostName = "fetching.micasaestu.casa";
+  #     forceSSL = true;
+  #     acmeHost = "micasaestu.casa";
+  #   };
+  # };
 
   services.ilias = {
     enable = true;
@@ -95,26 +96,8 @@
     };
   };
 
-  prometheus = {
-    enable = true;
-    node-exporter-btrfs.enable = true;
-    node-exporter-btrfs.directoriesToReport = [ "/data" ];
-  };
+  prometheus.enable = true;
   programs.prometheus-renderer.enable = true;
-
-    # Hourly Snapper on /home (prunes aggressively)
-  services.snapper.configs.home = {
-    SUBVOLUME = "/home";
-    FSTYPE = "btrfs";
-    ALLOW_USERS = [ "halfdane" ];  # Replace
-    TIMELINE_CREATE = true;
-    TIMELINE_CLEANUP = true;
-    TIMELINE_MIN_AGE = "1800";
-    TIMELINE_LIMIT_HOURLY = "5";
-    TIMELINE_LIMIT_DAILY = "7";
-    TIMELINE_LIMIT_WEEKLY = "4";
-    TIMELINE_LIMIT_MONTHLY = "3";
-  };
 
   # default route for random subdomains: just refuse connection
   services.nginx = {

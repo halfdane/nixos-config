@@ -13,12 +13,25 @@
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
 
-  # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
-  # (the default) this is the recommended approach. When using systemd-networkd it's
-  # still possible to use this option, but it's recommended to use it in conjunction
-  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
-  networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.ens3.useDHCP = lib.mkDefault true;
+  # Swapfile (8GB example)
+  swapDevices = [{
+    device = "/swapfile/swapfile";
+    size = 8192;
+    randomEncryption.enable = true;
+  }];
+
+  # Swapfile setup (now on ext4: disable CoW not needed, but truncate/mkswap)
+  systemd.services.initrd-setup-swapfile = {
+    wantedBy = [ "initrd-setup.service" ];
+    before = [ "initrd-setup.service" ];
+    script = ''
+      truncate -s 8G /swapfile/swapfile
+      chattr +C /swapfile/swapfile  # Optional: nodatacow-like
+      mkswap /swapfile/swapfile
+      chmod 600 /swapfile/swapfile
+    '';
+  };
+
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }
