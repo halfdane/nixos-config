@@ -4,9 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ./disko.nix
-    ./arr_stack.nix
     ./prometheus.nix
-    ./dyndns.nix
   ];
   hardware.enableRedistributableFirmware = true;
 
@@ -26,19 +24,7 @@
       owner = "${username}";
       mode = "600";
     };
-    "privado_config.conf" = {
-      file = ./../../secrets/privado_config.age;
-      path = "/run/agenix/privado_config.conf";
-      owner = "${username}";
-      mode = "600";
-    };
-    wg-server = {
-      file = ./../../secrets/wg-server.age;
-      path = "/run/agenix/wg-server";
-      owner = "${username}";
-      mode = "600";
-    };
-    dyndns.file = ./../../secrets/dyndns.age;
+    hetzner_storage.file = ./../../secrets/hetzner_storage.age;
   };
   services.maestral = {
     enable = true;
@@ -112,23 +98,6 @@
     allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
   };
 
-  arr = {
-    enable = true;
-    password = config.age.secrets.eweka;
-  };
-
-  dyndns = {
-    enable = true;
-    secretTokenPath = config.age.secrets.dyndns.path;
-    domain = "micasaestu.dedyn.io";
-  };
-
-  services.ilias = {
-    enable = true;
-    configDir = ./ilias;
-    extraPackages = [ pkgs.openssl ];
-  };
-
   services.prometheus.enable = true;
   programs.prometheus-renderer.enable = true;
     services.nginx.virtualHosts."prometheus.tubman" = {
@@ -148,28 +117,12 @@
     };
   };
 
-  
-  wireguard = {
+  services.storagebox = {
     enable = true;
-    endpointHost = "94.134.111.167";
-    privateKeyFile = config.age.secrets.wg-server.path;
-    dns.domains = [ "micasaestu.dedyn.io" ];
-    peers = [
-      # Add peers here after running scripts/wg-add-peer to generate their keys.
-      { name = "halfdane_phone"; publicKey = "C00UYrkTcB8bsAbdgG0Gx+N0FzXvBBjhAQBduMqRzzQ="; ip = "10.100.0.6"; }
-      { name = "curie"; publicKey = "pg6gxLgNG1Kmq5VqzYlRaL+VSost7Wfx4to/IepaLjg="; ip = "10.100.0.6"; }
-    ];
-  };
-
-  services.dnsmasq = {
-    enable = true;
-    settings = {
-      listen-address = [ "127.0.0.1" "192.168.178.145" ];
-      address = [ "/tubman/192.168.178.145" ];
-
-      server = [ "8.8.8.8" "8.8.4.4" "94.140.14.14" "94.140.15.15" ];
-      no-hosts = true;
-    };
+    mountpoint = "/mnt/storagebox";
+    sshKeyPath = config.age.secrets.hetzner_storage.path;
+    server     = "u564954.your-storagebox.de";
+    username   = "u564954";
   };
 
 }

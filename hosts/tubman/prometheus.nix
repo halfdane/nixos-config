@@ -24,13 +24,5 @@
       "Z /var/lib/node_exporter/textfile_collector 0775 node-exporter node-exporter - -"  # Z=recursive
     ];
 
-    # services.nginx.virtualHosts."prometheus.micasaestu.casa" = {
-    #   useACMEHost = "micasaestu.casa";
-    #   forceSSL = true;
-    #   locations."/" = {
-    #     proxyPass = "http://127.0.0.1:9090";
-    #     proxyWebsockets = true;
-    #   };
-    # };
   };
 }
