@@ -16,10 +16,10 @@ defaults:
 _anchors:
   pct_rules: &pct_rules           # works for disk, memory, CPU …
     - match:
-        output: "^[0-6]\\d%$|^[0-9]%$"
+        output: "^[0-6]\\d$|^[0-9]$"
       status: { id: ok, label: "✅ <70%" }
     - match:
-        output: "^[7-8]\\d%$"
+        output: "^[7-8]\\d$"
       status: { id: warn, label: "⚠️ 70–89%" }
     - match: {}
       status: { id: critical, label: "🔴 ≥90%" }
@@ -106,20 +106,6 @@ groups:
               - match: {}
                 status: { id: "error", label: "🔴 expires soon!" }
 
-  - name: Systemd
-    tiles:
-      - name: Navidrome service
-        icon: assets/systemd.svg
-        slots:
-          - name: "active"
-            check: "systemctl is-active navidrome"
-
-      - name: Fetching service
-        icon: assets/systemd.svg
-        slots:
-          - name: "active"
-            check: "systemctl is-active fetching"
-
   - name: Metrics
     tiles:
       - name: "CPU Usage"
@@ -155,6 +141,32 @@ groups:
             --output /tmp/ilias_memory.svg
             --smooth
           timeout: "30s"
+        slots:
+          - name: "usage"
+            check: "free | grep Mem | awk '{printf \"%.f\", $3/$2 * 100.0}'"
+            rules: *pct_rules
+
+      - name: "Swap Usage"
+        link: "https://prometheus.micasaestu.casa/graph?g0.expr=(1%20-%20node_memory_SwapFree_bytes%20%2F%20node_memory_SwapTotal_bytes)%20*%20100&g0.tab=0&g0.range_input=24h"
+        banner:
+          src: "/tmp/ilias_swap.svg"
+          type: image
+        generate:
+          command: >- 
+            prometheus-render 
+            --url https://prometheus.micasaestu.casa
+            --query '(1 - node_memory_SwapFree_bytes / node_memory_SwapTotal_bytes) * 100' 
+            --range 24h 
+            --title 'Swap %' 
+            --vlines-query 'nixos_system_version' 
+            --output /tmp/ilias_swap.svg
+            --smooth
+          timeout: "30s"
+        slots:
+          - name: "usage"
+            check: "free | grep Swap | awk '{printf \"%.f\", $3/$2 * 100.0}'"
+            rules: *pct_rules
+
 
       - name: "Disk I/O"
         link: "https://prometheus.micasaestu.casa/graph?g0.expr=rate(node_disk_io_time_seconds_total%5B5m%5D)&g0.tab=0&g0.range_input=24h"
@@ -203,7 +215,11 @@ groups:
             --output /tmp/ilias_disk.svg 
             --smooth
           timeout: "30s"
-      - name: "Disk Usage (Music)"
+        slots:
+          - name: "usage"
+            check: "df / --output=pcent | tail -1 | tr -d ' %'"
+            rules: *pct_rules
+      - name: "Disk Usage (media)"
         banner:
           src: "/tmp/ilias_disk_music.svg"
           type: "image"
@@ -211,15 +227,15 @@ groups:
           command: >-
             prometheus-render 
             --url https://prometheus.micasaestu.casa
-            --query '100 * (1 - node_filesystem_avail_bytes{mountpoint="/data"} / node_filesystem_size_bytes{mountpoint="/data"})'
-            --range 24h --title "Music % Used/Free" 
+            --query '100 * (1 - node_filesystem_avail_bytes{mountpoint="/mnt/storagebox"} / node_filesystem_size_bytes{mountpoint="/mnt/storagebox"})'
+            --range 24h --title "Media % Used/Free" 
             --vlines-query 'nixos_system_version' 
             --output /tmp/ilias_disk_music.svg 
             --smooth
           timeout: "30s"
         slots:
           - name: "usage"
-            check: "df /data/Music --output=pcent | tail -1 | tr -d ' '"
+            check: "df /mnt/storagebox --output=pcent | tail -1 | tr -d ' %'"
             rules: *pct_rules
 
 
