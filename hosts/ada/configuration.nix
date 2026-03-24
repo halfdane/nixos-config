@@ -49,7 +49,6 @@
     dns.domains = [ "micasaestu.casa" ];
     peers = [
       # Add peers here after running scripts/wg-add-peer to generate their keys.
-      { name = "curie-old"; publicKey = "qMIIXDuMy813aF/fvHs7jW8TyDqunlPtkk29zCWwKnI="; ip = "10.100.0.2"; }
       { name = "halfdane_phone"; publicKey = "d+pnZufuTJrUgNV3ssmqYGwmtlv2F2JwWBRa2Jh2tWs="; ip = "10.100.0.3"; }
       { name = "tv_fritzbox"; publicKey = "dsmmCyBb+3By4OC4MHQOPiL/z0nOp5SnN85h8wR1Cz8="; ip = "10.100.0.4"; }
       { name = "curie"; publicKey = "5Fj83zAxSWewFghe2VuoM7Nd++cFRUNyKcuPmoJZflY="; ip = "10.100.0.5"; }
