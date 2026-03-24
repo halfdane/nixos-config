@@ -26,7 +26,10 @@
       sabnzbd = {
         enable = true;
         vpn.enable = true;
-        # force news.eweka.nl through vpn? 
+      };
+      transmission = {
+        enable = true;
+        vpn.enable = true;
       };
 
       jellyfin.enable = true;
@@ -88,11 +91,27 @@
         proxyWebsockets = true;
       };
     };
+    services.nginx.virtualHosts."lidarr.${config.nixarr.domain}" = {
+      useACMEHost = config.nixarr.domain;
+      forceSSL = true;
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:8686";
+        proxyWebsockets = true;
+      };
+    };
     services.nginx.virtualHosts."sabnzbd.${config.nixarr.domain}" = {
       useACMEHost = config.nixarr.domain;
       forceSSL = true;
       locations."/" = {
         proxyPass = "http://127.0.0.1:6336";
+        proxyWebsockets = true;
+      };
+    };
+    services.nginx.virtualHosts."transmission.${config.nixarr.domain}" = {
+      useACMEHost = config.nixarr.domain;
+      forceSSL = true;
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:9091";
         proxyWebsockets = true;
       };
     };
@@ -105,5 +124,18 @@
       };
     };
 
+    systemd.services.prometheus-wireguard-exporter-ns = {
+      description = "WireGuard Exporter for wg namespace";
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        ExecStart = "${pkgs.prometheus-wireguard-exporter}/bin/prometheus_wireguard_exporter -p 9587 -i wg0";
+        Restart = "always";
+        User = "prometheus-exporter";
+      };
+      preStart = ''
+        ip netns exec wg wg show wg0 dump || true
+      '';
+    };
   };
 }
