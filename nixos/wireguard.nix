@@ -23,6 +23,13 @@ let
       ${builtins.readFile ../scripts/wg-add-peer}
     '';
   };
+  wg-scraper = pkgs.writeShellApplication {
+    name = "wg-scraper";
+    runtimeInputs = [ pkgs.wireguard-tools pkgs.iproute2 ];
+    text = ''
+      ${builtins.readFile ../scripts/wg-scraper}
+    '';
+  };
 in
 {
   options.wireguard = {
@@ -138,7 +145,29 @@ in
       };
     };
 
+    # prometheus metrics exporter service + timer
+    systemd.services.wireguard-metrics = {
+      description = "WireGuard Prometheus metrics collector";
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        User = "root";
+        ExecStart = "${wg-scraper}/bin/wg-scraper";
+        RemainAfterExit = true;
+      };
+    };
+    
+    systemd.timers.wireguard-metrics = {
+      description = "Run WireGuard metrics collection periodically";
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnUnitActiveSec = "30s";  # Every 30 seconds
+        AccuracySec = "1m";
+        Persistent = true;
+      };
+    };
+    
     # Install the peer-onboarding helper on the server.
-    environment.systemPackages = [ wg-add-peer ];
+    environment.systemPackages = [ wg-add-peer wg-scraper ];
   };
 }

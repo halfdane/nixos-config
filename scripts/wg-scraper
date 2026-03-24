@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -euo pipefail
+echo "Collecting WireGuard metrics as user $(whoami)..."
+
+OUTPUT="/var/lib/node_exporter/textfile_collector/wireguard.prom"
+
+echo "Ensuring output directory exists at $(dirname "$OUTPUT")..."
+mkdir -p "$(dirname "$OUTPUT")"
+
+parse_wg_output() {
+  local namespace="$1"
+  local command="$2"
+
+  $command | { 
+    read -r # skip first line
+    while IFS=$'\t' read -r iface pubkey _preshared_key _endpoint allowed latest_handshake rx_bytes tx_bytes _keepalive; do
+      # Peer up/down gauge
+      handshake_age=$(( $(date +%s) - latest_handshake ))
+      peer_up=0
+      if [[ "$latest_handshake" != "0" && "$handshake_age" -lt 180 ]]; then
+        peer_up=1
+      fi
+      
+      # Emit metrics
+      cat << EOF
+wireguard_latest_handshake_seconds{namespace="$namespace",interface="$iface",public_key="${pubkey:0:8}...",allowed_ips="$allowed",peer_up="$peer_up"} $handshake_age
+wireguard_bytes_received_total{namespace="$namespace",interface="$iface",public_key="${pubkey:0:8}...",allowed_ips="$allowed",peer_up="$peer_up"} $rx_bytes
+wireguard_bytes_sent_total{namespace="$namespace",interface="$iface",public_key="${pubkey:0:8}...",allowed_ips="$allowed",peer_up="$peer_up"} $tx_bytes
+EOF
+  done }
+}
+
+# Header for this interface/namespace (only once)
+cat << EOF > $OUTPUT
+# HELP wireguard_bytes_sent_total Bytes sent to peer in namespace
+# TYPE wireguard_bytes_sent_total counter
+# HELP wireguard_bytes_received_total Bytes received from peer in namespace
+# TYPE wireguard_bytes_received_total counter
+# HELP wireguard_latest_handshake_seconds Age of last handshake in namespace
+# TYPE wireguard_latest_handshake_seconds gauge
+EOF
+
+parse_wg_output "global" "wg show all dump" >> $OUTPUT
+
+# Namespaces
+for ns in /var/run/netns/*; do
+  ns_name=${ns##*/}; 
+  parse_wg_output "$ns_name" "ip netns exec $ns_name wg show all dump" >> $OUTPUT
+done
+
+echo "WireGuard metrics collected and written to $OUTPUT"

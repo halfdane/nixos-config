@@ -6,7 +6,19 @@
     settings = {
       directory = "/mnt/storagebox/media/music/";
       library = "/mnt/storagebox/media/music/library.db";
-      plugins = [ "info" "scrub" "missing" "duplicates" "ftintitle" "fetchart" "musicbrainz" "spotify" "lyrics" "lastgenre" ];
+      plugins = [ 
+        "info" 
+        "scrub" 
+        "missing" 
+        "duplicates" 
+        "ftintitle" 
+        "fetchart" 
+        "musicbrainz" 
+        "spotify" 
+        "lyrics" 
+        "lastgenre" 
+        "convert"
+      ];
       import = {
         move = true;
         duplicate_action = "merge";
@@ -17,6 +29,13 @@
         default = "$album_artist_no_feat/$year-$album/$track-$title";
       };
       asciify_paths = true;
+      convert = {
+        auto = true;
+        format = "opus";
+        never_convert_lossy_formats = true;
+        formats.opus = "ffmpeg -i $source -y -vn -acodec libopus -ab 128k $dest";
+
+      };
 
       musicbrainz = {
         genres = false;
