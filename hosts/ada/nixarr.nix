@@ -123,19 +123,5 @@
         proxyWebsockets = true;
       };
     };
-
-    systemd.services.prometheus-wireguard-exporter-ns = {
-      description = "WireGuard Exporter for wg namespace";
-      after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        ExecStart = "${pkgs.prometheus-wireguard-exporter}/bin/prometheus_wireguard_exporter -p 9587 -i wg0";
-        Restart = "always";
-        User = "prometheus-exporter";
-      };
-      preStart = ''
-        ip netns exec wg wg show wg0 dump || true
-      '';
-    };
   };
 }
