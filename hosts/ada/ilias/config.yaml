@@ -70,6 +70,13 @@ groups:
         slots:
           - name: "healthy"
             check: "https://radarr.micasaestu.casa"
+      
+      - name: Lidarr
+        icon: assets/lidarr.svg
+        link: https://lidarr.micasaestu.casa
+        slots:
+          - name: "healthy"
+            check: "https://lidarr.micasaestu.casa"
 
       - name: Prowlarr
         icon: assets/prowlarr.svg
@@ -91,6 +98,13 @@ groups:
         slots:
           - name: "healthy"
             check: "https://bazarr.micasaestu.casa"
+
+      - name: Transmission
+        icon: assets/transmission.svg
+        link: https://transmission.micasaestu.casa
+        slots:
+          - name: "healthy"
+            check: "https://transmission.micasaestu.casa"
 
   - name: Infrastructure
     tiles:
