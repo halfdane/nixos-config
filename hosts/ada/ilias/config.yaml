@@ -123,7 +123,6 @@ groups:
             --vlines-query 'nixos_system_version' 
             --output /tmp/ilias_cpu.svg
             --smooth
-          timeout: "30s"
 
       - name: "Memory Usage"
         link: "https://prometheus.micasaestu.casa/graph?g0.expr=(1%20-%20node_memory_MemAvailable_bytes%20%2F%20node_memory_MemTotal_bytes)%20*%20100&g0.tab=0&g0.range_input=24h"
@@ -140,7 +139,6 @@ groups:
             --vlines-query 'nixos_system_version' 
             --output /tmp/ilias_memory.svg
             --smooth
-          timeout: "30s"
         slots:
           - name: "usage"
             check: "free | grep Mem | awk '{printf \"%.f\", $3/$2 * 100.0}'"
@@ -161,13 +159,10 @@ groups:
             --vlines-query 'nixos_system_version' 
             --output /tmp/ilias_swap.svg
             --smooth
-          timeout: "30s"
         slots:
           - name: "usage"
             check: "free | grep Swap | awk '{printf \"%.f\", $3/$2 * 100.0}'"
             rules: *pct_rules
-
-
       - name: "Disk I/O"
         link: "https://prometheus.micasaestu.casa/graph?g0.expr=rate(node_disk_io_time_seconds_total%5B5m%5D)&g0.tab=0&g0.range_input=24h"
         banner:
@@ -183,8 +178,6 @@ groups:
             --vlines-query 'nixos_system_version' 
             --output /tmp/ilias_diskio.svg
             --smooth
-          timeout: "30s"
-
       - name: "Network Traffic"
         link: "https://prometheus.micasaestu.casa/graph?g0.expr=rate(node_network_receive_bytes_total%7Bdevice!%3D%22lo%22%7D%5B5m%5D)&g0.tab=0&g0.range_input=24h"
         banner:
@@ -201,6 +194,21 @@ groups:
             --output /tmp/ilias_network.svg
             --smooth
           timeout: "30s"
+      - name: "Wireguard Traffic"
+        link: "https://prometheus.micasaestu.casa/query?g0.expr=rate(wireguard_bytes_received_total{peer_up=\"1\"}[5m])&g0.tab=graph&g0.range_input=1d"
+        banner:
+          src: "/tmp/ilias_wireguard.svg"
+          type: image
+        generate:
+          command: >-
+            prometheus-render 
+            --url https://prometheus.micasaestu.casa
+            --query 'rate(wireguard_bytes_received_total{peer_up="1"}[5m])' 
+            --range 24h 
+            --title 'WG RX (bytes/s)' 
+            --vlines-query 'nixos_system_version' 
+            --output /tmp/ilias_wireguard.svg
+            --smooth
       - name: "Disk Usage (Root)"
         banner:
           src: "/tmp/ilias_disk.svg"
@@ -214,7 +222,6 @@ groups:
             --vlines-query 'nixos_system_version' 
             --output /tmp/ilias_disk.svg 
             --smooth
-          timeout: "30s"
         slots:
           - name: "usage"
             check: "df / --output=pcent | tail -1 | tr -d ' %'"
@@ -232,7 +239,6 @@ groups:
             --vlines-query 'nixos_system_version' 
             --output /tmp/ilias_disk_music.svg 
             --smooth
-          timeout: "30s"
         slots:
           - name: "usage"
             check: "df /mnt/storagebox --output=pcent | tail -1 | tr -d ' %'"
