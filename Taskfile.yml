@@ -11,6 +11,7 @@ tasks:
     desc: Deploy to a specific target
     vars:
       TARGET: '{{index .MATCH 0}}'
+      TARGET_HOST: '{{.TARGET_HOST| default .TARGET}}'
       HOSTNAME:
         sh: "hostname"
       ALLOWED_TARGETS: # Dynamically get allowed targets to use in precondition
@@ -20,12 +21,12 @@ tasks:
       - sh: echo '{{.ALLOWED_TARGETS}}' | grep -q '^{{.TARGET}}$'
         msg: "Target [{{.TARGET}}] is not in the list of allowed targets: [{{.ALLOWED_TARGETS}}]"
     cmds:
-      - echo "    🚀 Deploying to {{.TARGET}}..."
+      - echo "    🚀 Deploying flake .#{{.TARGET}} to host {{.TARGET_HOST}}..."
       - cmd: sudo {{.NIX_REBUILD_CMD}}
-        if: '{{eq .TARGET .HOSTNAME}}'
-      - cmd: '{{.NIX_REBUILD_CMD}} --target-host "{{.TARGET}}" --build-host "{{.TARGET}}" --sudo'
-        if: '{{ne .TARGET .HOSTNAME}}'
-      - cmd: echo "🎉 Deployment to {{.TARGET}} completed successfully! 🎉"
+        if: '{{eq .TARGET_HOST .HOSTNAME}}'
+      - cmd: '{{.NIX_REBUILD_CMD}} --target-host "{{.TARGET_HOST}}" --build-host "{{.TARGET_HOST}}" --sudo'
+        if: '{{ne .TARGET_HOST .HOSTNAME}}'
+      - cmd: echo "🎉 Deployment to {{.TARGET_HOST}} completed successfully! 🎉"
   
   deploy:all:
     desc: Deploy to all targets
@@ -69,25 +70,42 @@ tasks:
     cmds:
       - echo "This is a test task. Nothing to see here."
       - echo "continuing"
+  
+  rekey_secrets:
+    desc: Rekey secrets with agenix
+    cmds:
+      - cd secrets && agenix -r
+
+  add_ada_vpn:
+    desc: Add the current Wireguard peer config to the VPN
+    requires:
+      vars:
+        - name: USER_ON_TARGET_HOST
+        - name: TARGET_HOST_IP_USER_ACCESSIBLE
+    cmds:
+      - ssh {{.USER_ON_TARGET_HOST}}@{{.TARGET_HOST_IP_USER_ACCESSIBLE}} "nmcli connection import type wireguard file /var/run/agenix/ada_vpn_curie.conf"
 
   new_install:
     desc: Fresh install on a new machine
     requires:
       vars:
-        - name: TARGET_HOST_IP_ROOT_ACCESSIBLE
+        - name: USER_ON_TARGET_HOST
+        - name: TARGET_HOST_IP_USER_ACCESSIBLE
         - name: CONFIG_NAME
         - name: SKIP_ACTUAL_INSTALL
           enum: [y,n]
     cmds:
-      - cmd: "nix run github:nix-community/nixos-anywhere -- root@{{.TARGET_HOST_IP_ROOT_ACCESSIBLE}} --flake .#{{.CONFIG_NAME}} --print-build-logs"
+      - cmd: "nix run github:nix-community/nixos-anywhere -- {{.USER_ON_TARGET_HOST}}@{{.TARGET_HOST_IP_USER_ACCESSIBLE}} --flake .#{{.CONFIG_NAME}} --print-build-logs"
         if: '[ "{{.SKIP_ACTUAL_INSTALL}}" != "y" ]'
-      - read -p "Hit enter after you booted into the fresh installation " -r;
-      - ssh user@{{.TARGET_HOST_IP_ROOT_ACCESSIBLE}} "sudo nixos-generate-config --show-hardware-config" > ./hosts/{{.CONFIG_NAME}}/hardware-configuration.nix
-      - read -p "Hit enter after you removed the filesystem entries from ./hosts/{{.CONFIG_NAME}}/hardware-configuration.nix " -r;
-      - ssh user@{{.TARGET_HOST_IP_ROOT_ACCESSIBLE}} 'cat /etc/ssh/ssh_host_ed25519_key.pub'
-      - read -p "Hit enter after you added the above SSH host key to the secrets.nix " -r;
-      - cd secrets && agenix -r
-      - nixos-rebuild switch --flake .#{{.CONFIG_NAME}} --no-reexec --target-host "{{.TARGET_HOST_IP_ROOT_ACCESSIBLE}}" --build-host "{{.TARGET_HOST_IP_ROOT_ACCESSIBLE}}" --sudo 
-      - read -p "Hit enter after you entered your user password for the fresh keyring" -r;
-      - ssh user@{{.TARGET_HOST_IP_ROOT_ACCESSIBLE}} "systemctl --user restart maestral"
-      - ssh user@{{.TARGET_HOST_IP_ROOT_ACCESSIBLE}} "nmcli connection import type wireguard file /var/run/agenix/ada_vpn_curie.conf"
+      - read -p "Wait for boot into new config, then hit enter to get the hardware configuration" -r;
+      - ssh {{.USER_ON_TARGET_HOST}}@{{.TARGET_HOST_IP_USER_ACCESSIBLE}} "sudo nixos-generate-config --show-hardware-config" > ./hosts/{{.CONFIG_NAME}}/hardware-configuration.nix
+      - read -p "Adjusted filesystem entries from ./hosts/{{.CONFIG_NAME}}/hardware-configuration.nix , then hit enter for the ssh key" -r;
+      - ssh {{.USER_ON_TARGET_HOST}}@{{.TARGET_HOST_IP_USER_ACCESSIBLE}} 'cat /etc/ssh/ssh_host_ed25519_key.pub'
+      - read -p "Hit enter after you added the above SSH host key to the pubkeys_attrset.nix " -r;
+      - task: rekey_secrets
+      - task: deploy:{{.CONFIG_NAME}}
+        vars: { TARGET_HOST: .TARGET_HOST_IP_USER_ACCESSIBLE }
+      - task: add_ada_vpn
+        vars: 
+          TARGET_HOST_IP_USER_ACCESSIBLE: "{{.TARGET_HOST_IP_USER_ACCESSIBLE}}"
+          USER_ON_TARGET_HOST: "{{.USER_ON_TARGET_HOST}}"
