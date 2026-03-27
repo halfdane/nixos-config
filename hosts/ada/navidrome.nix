@@ -3,7 +3,7 @@
   services.navidrome = {
     enable = true;
     settings = {
-      MusicFolder = "/mnt/storagebox/media/music/";
+      MusicFolder = "/mnt/storagebox/media/library/music/";
       Address = "127.0.0.1";
       ND_DEFAULTPLAYLISTPUBLICVISIBILITY = true;
     };

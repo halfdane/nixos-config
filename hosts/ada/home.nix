@@ -4,37 +4,33 @@
   programs.beets = {
     enable = true;
     settings = {
-      directory = "/mnt/storagebox/media/music/";
-      library = "/mnt/storagebox/media/music/library.db";
+      directory = "/mnt/storagebox/media/library/music/";
+      library = "/mnt/storagebox/media/library/music/library.db";
       plugins = [ 
-        "info" 
-        "scrub" 
-        "missing" 
-        "duplicates" 
-        "ftintitle" 
         "fetchart" 
+        "ftintitle" 
         "musicbrainz" 
         "spotify" 
         "lyrics" 
         "lastgenre" 
         "convert"
+        "the"
       ];
       import = {
         move = true;
         duplicate_action = "merge";
-        incremental = true;
         incremental_skip_later = false;
       };
       paths = {
-        default = "$album_artist_no_feat/$year-$album/$track-$title";
+        default = "%the{$album_artist_no_feat}/$year-$album/$track-$title";
       };
       asciify_paths = true;
       convert = {
         auto = true;
         format = "opus";
-        never_convert_lossy_formats = true;
+        no_convert = "^path::\.(flac)$";
+        never_convert_lossy_formats = "yes";
         formats.opus = "ffmpeg -i $source -y -vn -acodec libopus -ab 128k $dest";
-
       };
 
       musicbrainz = {
