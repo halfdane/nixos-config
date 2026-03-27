@@ -1,8 +1,7 @@
-{ config, pkgs, lib, nixpkgsNavidrome, ... }:
+{ config, pkgs, lib, ... }:
 {
   services.navidrome = {
     enable = true;
-    package = nixpkgsNavidrome.navidrome;
     settings = {
       MusicFolder = "/mnt/storagebox/media/music/";
       Address = "127.0.0.1";

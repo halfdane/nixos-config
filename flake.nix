@@ -17,10 +17,6 @@
     prometheus-renderer.url = "github:halfdane/prometheus-renderer";
     prometheus-renderer.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Pinned to the nixpkgs commit ada's working navidrome was built from.
-    # Update only once a navidrome build is confirmed working in a newer commit.
-    nixpkgs-navidrome.url = "github:NixOS/nixpkgs/0182a361324364ae3f436a63005877674cf45efb";
-
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";  # Pin to your nixpkgs
@@ -31,7 +27,7 @@
 
   outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, 
                       disko, agenix, plasma-manager, fetching, 
-                      nixpkgs-navidrome, ilias, nixarr, ... }:
+                      ilias, nixarr, ... }:
     let
       nixosModules =
         (import ./nixos)
@@ -59,7 +55,7 @@
         ada = {
           platform = "x86_64-linux";
           username = "user";
-          specialArgs = { inherit inputs agenix fetching; nixpkgsNavidrome = nixpkgs-navidrome.legacyPackages.x86_64-linux; };
+          specialArgs = { inherit inputs agenix fetching; };
         };
         tubman = {
           platform = "x86_64-linux";
