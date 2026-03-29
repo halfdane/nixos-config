@@ -1,10 +1,7 @@
-{ config, pkgs, inputs, lib, ... }:
+{ config, pkgs, inputs, lib, username, ... }:
 let
   userConfig = import ./user-config.nix;
-  username = userConfig.username;
-  homeDir = "/home/${username}";
 in
-
 {
   age = {
     identityPaths = [ "/run/agenix/user-ssh-key" ];
@@ -44,8 +41,6 @@ in
     libsecret
     supersonic
   ];
-
-  home.username = userConfig.username;
 
   programs.git = {
     enable = true;

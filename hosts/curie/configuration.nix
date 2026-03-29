@@ -1,5 +1,5 @@
 # Laptop host configuration
-{ config, pkgs, lib, inputs, username, ... }:
+{ config, pkgs, lib, inputs, username, hostname, ... }:
 {
   nixpkgs.overlays = [ inputs.nixos-aarch64-widevine.overlays.default ];
 
@@ -42,7 +42,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "curie";
+  networking.hostName = hostname;
   networking.networkmanager.enable = true;
 
   # despite using en_us, I still want German locale settings for things like date formatting, measurement units, etc.
