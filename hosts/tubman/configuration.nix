@@ -1,5 +1,5 @@
 # Laptop host configuration
-{ config, pkgs, lib, inputs, username, ... }:
+{ config, pkgs, lib, inputs, username, hostname, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -12,7 +12,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "tubman";
+  networking.hostName = hostname;
   networking.networkmanager.enable = true;
   networking.wireless.enable = true;
   programs.nm-applet.enable = true;
@@ -100,15 +100,15 @@
 
   services.prometheus.enable = true;
   programs.prometheus-renderer.enable = true;
-    services.nginx.virtualHosts."prometheus.tubman" = {
-      serverName = "prometheus.tubman";
+    services.nginx.virtualHosts."prometheus.${hostname}" = {
+      serverName = "prometheus.${hostname}";
       locations."/" = {
         proxyPass = "http://127.0.0.1:9090";
         proxyWebsockets = true;
       };
     };
 
-  services.nginx.virtualHosts."tubman" = {
+  services.nginx.virtualHosts."${hostname}" = {
     serverName = "_";
     default = true;
     root = builtins.dirOf config.services.ilias.outputPath;
