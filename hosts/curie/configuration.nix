@@ -81,7 +81,6 @@
 
   virtualisation.docker.enable = true;
   services.openssh.enable = true;
-  networking.firewall.allowedTCPPorts = [ 22 ];
   
   environment.sessionVariables.MOZ_GMP_PATH = [ "${pkgs.widevine-cdm-lacros}/gmp-widevinecdm/system-installed" ];
   environment.systemPackages = with pkgs; [
