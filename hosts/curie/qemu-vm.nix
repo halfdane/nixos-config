@@ -1,11 +1,5 @@
 # QEMU/UTM specific configuration
-{ config, pkgs, ... }:
-
-let
-  userConfig = import ./user-config.nix;
-  username = userConfig.username;
-  homeDir = "/home/${username}";
-in
+{ config, pkgs, username, hostname, ... }:
 {
   # VirtFS shared folder from UTM
   fileSystems."/mnt/utm" = {
@@ -15,7 +9,7 @@ in
   };
 
   # bindfs mount to remap UID/GID (macOS UID 502 -> NixOS UID 1000, macOS GID 20 -> NixOS GID 100)
-  fileSystems."${homeDir}/utm" = {
+  fileSystems."/home/${username}/utm" = {
     device = "/mnt/utm";
     fsType = "fuse.bindfs";
     options = [ "map=502/1000:@20/@100" "x-systemd.requires=/mnt/utm" "_netdev" "nofail" ];

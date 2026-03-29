@@ -18,21 +18,9 @@ in
   };
   programs.ssh.enable = true;  
   programs.chromium.enable = true;
+  
   programs.plasma_hacking.enable = true;
-
-  programs.plasma = {
-    enable = true;
-    kscreenlocker.autoLock = false;
-    kscreenlocker.lockOnResume = false;
-    kscreenlocker.lockOnStartup = false;
-    kscreenlocker.passwordRequired = false;
-    configFile.kscreenlockerrc = {
-      Daemon = {
-        Autolock = false;
-      };
-    };
-  };
-
+  programs.plasma.enable = true;
 
   home.packages = with pkgs; [ 
     home-manager 
