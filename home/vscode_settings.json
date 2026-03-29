@@ -9,5 +9,6 @@
     "workbench.colorTheme": "Visual Studio Dark",
     "git.confirmSync": false,
     "git.enableSmartCommit": true,
-    "explorer.confirmDelete": false
+    "explorer.confirmDelete": false,
+    "chat.viewSessions.orientation": "stacked"
   }
