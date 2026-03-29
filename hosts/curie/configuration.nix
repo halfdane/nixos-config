@@ -1,4 +1,3 @@
-# Laptop host configuration
 { config, pkgs, lib, inputs, username, hostname, ... }:
 {
   nixpkgs.overlays = [ inputs.nixos-aarch64-widevine.overlays.default ];

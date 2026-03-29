@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, pkgs, lib, inputs, username, hostname, ... }:
 {
   age.secrets = {
     wg-server.file = ./../../secrets/wg-server.age;
@@ -20,13 +20,13 @@
   boot.initrd.luks.devices."luks-root".fallbackToPassword = true;
 
   # Basic networking (systemd-networkd, ens3 DHCP)
-  networking.hostName = "ada";
+  networking.hostName = hostname;
   networking.useDHCP = false;
   systemd.network.enable = true;
   networking.interfaces.ens3.useDHCP = true;
 
-  users.groups.user = {};
-  users.users.user = {
+  users.groups.${username} = {};
+  users.users.${username} = {
     isNormalUser = true;
     extraGroups = [ "wheel" "music" ];
     shell = pkgs.fish;
