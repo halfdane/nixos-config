@@ -13,6 +13,7 @@
     ./nixarr.nix
     ./acme.nix
     ./prometheus.nix
+    ./paperless.nix
   ];
   
   boot.initrd.availableKernelModules = [ "virtio_scsi" "virtio_blk" "virtio_pci" "ata_piix" ];
@@ -108,5 +109,7 @@
     server     = "u564954.your-storagebox.de";
     username   = "u564954";
   };
+
+  services.paperless.enable = true;
 
 }
