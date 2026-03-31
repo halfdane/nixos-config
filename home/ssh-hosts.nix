@@ -18,7 +18,7 @@
       leguin = {
         host = "leguin";
         hostname = "192.168.178.103";
-        user = "tom";
+        user = "user";
       };
       tubman = {
         host = "tubman";

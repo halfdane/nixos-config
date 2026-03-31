@@ -1,7 +1,5 @@
 { config, pkgs, lib, inputs, username, hostname, ... }:
 {
-  nixpkgs.overlays = [ inputs.nixos-aarch64-widevine.overlays.default ];
-
   age.secrets = {
     user-ssh-key = {
       file = ./../../secrets/personal_ssh.age;
@@ -68,7 +66,6 @@
   services.openssh.enable = true;
   networking.firewall.allowedTCPPorts = [ 22 ];
   
-  environment.sessionVariables.MOZ_GMP_PATH = [ "${pkgs.widevine-cdm-lacros}/gmp-widevinecdm/system-installed" ];
   environment.systemPackages = with pkgs; [
     bindfs
     file
