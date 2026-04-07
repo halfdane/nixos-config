@@ -1,7 +1,12 @@
 {
     "rust-analyzer.server.path": "rust-analyzer",
-    "chat.instructionsFilesLocations": {
+    "chat": {
+      "instructionsFilesLocations": {
       "~/global-instructions": true
+      },
+      "agentFilesLocations": {
+        "~/.agents/agents": true
+      }
     },
     "explorer.confirmDragAndDrop": false,
     "svelte.enable-ts-plugin": true,
