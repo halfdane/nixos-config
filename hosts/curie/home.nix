@@ -29,6 +29,7 @@ in
     libsecret
     supersonic
     voxtype
+    vlc
   ];
 
   programs.git = {
