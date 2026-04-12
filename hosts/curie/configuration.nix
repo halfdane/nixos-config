@@ -74,7 +74,7 @@
 
   users.users.${username} = {
     isNormalUser = true;
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "input"];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [ config.my.sshPubKeys.personal ];
   };
@@ -121,4 +121,8 @@
     server     = "u564954.your-storagebox.de";
     username   = "u564954";
   };
+
+  services.udev.extraRules = ''
+    KERNEL=="uinput", MODE="0660", GROUP="input", SYMLINK+="uinput"
+  '';
 }

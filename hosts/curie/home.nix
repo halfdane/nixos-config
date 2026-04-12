@@ -28,6 +28,7 @@ in
     keepassxc
     libsecret
     supersonic
+    voxtype
   ];
 
   programs.git = {
