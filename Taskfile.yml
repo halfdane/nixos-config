@@ -31,7 +31,7 @@ tasks:
   deploy:all:
     desc: Deploy to all targets
     deps:
-      - for: [curie, ada]
+      - for: [curie, ada, leguin]
         task: deploy:{{.ITEM}}
 
   update:
