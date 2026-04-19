@@ -15,6 +15,6 @@
     "git.confirmSync": false,
     "git.enableSmartCommit": true,
     "explorer.confirmDelete": false,
-    "chat.viewSessions.orientation": "stacked",
-    "update.mode": "manual"
+    "update.mode": "manual",
+    "chat.viewSessions.orientation": "stacked"
   }
