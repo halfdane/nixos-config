@@ -55,6 +55,13 @@ groups:
           - name: "healthy"
             check: "https://fetching.micasaestu.casa"
 
+      - name: Paperless-ngx
+        icon: assets/paperless-ngx.svg
+        link: https://paperless.micasaestu.casa
+        slots:
+          - name: "healthy"
+            check: "https://paperless.micasaestu.casa"
+
   - name: "*Arr"
     tiles:
       - name: Sonarr
