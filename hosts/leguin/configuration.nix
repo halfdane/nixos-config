@@ -7,6 +7,7 @@
       owner = "${username}";
       mode = "600";
     };
+    hetzner_storage.file = ./../../secrets/hetzner_storage.age;
   };
 
   imports = [
@@ -81,4 +82,13 @@
     allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
     allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
   };
+
+  services.storagebox = {
+    enable = true;
+    mountpoint = "/mnt/storagebox";
+    sshKeyPath = config.age.secrets.hetzner_storage.path;
+    server     = "u564954.your-storagebox.de";
+    username   = "u564954";
+  };
+
 }
