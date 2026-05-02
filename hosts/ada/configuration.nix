@@ -102,6 +102,20 @@
     };
   };
 
+  services.nginx.virtualHosts."timer.micasaestu.casa" = {
+    useACMEHost = "micasaestu.casa";
+    forceSSL = true;
+    root = pkgs.fetchFromGitHub {
+      owner = "halfdane";
+      repo = "prog_timer";
+      rev = "8c5c735";
+      hash = "sha256-LqxisLMgpywymv3iDIRmkT7+ER04bFmcP4g0FzREMT4=";
+    };
+    locations."/" = {
+      index = "progressive-timer.html";
+    };
+  };
+
   services.storagebox = {
     enable = true;
     mountpoint = "/mnt/storagebox";
