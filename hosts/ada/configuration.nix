@@ -108,8 +108,8 @@
     root = pkgs.fetchFromGitHub {
       owner = "halfdane";
       repo = "prog_timer";
-      rev = "8c5c735";
-      hash = "sha256-LqxisLMgpywymv3iDIRmkT7+ER04bFmcP4g0FzREMT4=";
+      rev = "1d9f39bb90382590b03e1e452516836906e0bc1a";
+      hash = "sha256-j9pPmZJ/bkzqvjHLpTRH6GpEg/aNpdWqgrJ3vYWf08Y=";
     };
     locations."/" = {
       index = "progressive-timer.html";
