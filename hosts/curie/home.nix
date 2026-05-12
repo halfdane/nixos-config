@@ -24,12 +24,20 @@ in
 
   home.packages = with pkgs; [ 
     home-manager 
+    github-copilot-cli
     kdePackages.kdeconnect-kde
     keepassxc
     libsecret
     supersonic
     voxtype
     vlc
+  ];
+
+  programs.fish.plugins = [
+    {
+      name = "github-copilot-cli-fish";
+      src = pkgs.fishPlugins.github-copilot-cli-fish.src;
+    }
   ];
 
   programs.git = {
