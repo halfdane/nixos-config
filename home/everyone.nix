@@ -3,7 +3,7 @@
   home.stateVersion = "25.11";
 
   # Shell configuration
-  home.sessionPath = [ "~/bin" ];
+  home.sessionPath = [ "~/bin" "~/.local/bin" ];
 
   programs.bash.enable = true;
 
@@ -46,5 +46,9 @@
   home.file.".taskrc.yml".text = ''
   "interactive: true"
 '';
+
+  home.packages = with pkgs; [
+    uv
+  ];
 
 }

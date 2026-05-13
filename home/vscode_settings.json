@@ -2,10 +2,19 @@
     "rust-analyzer.server.path": "rust-analyzer",
     "chat": {
       "instructionsFilesLocations": {
-      "~/global-instructions": true
+        "~/global-instructions": true
       },
       "agentFilesLocations": {
         "~/.agents/agents": true
+      }
+    },
+    "mcp": {
+      "servers": {
+        "basic-memory": {
+          "command": "basic-memory",
+          "args": ["mcp"],
+          "type": "stdio"
+        }
       }
     },
     "explorer.confirmDragAndDrop": false,
