@@ -31,6 +31,7 @@ in
     supersonic
     voxtype
     vlc
+    unzip
   ];
 
   programs.fish.plugins = [

@@ -15,6 +15,9 @@
         src = pkgs.fishPlugins.plugin-git.src;
       }
     ];
+    shellInit = ''
+      fish_add_path ~/.local/bin ~/bin
+    '';
   };
 
   programs.direnv = {

@@ -32,6 +32,7 @@
     enable = true;
     autoLogin = "${username}";
   };
+  services.teamviewer.enable = true;
   programs.nix-ld.enable = true;
 
   # Enable x86_64 emulation on aarch64

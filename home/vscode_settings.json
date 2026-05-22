@@ -8,15 +8,6 @@
         "~/.agents/agents": true
       }
     },
-    "mcp": {
-      "servers": {
-        "basic-memory": {
-          "command": "basic-memory",
-          "args": ["mcp"],
-          "type": "stdio"
-        }
-      }
-    },
     "explorer.confirmDragAndDrop": false,
     "svelte.enable-ts-plugin": true,
     "files.autoSave": "afterDelay",

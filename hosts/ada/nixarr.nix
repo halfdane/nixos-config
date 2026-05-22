@@ -27,10 +27,6 @@
         enable = true;
         vpn.enable = true;
       };
-      transmission = {
-        enable = true;
-        vpn.enable = true;
-      };
 
       jellyfin.enable = true;
       bazarr.enable = true;
@@ -104,14 +100,6 @@
       forceSSL = true;
       locations."/" = {
         proxyPass = "http://127.0.0.1:6336";
-        proxyWebsockets = true;
-      };
-    };
-    services.nginx.virtualHosts."transmission.${config.nixarr.domain}" = {
-      useACMEHost = config.nixarr.domain;
-      forceSSL = true;
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:9091";
         proxyWebsockets = true;
       };
     };
