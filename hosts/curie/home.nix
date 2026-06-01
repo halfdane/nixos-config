@@ -32,13 +32,7 @@ in
     voxtype
     vlc
     unzip
-  ];
-
-  programs.fish.plugins = [
-    {
-      name = "github-copilot-cli-fish";
-      src = pkgs.fishPlugins.github-copilot-cli-fish.src;
-    }
+    obsidian
   ];
 
   programs.git = {
