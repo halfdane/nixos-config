@@ -70,6 +70,7 @@
   environment.systemPackages = with pkgs; [
     bindfs
     file
+    jellyfin-desktop
   ];
 
   hardware.bluetooth = {
