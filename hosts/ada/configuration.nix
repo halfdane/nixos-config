@@ -60,6 +60,10 @@
     enable = true;
     wgConfigPath = config.age.secrets.privado_config.path;
   };
+  environment.systemPackages = with pkgs; [
+    jellyfin-desktop
+  ];
+
 
   services.fetching = {
     enable = true;
