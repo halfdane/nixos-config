@@ -146,19 +146,19 @@ in
     };
 
     # prometheus metrics exporter service + timer
-    systemd.services.wireguard-metrics = {
-      script = ''
-        set -eu
-        ${wg-scraper}/bin/wg-scraper
-      '';
-      description = "WireGuard Prometheus metrics collector";
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        Type = "oneshot";
-        User = "root";
-      };
-      startAt = "*:*:0/30";
-    };
+    # systemd.services.wireguard-metrics = {
+    #   script = ''
+    #     set -eu
+    #     ${wg-scraper}/bin/wg-scraper
+    #   '';
+    #   description = "WireGuard Prometheus metrics collector";
+    #   wantedBy = [ "multi-user.target" ];
+    #   serviceConfig = {
+    #     Type = "oneshot";
+    #     User = "root";
+    #   };
+    #   startAt = "*:*:0/30";
+    # };
 
     # Install the peer-onboarding helper on the server.
     environment.systemPackages = [ wg-add-peer wg-scraper ];

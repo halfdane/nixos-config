@@ -25,7 +25,7 @@
 
       sabnzbd = {
         enable = true;
-        vpn.enable = true;
+        # vpn.enable = true;
       };
 
       jellyfin.enable = true;
