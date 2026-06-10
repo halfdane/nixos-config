@@ -8,7 +8,6 @@
   };
   boot.initrd.availableKernelModules = [ "virtio_scsi" "virtio_blk" "virtio_pci" ];
   boot.initrd.kernelModules = [ "dm-crypt" "cryptd" ];
-  boot.initrd.luks.devices."luks-root".fallbackToPassword = true;
 
   disko.devices = {
     disk.vda = {

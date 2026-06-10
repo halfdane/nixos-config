@@ -18,7 +18,6 @@
   
   boot.initrd.availableKernelModules = [ "virtio_scsi" "virtio_blk" "virtio_pci" "ata_piix" ];
   boot.initrd.kernelModules = [ "dm-crypt" "cryptd" ];
-  boot.initrd.luks.devices."luks-root".fallbackToPassword = true;
 
   # Basic networking (systemd-networkd, ens3 DHCP)
   networking.hostName = hostname;

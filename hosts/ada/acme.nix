@@ -7,7 +7,7 @@
   # The ACME client (lego) writes a TXT record to the netcup DNS API to prove
   # domain ownership, then removes it after the challenge succeeds.
   #
-  # The credential file (sourced as shell env before lego runs) must contain:
+  # The environment file (sourced as shell env before lego runs) must contain:
   #   NETCUP_CUSTOMER_NUMBER=<your 8-digit customer number>
   #   NETCUP_API_KEY=<your API key>
   #   NETCUP_API_PASSWORD=<your API password>
@@ -33,7 +33,7 @@
       extraDomainNames = [ "micasaestu.casa" ];
 
       dnsProvider = "netcup";
-      credentialsFile = config.age.secrets.netcup.path;
+      environmentFile = config.age.secrets.netcup.path;
 
       # Allow nginx to read the issued cert files.
       group = config.services.nginx.group;
