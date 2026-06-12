@@ -9,11 +9,11 @@ in
 
 {
   options.services.storagebox = {
-    enable = mkEnableOption "Hetzer Storage Box SSHFS mount";
+    enable = mkEnableOption "Hetzner Storage Box mount";
 
     mountpoint = mkOption {
       type = types.path;
-      description = "Mount point for the Storage Box share.";
+      description = "Mount point for the Storage Box. SSHFS is mounted at <mountpoint>.sshfs.";
     };
 
     sshKeyPath = mkOption {
@@ -35,11 +35,45 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.sshfs ];
+    environment.systemPackages = [ pkgs.sshfs pkgs.rclone ];
 
     boot.kernelModules = [ "fuse" ];
 
-    fileSystems."${cfg.mountpoint}" = {
+    # -------------------------------------------------------------------------
+    # rclone SFTP mount at <mountpoint>
+    # -------------------------------------------------------------------------
+    systemd.services.rclone-storagebox = {
+      description = "rclone SFTP mount for Hetzner Storage Box";
+      after    = [ "network-online.target" ];
+      wants    = [ "network-online.target" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "simple";
+        ExecStartPre = "+${pkgs.coreutils}/bin/mkdir -p ${cfg.mountpoint}";
+        ExecStart = pkgs.writeShellScript "rclone-storagebox-mount" ''
+          exec ${pkgs.rclone}/bin/rclone mount \
+            :sftp:/home \
+            ${cfg.mountpoint} \
+            --sftp-host=${cfg.server} \
+            --sftp-port=23 \
+            --sftp-user=${cfg.username} \
+            --sftp-key-file=${cfg.sshKeyPath} \
+            --allow-other \
+            --vfs-cache-mode=minimal \
+            --buffer-size=256M \
+            --vfs-read-ahead=512M \
+            --transfers=4 \
+            --log-level=INFO
+        '';
+        Restart    = "on-failure";
+        RestartSec = "10s";
+      };
+    };
+
+    # -------------------------------------------------------------------------
+    # sshfs mount at <mountpoint>.sshfs  (retained for comparison / fallback)
+    # -------------------------------------------------------------------------
+    fileSystems."${cfg.mountpoint}.sshfs" = {
       device = "${cfg.username}@${cfg.server}:/home";
       fsType = "fuse.sshfs";
       options = [
