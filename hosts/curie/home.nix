@@ -33,6 +33,7 @@ in
     vlc
     unzip
     obsidian
+    opencode
   ];
 
   programs.git = {

@@ -25,6 +25,12 @@
 
       sabnzbd = {
         enable = true;
+        # guiPort defaults to 6336 — kept explicit to avoid future drift
+        guiPort = 6336;
+        whitelistHostnames = [
+          config.networking.hostName
+          "sabnzbd.${config.nixarr.domain}"
+        ];
         # vpn.enable = true;
       };
 
@@ -34,7 +40,7 @@
       prowlarr.enable = true;
       radarr.enable = true;
       sonarr.enable = true;
-      jellyseerr.enable = true;
+      seerr.enable = true;
     };
 
     services.nginx.virtualHosts."video.${config.nixarr.domain}" = {

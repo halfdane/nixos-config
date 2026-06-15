@@ -84,6 +84,7 @@
   services.openssh.enable = true;
   
   environment.sessionVariables.MOZ_GMP_PATH = [ "${pkgs.widevine-cdm-lacros}/gmp-widevinecdm/system-installed" ];
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
   environment.systemPackages = with pkgs; [
     bindfs
     gst_all_1.gst-plugins-good
