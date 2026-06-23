@@ -34,6 +34,7 @@ in
     unzip
     obsidian
     opencode
+    inkscape
   ];
 
   programs.git = {

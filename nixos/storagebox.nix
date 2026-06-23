@@ -5,6 +5,10 @@ with lib;
 
 let
   cfg = config.services.storagebox;
+  # Media group GID as set by nixarr globals — all arr services and sabnzbd run under this group.
+  # sabnzbd uid is also set by nixarr globals (38). These are stable nixarr-assigned values.
+  mediaGid = toString config.users.groups.media.gid;
+  sabnzbdUid = toString config.users.users.sabnzbd.uid;
 in
 
 {
@@ -59,6 +63,8 @@ in
             --sftp-user=${cfg.username} \
             --sftp-key-file=${cfg.sshKeyPath} \
             --allow-other \
+            --dir-perms=0775 \
+            --file-perms=0664 \
             --vfs-cache-mode=minimal \
             --buffer-size=256M \
             --vfs-read-ahead=512M \
