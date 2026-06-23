@@ -1,6 +1,7 @@
 { config, pkgs, inputs, lib, username, ... }:
 let
   userConfig = import ./user-config.nix;
+  logsmith = pkgs.callPackage ../../pkgs/logsmith { };
 in
 {
   age = {
@@ -25,6 +26,7 @@ in
   home.packages = with pkgs; [ 
     home-manager 
     github-copilot-cli
+    logsmith
     kdePackages.kdeconnect-kde
     keepassxc
     libsecret
