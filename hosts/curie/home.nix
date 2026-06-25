@@ -37,6 +37,7 @@ in
     obsidian
     opencode
     inkscape
+    awscli2
   ];
 
   programs.git = {

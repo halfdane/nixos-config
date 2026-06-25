@@ -16,6 +16,8 @@
     ./paperless.nix
   ];
   
+  services.qemuGuest.enable = true;
+
   boot.initrd.availableKernelModules = [ "virtio_scsi" "virtio_blk" "virtio_pci" "ata_piix" ];
   boot.initrd.kernelModules = [ "dm-crypt" "cryptd" ];
 
