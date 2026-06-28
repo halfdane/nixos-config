@@ -2,11 +2,11 @@
 {
   programs.ssh = lib.mkIf config.programs.ssh.enable {
     enableDefaultConfig = false;
-    matchBlocks = {
+    settings = {
       "*" = {
         # Add your default SSH settings here
-        forwardAgent = true;
-        # Example: compression = true;
+        ForwardAgent = true;
+        # Example: Compression = true;
       };
     };
   };

@@ -4,26 +4,22 @@
     extraConfig = ''
       IdentityFile /run/agenix/user-ssh-key
     '';
-    matchBlocks = {
+    settings = {
       ada = {
-        host = "ada";
-        hostname = "10.100.0.1";
-        user = "user";
+        HostName = "10.100.0.1";
+        User = "user";
       };
       curie = {
-        host = "curie";
-        hostname = "192.168.64.8";
-        user = "user";
+        HostName = "192.168.64.8";
+        User = "user";
       };
       leguin = {
-        host = "leguin";
-        hostname = "192.168.178.103";
-        user = "user";
+        HostName = "192.168.178.103";
+        User = "user";
       };
       tubman = {
-        host = "tubman";
-        hostname = "192.168.178.145";
-        user = "user";
+        HostName = "192.168.178.145";
+        User = "user";
       };
 
     };
