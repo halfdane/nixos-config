@@ -9,13 +9,13 @@ let
 in
 stdenv.mkDerivation {
   pname = "logsmith";
-  version = "10.0.0";
+  version = "11.0.2";  
 
   src = fetchFromGitHub {
     owner = "otto-de";
     repo = "logsmith";
-    rev = "10.0.0";
-    hash = "sha256-kIUWdXN8rPvsBPbw755GX5qx5LgHRmNTtbawVKVplBw=";
+    rev = "11.0.2";
+    hash = "sha256-xAD8H8jkK7RIUez2xzzqh0HHiF2Iaf4ZfGpStjd80Og=";
   };
 
   nativeBuildInputs = [ makeWrapper ];
