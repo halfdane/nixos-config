@@ -23,6 +23,8 @@ in
   programs.plasma_hacking.enable = true;
   programs.plasma.enable = true;
 
+  programs.agents.enable = true;
+
   home.packages = with pkgs; [ 
     home-manager 
     github-copilot-cli

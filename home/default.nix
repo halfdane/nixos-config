@@ -6,4 +6,5 @@
   ./firefox.nix
   ./chrome.nix
   ./plasma_hacking.nix
+  ./agents.nix
 ]
