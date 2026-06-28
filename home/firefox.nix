@@ -9,6 +9,9 @@
 
   config = lib.mkIf config.programs.firefox.enable {
     programs.firefox = {
+      # Adopt the new XDG-based profile path (`$XDG_CONFIG_HOME/mozilla/firefox`).
+      configPath = "${config.xdg.configHome}/mozilla/firefox";
+
       policies = {
         Extensions = {
           Install = [
