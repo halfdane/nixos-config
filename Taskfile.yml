@@ -64,12 +64,6 @@ tasks:
     cmds:
       - kwin_wayland --replace &
       - systemctl --user restart plasma-plasmashell
-
-  lol_test:
-    desc: Just a test task
-    cmds:
-      - echo "This is a test task. Nothing to see here."
-      - echo "continuing"
   
   rekey_secrets:
     desc: Rekey secrets with agenix
