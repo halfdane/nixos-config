@@ -116,14 +116,6 @@
     allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
   };
 
-  services.storagebox = {
-    enable = true;
-    mountpoint = "/mnt/storagebox";
-    sshKeyPath = config.age.secrets.hetzner_storage.path;
-    server     = "u564954.your-storagebox.de";
-    username   = "u564954";
-  };
-
   services.udev.extraRules = ''
     KERNEL=="uinput", MODE="0660", GROUP="input", SYMLINK+="uinput"
   '';
