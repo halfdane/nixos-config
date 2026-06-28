@@ -40,6 +40,7 @@ in
     opencode
     inkscape
     awscli2
+    tuxedo
   ];
 
   programs.git = {
