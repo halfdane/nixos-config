@@ -43,6 +43,14 @@ in
           turnOffDisplay = {
             idleTimeout = "never";
           };
+
+          # Equivalent of the "Manually block sleep and screen locking" tray
+          # toggle: never auto-suspend and ignore lid close (screen locking is
+          # disabled via kscreenlockerrc above). Set declaratively because the
+          # applet toggle is not a persistable plasma-manager / powerdevilrc
+          # setting.
+          autoSuspend.action = "nothing";
+          whenLaptopLidClosed = "doNothing";
         };
       };
 
