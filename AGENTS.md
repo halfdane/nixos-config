@@ -15,23 +15,9 @@ This keeps every host importing the same module set while only activating what i
 needs. Do **not** add per-host `imports = [ ../../home/foo.nix ];` blocks — wire
 features through the enable flag instead.
 
-### Pattern (reference: `home/plasma_hacking.nix`, `home/agents.nix`)
-
-```nix
-{ config, lib, ... }:
-let
-  cfg = config.programs.<name>;
-in
-{
-  options.programs.<name> = {
-    enable = lib.mkEnableOption "<short description>";
-  };
-
-  config = lib.mkIf cfg.enable {
-    # ... actual home.file / programs.* / etc. ...
-  };
-}
-```
+Pattern: a module defines `options.programs.<name>.enable` (via
+`lib.mkEnableOption`) and wraps its real config in `lib.mkIf cfg.enable { ... }`.
+Copy an existing one — see `home/agents.nix` or `home/plasma_hacking.nix`.
 
 Steps to add a new home feature:
 
@@ -43,17 +29,10 @@ Steps to add a new home feature:
 ## Editable-via-repo files (`mkOutOfStoreSymlink`)
 
 For config that the user edits frequently and wants to take effect **without a
-rebuild**, symlink the file back to the repo working tree instead of copying it
-into the Nix store:
-
-```nix
-home.file."<dest>".source =
-  config.lib.file.mkOutOfStoreSymlink "/home/user/nixos-config/<path>";
-```
-
-Used by `home/vscode.nix` (settings), Firefox bookmarks, and `home/agents.nix`
-(shared agent rules). The trade-off: the symlink points at an absolute repo path,
-so it is inherently machine/host-specific.
+rebuild**, point `home.file."<dest>".source` at
+`config.lib.file.mkOutOfStoreSymlink "/home/user/nixos-config/<path>"` instead of
+copying into the Nix store. See `home/agents.nix` or `home/vscode.nix`. Trade-off:
+the absolute repo path makes it machine/host-specific.
 
 ## Deploy
 

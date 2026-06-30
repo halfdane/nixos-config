@@ -10,45 +10,40 @@ This is a NixOS-machine. Do not assume any tools are globally installed.
 
 ## Shell
 
-The shell is **fish**. All terminal commands must use valid fish syntax. Do not use bash syntax — it will fail.
+The shell is **fish**. Use valid fish syntax for every command; bash syntax will
+fail. Key translations:
 
-Common bash-isms to avoid and their fish equivalents:
-
-| Bash | Fish |
-|------|------|
-| `cmd1 && cmd2` | `cmd1; and cmd2` |
-| `export VAR=value` | `set -x VAR value` |
-| `$(cmd)` | `(cmd)` |
-| `if [ ... ]; then` | `if test ...; ... end` |
-| `cmd > file 2>&1` | `cmd > file 2>&1` (ok) or `cmd &> file` (not valid in fish — use `cmd > file 2>&1`) |
-| `cmd 2> /dev/null` | `cmd 2>/dev/null` |
-
-When writing multi-line scripts, use fish syntax throughout (`end` instead of `fi`/`done`/`}`, etc.).
+- `cmd1 && cmd2` → `cmd1; and cmd2`
+- `export VAR=value` → `set -x VAR value`
+- `$(cmd)` → `(cmd)`
+- `if [ ... ]; then ... fi` → `if test ...; ...; end`
+- `cmd &> file` is invalid → use `cmd > file 2>&1`
+- Multi-line scripts: use `end` instead of `fi`/`done`/`}`.
 
 ## Running Tools with Nix
 
-If a tool is not found, do not fail or ask immediately. Instead:
+If a tool is not found, do not fail or ask immediately:
 
-1. **Wrap the command** using `nix-shell -p <package> --run '<command>'`, making your best guess at the nixpkgs package name.
-2. **If that fails**, try to determine the correct package name on your own (e.g., by searching or reasoning about nixpkgs naming conventions).
-3. **If that also fails**, ask the user for the correct package name.
+1. Wrap it: `nix-shell -p <package> --run '<command>'` (guess the nixpkgs name,
+   e.g. `nix-shell -p python3 --run 'python3 script.py'`).
+2. If that fails, reason out the correct package name (nixpkgs conventions).
+3. Only then ask the user.
 
-Example — running a Python script:
-```fish
-nix-shell -p python3 --run 'python3 script.py'
-```
+## Project-specific tools
 
-## Using Project specific tools
+You may run a project's tools via `nix-shell` to verify things work, but you
+**must** also leave the project reproducible without it. A good dev setup has:
 
-If a tool is necessary for a project (tofu for terraform tests in a terraform project), you *MAY* run the tests with `nix-shell` to make sure things work, but you *MUST* also create or update a flake.nix and an .envrc file in that directory, so the user can reproduce the workflows without much hassle.
-
-A good dev setup has:
-
-- **`flake.nix`** exposing `devShells.default` (toolchain + LSP + linter).
+- **`flake.nix`** exposing `devShells.default` (toolchain + LSP + linter),
+  cross-platform for macOS *and* Linux via `flake-utils.lib.eachDefaultSystem`.
 - **`.envrc`** containing `use flake` so direnv loads the shell automatically.
-- **Cross-platform systems.** Always support macOS *and* Linux (the team is
-  mostly on mac) via `flake-utils.lib.eachDefaultSystem`.
-- **A `shellHook` that echoes the most important commands**, so entering the
-  shell prints how to build/run/test.
-- **A `Taskfile.yml`** that wraps and documents the common commands (build, run,
-  test, lint). Tasks are the canonical entry points — put real commands there. 
+- **A `shellHook`** that echoes the key build/run/test commands.
+- **A `Taskfile.yml`** wrapping those commands as the canonical entry points.
+
+## On-demand references (routing)
+
+Do not load these unless the task matches. When it does, read the file before
+acting.
+
+- **Caveman / compression** — only when asked to "caveman", "compress this", or
+  similar: read `/home/user/nixos-config/home/agents/caveman-style.md`.
