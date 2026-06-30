@@ -2,7 +2,12 @@
 applyTo: "**"
 ---
 
-# Machine Context
+# Ground Rules
+
+- Prefer short answers
+- No flattering language
+- Tell me what I need to know, even if I don't want to hear it
+- Canary: prefix each response with 🟢 so I know you're still following the rules.
 
 ## OS
 
@@ -47,3 +52,4 @@ acting.
 
 - **Caveman / compression** — only when asked to "caveman", "compress this", or
   similar: read `/home/user/nixos-config/home/agents/caveman-style.md`.
+
