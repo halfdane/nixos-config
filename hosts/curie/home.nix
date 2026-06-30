@@ -13,10 +13,7 @@ in
   };
 
   programs.vscode.enable = true;
-  programs.firefox = { 
-    enable = true; 
-    bookmarksfile = ./bookmarks.json;
-  };
+  programs.firefox.enable = true;
   programs.ssh.enable = true;  
   programs.chromium.enable = true;
   
