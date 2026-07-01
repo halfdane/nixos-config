@@ -65,7 +65,9 @@ in
             --allow-other \
             --dir-perms=0775 \
             --file-perms=0664 \
-            --vfs-cache-mode=minimal \
+            --vfs-cache-mode=writes \
+            --vfs-cache-max-age=6h \
+            --vfs-cache-max-size=50G \
             --buffer-size=256M \
             --vfs-read-ahead=512M \
             --transfers=4 \
