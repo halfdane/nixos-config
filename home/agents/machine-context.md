@@ -10,7 +10,7 @@ applyTo: "**"
 
 ## Working on my machine
 
-- This is a NixOS-machine. Do not assume any tools are globally installed.
+- This is a NixOS-machine (utm/qemu on a m4 macbook pro). 
 - The shell is **fish**. Use valid fish syntax for every command; bash syntax will fail. Key translations:
 
     - `cmd1 && cmd2` → `cmd1; and cmd2`
@@ -21,12 +21,11 @@ applyTo: "**"
     - Multi-line scripts: use `end` instead of `fi`/`done`/`}`.
 
 - Running Tools with Nix
-    If a tool is not found, do not fail or ask immediately:
 
-    1. Wrap it: `nix-shell -p <package> --run '<command>'` (guess the nixpkgs name,
+    - Wrap it: `nix-shell -p <package> --run '<command>'` (guess the nixpkgs name,
     e.g. `nix-shell -p python3 --run 'python3 script.py'`).
-    2. If that fails, reason out the correct package name (nixpkgs conventions).
-    3. Only then ask the user.
+    - If that fails, reason out the correct package name (nixpkgs conventions).
+    - Only then ask the user.
 
 - Project-specific tools
 
