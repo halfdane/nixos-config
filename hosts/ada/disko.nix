@@ -51,6 +51,6 @@
     memoryPercent = 100;  # Max 3.8G compressed
     priority = 100;
   };
-  boot.kernel.sysctl."vm.swappiness" = 180;  # Aggressively use zram
+  boot.kernel.sysctl."vm.swappiness" = 100;  # zram-friendly, but less eager to spill into the slow disk swap than the previous 180
 
 }

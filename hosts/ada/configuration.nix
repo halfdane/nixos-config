@@ -40,6 +40,33 @@
     keyFile = "/crypto_keyfile.bin";
   };
 
+  # Auto-reboot instead of hanging on kernel faults. This is a headless netcup
+  # VPS: by default `kernel.panic=0` halts forever, so a panic requires a
+  # manual console reset. Set as kernel params so they apply from the very
+  # first instant of boot (earlier than sysctls would). Now that the disk
+  # auto-unlocks, an unattended reboot brings the box straight back up.
+  boot.kernelParams = [
+    "panic=10"           # reboot 10s after a kernel panic
+    "oops=panic"         # promote a kernel oops to a full panic -> reboot
+    "softlockup_panic=1" # a CPU soft-lockup triggers a panic -> reboot
+  ];
+
+  # Persist logs across reboots so the crash that triggers an auto-reboot can
+  # actually be diagnosed afterwards (journald otherwise keeps them only in
+  # volatile /run and loses them on the following reboot).
+  services.journald.extraConfig = ''
+    Storage=persistent
+    SystemMaxUse=500M
+  '';
+
+  # Proactively kill the worst memory hog under pressure instead of letting the
+  # box thrash into a soft-lockup/hang. systemd-oomd is enabled by default but
+  # only manages user slices; the services here (jellyfin, sabnzbd, paperless,
+  # the *arr stack) all run under system.slice, so extend oomd to act on swap
+  # pressure there too. This is the userspace safety net that should stop the
+  # crashes at the source; the panic=/oops= reboot params are the last resort.
+  systemd.oomd.enableSystemSlice = true;
+
   # Basic networking (systemd-networkd, ens3 DHCP)
   networking.hostName = hostname;
   networking.useDHCP = false;

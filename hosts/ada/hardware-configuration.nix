@@ -13,11 +13,17 @@
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
 
-  # Swapfile (8GB example)
+  # Swapfile (2GB). Deliberately small: it is a last-resort buffer only. zram
+  # (prio 100) absorbs normal swap; this disk swap (prio -1) is a tail for cold /
+  # incompressible pages. Keeping it small caps how long the box can thrash
+  # before systemd-oomd/OOM-killer steps in.
+  # NOTE: no randomEncryption — the swapfile lives on the LUKS-encrypted root, so
+  # it is already encrypted at rest. A second dm-crypt layer was pure CPU overhead
+  # per page in/out (making the slow disk swap even slower). No hibernation on
+  # this VPS, so the per-boot-key benefit of randomEncryption is irrelevant.
   swapDevices = [{
     device = "/swapfile/swapfile";
-    size = 8192;
-    randomEncryption.enable = true;
+    size = 2048;
   }];
 
   # Swapfile setup (now on ext4: disable CoW not needed, but truncate/mkswap)
@@ -25,7 +31,7 @@
     wantedBy = [ "initrd-setup.service" ];
     before = [ "initrd-setup.service" ];
     script = ''
-      truncate -s 8G /swapfile/swapfile
+      truncate -s 2G /swapfile/swapfile
       chattr +C /swapfile/swapfile  # Optional: nodatacow-like
       mkswap /swapfile/swapfile
       chmod 600 /swapfile/swapfile
