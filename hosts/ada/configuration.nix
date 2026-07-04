@@ -21,6 +21,25 @@
   boot.initrd.availableKernelModules = [ "virtio_scsi" "virtio_blk" "virtio_pci" "ata_piix" ];
   boot.initrd.kernelModules = [ "dm-crypt" "cryptd" ];
 
+  # Auto-unlock the root LUKS volume with a keyfile so no passphrase prompt is
+  # needed at boot. The keyfile is generated on ada at
+  # /etc/secrets/initrd/crypto_keyfile.bin and baked into the initrd at
+  # activation time. The initrd lives on the unencrypted /boot.
+  #
+  # SECURITY TRADE-OFF: this effectively removes at-rest protection against
+  # anyone who can read the boot disk (including the VPS provider), since the
+  # key sits in cleartext inside the initrd on /boot. Accepted deliberately in
+  # exchange for unattended reboots.
+  #
+  # fallbackToPassword is implicit with the systemd-stage-1 initrd used here:
+  # systemd-cryptsetup automatically prompts for the passphrase if the keyfile
+  # is missing or doesn't match, so this config is safe to deploy *before* the
+  # matching LUKS keyslot has been added.
+  boot.initrd.secrets."/crypto_keyfile.bin" = "/etc/secrets/initrd/crypto_keyfile.bin";
+  boot.initrd.luks.devices."luks-root" = {
+    keyFile = "/crypto_keyfile.bin";
+  };
+
   # Basic networking (systemd-networkd, ens3 DHCP)
   networking.hostName = hostname;
   networking.useDHCP = false;
@@ -123,6 +142,12 @@
     sshKeyPath = config.age.secrets.hetzner_storage.path;
     server     = "u564954.your-storagebox.de";
     username   = "u564954";
+    # Services that read from / write to the mount. Ordered after the rclone
+    # mount so downloads never land on the local disk before it is live.
+    dependentServices = [
+      "sonarr" "radarr" "lidarr" "bazarr" "jellyfin"
+      "sabnzbd" "navidrome" "fetching"
+    ];
   };
 
   services.paperless.enable = true;
