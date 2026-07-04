@@ -10,7 +10,7 @@ applyTo: "**"
 
 ## Working on my machine
 
-- This is a NixOS-machine (utm/qemu on a m4 macbook pro). 
+- This is a NixOS virtual machine (utm/qemu on a m4 macbook pro). 
 - The shell is **fish**. Use valid fish syntax for every command; bash syntax will fail. Key translations:
 
     - `cmd1 && cmd2` → `cmd1; and cmd2`
