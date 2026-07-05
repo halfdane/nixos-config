@@ -10,9 +10,9 @@ NixOS flake for two machines.
 ## Deploy
 
 ```bash
-./deploy.sh        # deploys to current host
-./deploy.sh ada    # deploys to ada  (WireGuard must be active)
-./deploy.sh curie  # deploys to curie
+task                 # deploy to curie (the default task)
+task deploy:ada      # deploy to ada  (WireGuard must be active)
+task deploy:curie    # deploy to curie
 ```
 
 ## Docs

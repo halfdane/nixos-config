@@ -13,7 +13,7 @@
 #
 # After running:
 #   1. Copy the displayed peer line into hosts/ada/configuration.nix
-#   2. Deploy (./deploy.sh)
+#   2. Deploy (task deploy:ada)
 #   3. Show the QR code to the new peer to scan in the WireGuard app
 #      (or use the raw config text if QR is not practical)
 #

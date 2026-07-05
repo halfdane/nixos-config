@@ -31,7 +31,7 @@ wg-add-peer <name>          # auto-assigns next available IP
 wg-add-peer <name> 10.100.0.X  # explicit IP
 ```
 
-Copy the printed peer stanza into `hosts/ada/configuration.nix` → `wireguard.peers`, then `./deploy.sh ada`. Show the QR code to the device.
+Copy the printed peer stanza into `hosts/ada/configuration.nix` → `wireguard.peers`, then `task deploy:ada`. Show the QR code to the device.
 
 The peer's private key is printed once and discarded — never stored on the server. If a device is lost, remove its `publicKey` entry and redeploy.
 

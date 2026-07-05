@@ -5,9 +5,9 @@
 From curie itself:
 
 ```bash
-./deploy.sh          # detects current host, deploys locally
+task                 # deploy to curie (the default task)
 # or explicitly:
-./deploy.sh curie
+task deploy:curie
 ```
 
 ## First install
