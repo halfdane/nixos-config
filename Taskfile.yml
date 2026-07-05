@@ -51,12 +51,11 @@ tasks:
       - nix-collect-garbage --delete-old
     
   upgrade:
-    desc: Update, Switch, and Clean
+    desc: Update and deploy all targets
     output: 'prefixed'
     deps:
       - update
     cmds:
-      - task: clean
       - task: deploy:all
 
   kwin_restart:
