@@ -81,7 +81,6 @@
         x86_64-linux.default = agenix.packages.x86_64-linux.default;
         aarch64-linux.default = agenix.packages.aarch64-linux.default;
       };
-      nix.channel.enable = false;
 
       nixosConfigurations = nixpkgs.lib.mapAttrs (name: cfg:
         mkHost {
