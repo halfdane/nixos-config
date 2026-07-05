@@ -70,10 +70,10 @@ Secrets are encrypted to a union of keys — any one key can decrypt:
 | Input | Purpose |
 |-------|---------|
 | `nixpkgs` (unstable) | main package set |
-| `nixpkgs-navidrome` | pinned commit for navidrome (stability) |
 | `home-manager` | user environment |
 | `disko` | declarative disk partitioning |
 | `agenix` | secret management |
+| `nixarr` | media server stack (sonarr/radarr/jellyfin/sabnzbd/…) |
 | `fetching` | custom music downloader service |
 | `ilias` | custom web app |
 | `prometheus-renderer` | custom Grafana-like dashboard |
