@@ -74,8 +74,6 @@
           extraHomeManagerModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
         };
       };
-      system = "aarch64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
     in {
       packages = {
         x86_64-linux.default = agenix.packages.x86_64-linux.default;
