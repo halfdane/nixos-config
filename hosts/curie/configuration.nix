@@ -31,6 +31,7 @@
   services.kde = {
     enable = true;
     autoLogin = "${username}";
+    secretService = "oo7";
   };
   services.teamviewer.enable = true;
   programs.nix-ld.enable = true;
