@@ -20,6 +20,11 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
+          # plasma-manager is imported for every host because the always-loaded
+          # home/plasma_hacking.nix module references programs.plasma options,
+          # which must exist even when that module is disabled (mkIf only gates
+          # the value, not the option-existence check). Kept here so it is
+          # imported exactly once rather than also via extraHomeManagerModules.
           home-manager.sharedModules = extraHomeManagerModules ++ [inputs.plasma-manager.homeModules.plasma-manager];
           home-manager.users.${username} = { config, pkgs, lib, ... }:
             {

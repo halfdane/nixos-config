@@ -48,7 +48,6 @@
           platform = "aarch64-linux";
           username = "user";
           specialArgs = { inherit inputs agenix; };
-          extraHomeManagerModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
         };
         ada = {
           platform = "x86_64-linux";
@@ -59,13 +58,11 @@
           platform = "x86_64-linux";
           username = "user";
           specialArgs = { inherit inputs agenix; };
-          extraHomeManagerModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
         };
         leguin = {
           platform = "x86_64-linux";
           username = "user";
           specialArgs = { inherit inputs agenix; };
-          extraHomeManagerModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
         };
       };
     in {
