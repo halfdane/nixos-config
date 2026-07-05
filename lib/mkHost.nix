@@ -10,7 +10,7 @@
   ... 
 }:
   nixpkgs.lib.nixosSystem {
-    specialArgs = specialArgs // { username = username; hostname = hostname; };
+    specialArgs = specialArgs // { inherit username hostname; };
     modules = nixosModules ++ [
       { nixpkgs.hostPlatform = hostPlatform; }
       disko.nixosModules.disko
