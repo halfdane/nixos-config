@@ -32,7 +32,7 @@ in {
 
     users.users.${cfg.user}.packages = [ pkgs.maestral ];
 
-    systemd.user.services.maestral = rec {
+    systemd.user.services.maestral = {
       description = "Headless Maestral (${cfg.dropboxPath})";
       wantedBy = [ "default.target" ];
       serviceConfig = {
@@ -45,7 +45,7 @@ in {
       preStart = ''
         echo "Checking if maestral is prepared..."
         ${pkgs.maestral}/bin/maestral auth status 2>/dev/null || {
-          rm -rf ~/.config/maestral/maestral.ini
+          rm -f ~/.config/maestral/maestral.ini
           echo "Not authenticated, so starting initial setup - fetching secrets..."
           [ -r /run/agenix/maestral ] || { echo "Missing secrets"; exit 1; }
           . /run/agenix/maestral
