@@ -2,7 +2,7 @@
 # wg-add-peer: generate a WireGuard peer keypair and display onboarding QR code.
 #
 # Run this ON ADA after WireGuard is active (i.e. after nixos-rebuild switch
-# with at least an empty peers list). The wg0 interface must be up.
+# with at least an empty peers list). The wg-server interface must be up.
 #
 # Usage:
 #   wg-add-peer <name> [tunnel-ip]
@@ -58,7 +58,7 @@ SERVER_PUBKEY=$(wg show "$WG_IFACE" public-key 2>/dev/null) || {
 SERVER_ENDPOINT="${SERVER_HOST}:${WG_PORT}"
 
 # Auto-assign the next available tunnel IP if not given explicitly.
-# Reads currently assigned /32 peer IPs from wg0, finds the highest last octet,
+# Reads currently assigned /32 peer IPs from the WireGuard interface, finds the highest last octet,
 # and increments it. Server is always .1, so peers start at .2.
 if [ $# -eq 2 ]; then
   PEER_IP="$2"

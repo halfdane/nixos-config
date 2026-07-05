@@ -14,7 +14,7 @@ WireGuard hub-and-spoke. Ada is the hub (server), all other devices are peers.
 
 ```
 curie (10.100.0.2) ──┐
-                      ├── wg0 ── ada (10.100.0.1 / 152.53.176.47:51820)
+                      ├── wg-server ── ada (10.100.0.1 / 152.53.176.47:51820)
 phone (10.100.0.3) ──┘
 ```
 
@@ -46,7 +46,7 @@ All services are behind nginx with a Let's Encrypt wildcard cert for `*.micasaes
 | **fetching** | `https://fetching.micasaestu.casa` | music downloader |
 | **prometheus** | port 9090 (VPN only) | scrapes node exporter |
 
-**All services are VPN-only.** Ports 80/443 are not opened in the firewall — nginx is reachable only because `wg0` is a trusted interface. The only publicly open port is UDP 51820 (WireGuard itself). HTTPS works fine over the tunnel; the cert is obtained via DNS-01 so no inbound port 80 is needed from the internet.
+**All services are VPN-only.** Ports 80/443 are not opened in the firewall — nginx is reachable only because `wg-server` is a trusted interface. The only publicly open port is UDP 51820 (WireGuard itself). HTTPS works fine over the tunnel; the cert is obtained via DNS-01 so no inbound port 80 is needed from the internet.
 
 ### DNS
 
