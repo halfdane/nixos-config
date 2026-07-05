@@ -3,7 +3,7 @@
   home.stateVersion = "25.11";
 
   # Shell configuration
-  home.sessionPath = [ "~/bin" "~/.local/bin" ];
+  home.sessionPath = [ "$HOME/bin" "$HOME/.local/bin" ];
 
   programs.bash.enable = true;
 
