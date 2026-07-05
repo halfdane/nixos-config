@@ -43,8 +43,12 @@ fi
 
 # ── read server state ────────────────────────────────────────────────────────
 
-SERVER_PUBKEY=$(wg show wg0 public-key 2>/dev/null) || {
-  echo "Error: wg0 interface not found." >&2
+# The interface name is injected by the NixOS module wrapper (see
+# nixos/wireguard.nix). Fall back to wg0 when run standalone.
+WG_IFACE="${WG_IFACE:-wg0}"
+
+SERVER_PUBKEY=$(wg show "$WG_IFACE" public-key 2>/dev/null) || {
+  echo "Error: ${WG_IFACE} interface not found." >&2
   echo "Deploy the WireGuard config first (nixos-rebuild switch), then re-run." >&2
   exit 1
 }
@@ -59,7 +63,7 @@ SERVER_ENDPOINT="${SERVER_HOST}:${WG_PORT}"
 if [ $# -eq 2 ]; then
   PEER_IP="$2"
 else
-  HIGHEST=$(wg show wg0 allowed-ips 2>/dev/null \
+  HIGHEST=$(wg show "$WG_IFACE" allowed-ips 2>/dev/null \
     | grep -oP '10\.100\.0\.\K[0-9]+(?=/32)' \
     | sort -n | tail -1 || true)
   NEXT=$(( ${HIGHEST:-1} + 1 ))

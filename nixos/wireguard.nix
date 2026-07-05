@@ -14,6 +14,9 @@ let
     runtimeInputs = [ pkgs.wireguard-tools pkgs.qrencode ];
     text = ''
       export SERVER_HOST="${config.wireguard.endpointHost}"
+      # The actual WireGuard interface name, injected so the script never has
+      # to hardcode it (the interface is "wg-server", not "wg0").
+      export WG_IFACE="wg-server"
       # Routing domains tell systemd-resolved (NixOS/curie) and wg-quick to
       # send queries for these domains to the VPN DNS rather than the default
       # system DNS.  The tilde prefix (~) marks them as routing-only domains
