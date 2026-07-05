@@ -7,21 +7,29 @@
         url = "github:nix-community/home-manager/master";
         inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-aarch64-widevine.url = "github:epetousis/nixos-aarch64-widevine";
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
-    agenix.url = "github:ryantm/agenix";
-    fetching.url = "github:halfdane/fetching";
-    fetching.inputs.nixpkgs.follows = "nixpkgs";
-    ilias.url = "github:halfdane/ilias";
-    prometheus-renderer.url = "github:halfdane/prometheus-renderer";
-    prometheus-renderer.inputs.nixpkgs.follows = "nixpkgs";
-
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    fetching = {
+      url = "github:halfdane/fetching";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    ilias = {
+      url = "github:halfdane/ilias";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    prometheus-renderer = {
+      url = "github:halfdane/prometheus-renderer";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
-      inputs.nixpkgs.follows = "nixpkgs";  # Pin to your nixpkgs
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    agenix.url = "github:ryantm/agenix";
+    nixos-aarch64-widevine.url = "github:epetousis/nixos-aarch64-widevine";
     nixarr.url = "github:nix-media-server/nixarr";
   };
 
@@ -46,22 +54,18 @@
       hosts = {
         curie = {
           platform = "aarch64-linux";
-          username = "user";
           specialArgs = { inherit inputs agenix; };
         };
         ada = {
           platform = "x86_64-linux";
-          username = "user";
           specialArgs = { inherit inputs agenix fetching; };
         };
         tubman = {
           platform = "x86_64-linux";
-          username = "user";
           specialArgs = { inherit inputs agenix; };
         };
         leguin = {
           platform = "x86_64-linux";
-          username = "user";
           specialArgs = { inherit inputs agenix; };
         };
       };
@@ -77,7 +81,7 @@
           hostPlatform = cfg.platform;
           specialArgs = cfg.specialArgs;
           extraModules = [ ./hosts/${name}/configuration.nix ];
-          username = cfg.username;
+          username = cfg.username or "user";
           homeImports = [ ./hosts/${name}/home.nix inputs.agenix.homeManagerModules.default ];
           extraHomeManagerModules = cfg.extraHomeManagerModules or [];
         }
