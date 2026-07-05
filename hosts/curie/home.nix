@@ -1,6 +1,5 @@
 { config, pkgs, inputs, lib, username, ... }:
 let
-  userConfig = import ./user-config.nix;
   logsmith = pkgs.callPackage ../../pkgs/logsmith { };
 in
 {
@@ -43,8 +42,8 @@ in
   programs.git = {
     enable = true;
     settings = {
-      user.name = userConfig.github.personal.name;
-      user.email = userConfig.github.personal.email;
+      user.name = "halfdane";
+      user.email = "REDACTED_PERSONAL_EMAIL";
       init.defaultBranch = "main";
       core = {        
         sshCommand = "ssh -i ${config.age.secrets.github-personal.path} -o IdentitiesOnly=yes";      
@@ -54,8 +53,8 @@ in
       {
         condition = "gitdir:~/work/**";
         contents ={          
-          user.name = "${userConfig.github.work.name}";            
-          user.email = "${userConfig.github.work.email}";                 
+          user.name = "REDACTED_WORK_NAME";            
+          user.email = "REDACTED_WORK_EMAIL";
           core = {            
             sshCommand = "ssh -i ${config.age.secrets.github-work.path} -o IdentitiesOnly=yes";          
           };
