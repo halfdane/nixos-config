@@ -47,8 +47,8 @@
   programs.git.enable = true;
 
   home.file.".taskrc.yml".text = ''
-  "interactive: true"
-'';
+    interactive: true
+  '';
 
   home.packages = with pkgs; [
     uv
