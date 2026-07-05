@@ -46,13 +46,11 @@ in
 
     server = mkOption {
       type = types.str;
-      default = "u564933.your-storagebox.de";
       description = "Storage Box hostname.";
     };
 
     username = mkOption {
       type = types.str;
-      default = "u564933";
       description = "Username for Storage Box.";
     };
 
