@@ -5,10 +5,6 @@ with lib;
 
 let
   cfg = config.services.storagebox;
-  # Media group GID as set by nixarr globals — all arr services and sabnzbd run under this group.
-  # sabnzbd uid is also set by nixarr globals (38). These are stable nixarr-assigned values.
-  mediaGid = toString config.users.groups.media.gid;
-  sabnzbdUid = toString config.users.users.sabnzbd.uid;
 
   # Runs immediately before rclone mounts. Other modules (notably nixarr's
   # systemd-tmpfiles rules) recreate an empty directory skeleton under the
@@ -36,7 +32,7 @@ in
 
     mountpoint = mkOption {
       type = types.path;
-      description = "Mount point for the Storage Box. SSHFS is mounted at <mountpoint>.sshfs.";
+      description = "Mount point for the Storage Box.";
     };
 
     sshKeyPath = mkOption {
@@ -70,7 +66,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.sshfs pkgs.rclone ];
+    environment.systemPackages = [ pkgs.rclone ];
 
     boot.kernelModules = [ "fuse" ];
 
@@ -122,48 +118,6 @@ in
         requires = [ "rclone-storagebox.service" ];
       }))
     ];
-
-    # -------------------------------------------------------------------------
-    # sshfs mount at <mountpoint>.sshfs  (retained for comparison / fallback)
-    # -------------------------------------------------------------------------
-    fileSystems."${cfg.mountpoint}.sshfs" = {
-      device = "${cfg.username}@${cfg.server}:/home";
-      fsType = "fuse.sshfs";
-      options = [
-        "allow_other"
-
-        # Makes mount automatically reconnect on network drop
-        "reconnect"
-
-        # Don’t hang for ages on dead connections
-        "ConnectTimeout=5"
-        "ServerAliveInterval=30"
-        "ServerAliveCountMax=3"
-
-        # Cache tweaks for WAN (timeouts in seconds)
-        # `kernel_cache` avoids re‑reading metadata on every access
-        "cache=yes"
-        "kernel_cache"
-        "cache_timeout=3600"   # 1h cache for attrs
-        "attr_timeout=3600"   # 1h attribute cache
-        "entry_timeout=3600"  # 1h dir entry cache
-        "compression=yes"
-        "Ciphers=aes128-ctr"
-
-        # Don’t update atime on remote files (fewer SSH roundtrips)
-        "noatime"
-
-        # SSH port and key
-        "ssh_command=ssh -p 23"
-        "IdentityFile=${cfg.sshKeyPath}"
-
-        # systemd auto‑mount
-        "x-systemd.automount"
-        "x-systemd.requires=network-online.target"
-        "x-systemd.after=network-online.target"
-        "x-systemd.requires-mounts-for=/"
-      ];
-    };
   };
 }
 
