@@ -28,7 +28,7 @@
       convert = {
         auto = true;
         format = "opus";
-        no_convert = "^path::\.(flac)$";
+        no_convert = ''^path::\.(flac)$'';
         never_convert_lossy_formats = "yes";
         formats.opus = "ffmpeg -i $source -y -vn -acodec libopus -ab 128k $dest";
       };
