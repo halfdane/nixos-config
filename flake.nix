@@ -46,8 +46,6 @@
       hosts = {
         curie = {
           platform = "aarch64-linux";
-          nixosModules = import ./nixos;
-          homeModules = import ./home;
           username = "user";
           specialArgs = { inherit inputs agenix; };
           extraHomeManagerModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
@@ -59,16 +57,12 @@
         };
         tubman = {
           platform = "x86_64-linux";
-          nixosModules = import ./nixos;
-          homeModules = import ./home;
           username = "user";
           specialArgs = { inherit inputs agenix; };
           extraHomeManagerModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
         };
         leguin = {
           platform = "x86_64-linux";
-          nixosModules = import ./nixos;
-          homeModules = import ./home;
           username = "user";
           specialArgs = { inherit inputs agenix; };
           extraHomeManagerModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
