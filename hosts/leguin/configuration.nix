@@ -90,20 +90,6 @@
     sshKeyPath = config.age.secrets.hetzner_storage.path;
     server     = "u564954.your-storagebox.de";
     username   = "u564954";
-    # Wait for the mount before Jellyfin scans, so it never indexes an empty
-    # directory skeleton on boot.
-    dependentServices = [ "jellyfin" ];
-  };
-
-  # Local Jellyfin server: reads the same Storage Box mount directly and is
-  # played back by jellyfin-desktop over localhost. This bypasses ada's
-  # middle hop and its overloaded CPU/RAM entirely — the only WAN leg left is
-  # Hetzner -> leguin. openFirewall opens the standard Jellyfin ports (8096/
-  # 8920 TCP + 1900/7359 UDP discovery) so other trusted home-LAN devices can
-  # reach it as http://leguin:8096 as well as the local desktop client.
-  services.jellyfin = {
-    enable = true;
-    openFirewall = true;
   };
 
 }
