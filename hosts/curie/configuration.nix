@@ -120,4 +120,12 @@
   services.udev.extraRules = ''
     KERNEL=="uinput", MODE="0660", GROUP="input", SYMLINK+="uinput"
   '';
+
+  services.storagebox = {
+    enable = true;
+    mountpoint = "/mnt/storagebox";
+    sshKeyPath = config.age.secrets.hetzner_storage.path;
+    server     = "u564954.your-storagebox.de";
+    username   = "u564954";
+  };
 }
