@@ -43,6 +43,9 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # An 8 GB swapfile gives the OOM logic headroom before it starts killing.
+  swapDevices = [ { device = "/swapfile"; size = 8192; } ];
+
   networking.hostName = hostname;
   networking.networkmanager.enable = true;
 
@@ -127,5 +130,8 @@
     sshKeyPath = config.age.secrets.hetzner_storage.path;
     server     = "u564954.your-storagebox.de";
     username   = "u564954";
+    # Enable the loopback RC API so scripts/transcode-oversized can wait for
+    # VFS write-back uploads to finish between files.
+    rc.enable = true;
   };
 }

@@ -50,6 +50,25 @@ in
       description = "Username for Storage Box.";
     };
 
+    rc = {
+      enable = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Expose rclone's remote-control API on a loopback address (no auth) so
+          local tooling can query VFS upload progress. Used by
+          scripts/transcode-oversized to wait for each write-back upload to
+          drain before touching the next file (overlapping transfers once
+          wedged the FUSE mount). Leave off on hosts that only stream reads.
+        '';
+      };
+      addr = mkOption {
+        type = types.str;
+        default = "localhost:5572";
+        description = "Loopback address for the rclone RC API when rc.enable is true.";
+      };
+    };
+
     dependentServices = mkOption {
       type = types.listOf types.str;
       default = [];
@@ -97,14 +116,24 @@ in
             --allow-other \
             --dir-perms=0775 \
             --file-perms=0664 \
+            --cache-dir=/var/cache/rclone \
             --vfs-cache-mode=writes \
             --vfs-cache-max-age=6h \
             --vfs-cache-max-size=50G \
-            --buffer-size=256M \
-            --vfs-read-ahead=512M \
-            --transfers=4 \
-            --log-level=INFO
+            --buffer-size=32M \
+            --vfs-read-ahead=128M \
+            --transfers=2 \
+            ${optionalString cfg.rc.enable "--rc --rc-addr=${cfg.rc.addr} --rc-no-auth \\\n            "}--log-level=INFO
         '';
+        # Give rclone a real HOME so it stops erroring on the missing `getent`
+        # and stores its config/cache where we expect.
+        Environment = "HOME=/root";
+        # systemd creates/owns /var/cache/rclone for the VFS write cache.
+        CacheDirectory = "rclone";
+        # A dead rclone turns the FUSE mount into an uninterruptible zombie that
+        # hangs every consumer. Under memory pressure, tell the OOM killers to
+        # sacrifice the greedy readers/writers (ffmpeg, cp) first, not rclone.
+        OOMScoreAdjust = -800;
         Restart    = "on-failure";
         RestartSec = "10s";
       };
