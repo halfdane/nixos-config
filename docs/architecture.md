@@ -2,20 +2,29 @@
 
 ## Hosts
 
-| Host | Hardware | IP (public) | IP (VPN) | Platform |
-|------|----------|-------------|----------|----------|
-| **ada** | netcup VPS | `152.53.176.47` | `10.100.0.1` | x86_64 |
-| **curie** | laptop | — | `10.100.0.2` | aarch64 |
-| *(phone)* | Android/iOS | — | `10.100.0.3` | — |
+| Host | Hardware | CPU | RAM | Disk (root) | IP (public) | IP (VPN) | Platform |
+|------|----------|-----|-----|-------------|-------------|----------|----------|
+| **ada** | netcup VPS 500 G12 (KVM) | 2 vCPU AMD EPYC-Genoa | 3.8 GiB + 5.8 GiB swap (zram+file) | 125 GB (≈105 GB free) | `152.53.176.47` | `10.100.0.1` | x86_64 |
+| **curie** | laptop | — | — | — | — | `10.100.0.5` | aarch64 |
+| **leguin** | NUC (desktop) | 2× Intel Celeron N2830 @ 2.16 GHz | 3.7 GiB, no swap | 109 GB (≈79 GB free) | — | — (home LAN `192.168.178.103`) | x86_64 |
+| **tubman** | — | — | — | — | — | — (home LAN `192.168.178.145`) | — |
+| *(phone)* | Android/iOS | — | — | — | — | `10.100.0.3` | — |
+
+> **Resource notes.** ada is memory-constrained: at profiling time only ~730 MiB was available and it was actively swapping (~2 GiB in swap). Disk headroom is ample (~105 GB free). leguin's Celeron N2830 is a weak 2014 low-power part — comparable to ada for transcoding, not faster. Neither box is a strong transcoder. Media for both lives on the Hetzner Storage Box (rclone SFTP mount), not on local disk.
 
 ## Network
 
 WireGuard hub-and-spoke. Ada is the hub (server), all other devices are peers.
+Actual peers (see `hosts/ada/configuration.nix`): phone `10.100.0.3`,
+tv_fritzbox `10.100.0.4`, curie `10.100.0.5`. leguin and tubman are on the home
+LAN behind the Fritzbox and reach ada's services through the `tv_fritzbox` tunnel.
 
 ```
-curie (10.100.0.2) ──┐
-                      ├── wg-server ── ada (10.100.0.1 / 152.53.176.47:51820)
-phone (10.100.0.3) ──┘
+curie (10.100.0.5) ──────────┐
+phone (10.100.0.3) ──────────┤
+                             ├── wg-server ── ada (10.100.0.1 / 152.53.176.47:51820)
+tv_fritzbox (10.100.0.4) ────┘
+   └─ home LAN: leguin (192.168.178.103), tubman (192.168.178.145)
 ```
 
 - **Split tunnel**: only `10.100.0.0/24` routes through the VPN. Public internet goes direct.
