@@ -117,9 +117,9 @@ in
             --dir-perms=0775 \
             --file-perms=0664 \
             --cache-dir=/var/cache/rclone \
-            --vfs-cache-mode=writes \
-            --vfs-cache-max-age=6h \
-            --vfs-cache-max-size=50G \
+            --vfs-cache-mode=full \
+            --vfs-cache-max-age=72h \
+            --vfs-cache-max-size=40G \
             --buffer-size=32M \
             --vfs-read-ahead=128M \
             --transfers=2 \
@@ -128,7 +128,9 @@ in
         # Give rclone a real HOME so it stops erroring on the missing `getent`
         # and stores its config/cache where we expect.
         Environment = "HOME=/root";
-        # systemd creates/owns /var/cache/rclone for the VFS write cache.
+        # systemd creates/owns /var/cache/rclone for the VFS cache (full mode:
+        # caches both reads and write-back, so seeks/re-reads hit local disk
+        # instead of re-fetching over SFTP — sized for ada's streaming role).
         CacheDirectory = "rclone";
         # A dead rclone turns the FUSE mount into an uninterruptible zombie that
         # hangs every consumer. Under memory pressure, tell the OOM killers to
