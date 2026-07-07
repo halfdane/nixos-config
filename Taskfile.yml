@@ -63,6 +63,12 @@ tasks:
     cmds:
       - kwin_wayland --replace &
       - systemctl --user restart plasma-plasmashell
+
+  reset_display:
+    desc: Reset saved display/output config so KWin re-detects the preferred mode
+    cmds:
+      - rm -f ~/.config/kwinoutputconfig.json
+      - echo "Removed kwinoutputconfig.json — log out/in (or run 'task kwin_restart') to re-detect."
   
   rekey_secrets:
     desc: Rekey secrets with agenix
