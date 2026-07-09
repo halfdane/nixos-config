@@ -1,0 +1,326 @@
+#!/usr/bin/env bash
+#
+# transcode-oversized — find video files whose overall bitrate is too high for
+# the ada->leguin WireGuard link and re-encode them to H.264 8-bit with a
+# bitrate cap, so Jellyfin can Direct Play them (no server-side transcode) and
+# they fit through the tunnel.
+#
+# Selection is purely by BITRATE (codec is ignored): the Deep Space Nine HEVC
+# files play fine because they sit ~2.5 Mbit/s, so only files above the target
+# get touched.
+#
+# Intended to run on curie (the M4 host), which mounts the same Hetzner Storage
+# Box at /mnt/storagebox. Files are read from and written back to the mount in
+# place, keeping the original filename so Sonarr/Radarr keep tracking them.
+#
+# DEFAULT IS A DRY RUN: it only lists oversized files. Pass --apply to encode.
+#
+# Caveats:
+#   * Re-encoding is lossy; we aim for a quality-based CRF capped by --max-bitrate.
+#   * After transcoding, run a Jellyfin library scan so cached media info
+#     (bitrate/codec) is refreshed.
+#   * Between files it waits for rclone's write-back upload to drain (via the
+#     mount's RC API, if reachable) so overlapping transfers can't wedge it.
+#
+# Usage:
+#   transcode-oversized [options] [PATH]
+#
+# Options:
+#   --apply              Actually transcode (default: dry run / scan only).
+#   --max-bitrate MBIT   Target/selection ceiling in Mbit/s (default: 4).
+#                        Files whose overall bitrate exceeds this are selected;
+#                        video is capped so the total stays under it.
+#   --crf N              x264 CRF quality (default: 21; lower = better/bigger).
+#   --preset P           x264 preset (default: medium).
+#   --audio-reserve KBIT AAC audio bitrate + overhead headroom (default: 320).
+#                        (Audio is re-encoded to AAC at this rate, not copied.)
+#   --workdir DIR        Disk-backed scratch dir (default: temp under ~/.cache).
+#   --limit N            Process at most N files (useful for a first test).
+#   --keep-backup        Keep the original as "<file>.orig.bak" after success.
+#   -h, --help           Show this help.
+#
+# PATH may be a single file or a directory; defaults to
+# /mnt/storagebox/media/library
+
+set -euo pipefail
+
+ROOT="/mnt/storagebox/media/library"
+APPLY=0
+MAX_MBIT=3
+CRF=21
+PRESET="medium"
+AUDIO_RESERVE_KBIT=320
+WORKDIR=""
+LIMIT=0
+KEEP_BACKUP=0
+# rclone remote-control endpoint used to wait for VFS write-back uploads to
+# finish between files (see wait_for_uploads). Override with RCLONE_RC_URL.
+RC_URL="${RCLONE_RC_URL:-http://localhost:5572}"
+
+die() { echo "error: $*" >&2; exit 1; }
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --apply) APPLY=1 ;;
+    --max-bitrate) MAX_MBIT="${2:?}"; shift ;;
+    --crf) CRF="${2:?}"; shift ;;
+    --preset) PRESET="${2:?}"; shift ;;
+    --audio-reserve) AUDIO_RESERVE_KBIT="${2:?}"; shift ;;
+    --workdir) WORKDIR="${2:?}"; shift ;;
+    --limit) LIMIT="${2:?}"; shift ;;
+    --keep-backup) KEEP_BACKUP=1 ;;
+    -h|--help) sed -n '2,44p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    -*) die "unknown option: $1" ;;
+    *) ROOT="$1" ;;
+  esac
+  shift
+done
+
+command -v ffprobe >/dev/null || die "ffprobe not found (install ffmpeg)"
+command -v ffmpeg  >/dev/null || die "ffmpeg not found (install ffmpeg)"
+[ -e "$ROOT" ] || die "path not found: $ROOT (is the Storage Box mounted?)"
+
+# Selection threshold and derived video cap, in bits/s / kbit.
+THRESH_BPS=$(awk "BEGIN{printf \"%d\", $MAX_MBIT*1000000}")
+VIDEO_MAXRATE_KBIT=$(awk "BEGIN{printf \"%d\", $MAX_MBIT*1000 - $AUDIO_RESERVE_KBIT}")
+[ "$VIDEO_MAXRATE_KBIT" -gt 0 ] || die "--max-bitrate too low for --audio-reserve"
+VIDEO_BUFSIZE_KBIT=$((VIDEO_MAXRATE_KBIT * 2))
+
+# Scratch dir. Each source is copied here and encoded locally, so it must be a
+# real disk with room for ~2x the largest file. Default under ~/.cache rather
+# than /tmp, which is often a tmpfs (RAM) on NixOS.
+if [ -z "$WORKDIR" ]; then
+  cache_base="${XDG_CACHE_HOME:-$HOME/.cache}"
+  mkdir -p "$cache_base"
+  WORKDIR="$(mktemp -d "$cache_base/transcode-oversized.XXXXXX")"
+  trap 'rm -rf "$WORKDIR"' EXIT
+else
+  mkdir -p "$WORKDIR"
+fi
+
+# Refuse a RAM-backed scratch dir: copying multi-GB media there can exhaust
+# memory. Pass --workdir with a disk-backed path to override.
+scratch_fstype="$(stat -f -c '%T' "$WORKDIR" 2>/dev/null || echo unknown)"
+case "$scratch_fstype" in
+  tmpfs|ramfs)
+    die "scratch dir $WORKDIR is on $scratch_fstype (RAM); pass --workdir with a disk-backed path" ;;
+esac
+
+# Codec of the first video stream (empty on failure). The trailing '|| true'
+# keeps a non-zero ffprobe/SIGPIPE from tripping 'set -e' (via pipefail) when
+# this runs inside a command substitution.
+video_codec() {
+  { ffprobe -v error -select_streams v:0 -show_entries stream=codec_name \
+      -of csv=p=0 "$1" 2>/dev/null | head -n1; } || true
+}
+
+# Container duration in whole seconds (0 on failure).
+duration_s() {
+  local d
+  d="$({ ffprobe -v error -show_entries format=duration -of csv=p=0 "$1" 2>/dev/null | head -n1; } || true)"
+  printf '%.0f' "${d:-0}" 2>/dev/null || echo 0
+}
+
+# Overall bitrate in bits/s. Prefer the container's reported bitrate; fall back
+# to size*8/duration when it's missing (common for Matroska). Uses a SINGLE
+# ffprobe call (both fields at once) — important over the slow SFTP mount,
+# where each probe is a round-trip.
+overall_bps() {
+  local f="$1" out br dur bytes
+  out="$({ ffprobe -v error -show_entries format=bit_rate,duration \
+      -of default=noprint_wrappers=1 "$f" 2>/dev/null; } || true)"
+  br="$(printf '%s\n'  "$out" | sed -n 's/^bit_rate=//p' | head -n1)"
+  dur="$(printf '%s\n' "$out" | sed -n 's/^duration=//p' | head -n1)"
+  case "$br" in ''|N/A|0) br="" ;; esac
+  if [ -n "$br" ]; then echo "$br"; return; fi
+  bytes="$(stat -c '%s' "$f" 2>/dev/null || echo 0)"
+  dur="$(printf '%.0f' "${dur:-0}" 2>/dev/null || echo 0)"
+  if [ "$dur" -gt 0 ]; then
+    awk "BEGIN{printf \"%d\", $bytes*8/$dur}"
+  else
+    echo 0
+  fi
+}
+
+# Block until rclone has flushed all pending VFS write-back uploads to the
+# Storage Box. Writing a transcoded file to the mount only stages it in the
+# local VFS cache and queues an async upload; starting the next big read while
+# that upload is still draining is exactly what wedged the mount before. If the
+# mount's RC API isn't reachable (e.g. --rc not enabled), we skip the wait.
+wait_for_uploads() {
+  command -v rclone >/dev/null 2>&1 || return 0
+  rclone rc --url "$RC_URL" vfs/stats >/dev/null 2>&1 || return 0
+  local stats prog queued
+  printf '   waiting for rclone upload to finish ...' >&2
+  while :; do
+    stats="$(rclone rc --url "$RC_URL" vfs/stats 2>/dev/null)" || break
+    prog="$(printf '%s\n' "$stats" | sed -n 's/.*"uploadsInProgress"[^0-9]*\([0-9][0-9]*\).*/\1/p' | head -n1)"
+    queued="$(printf '%s\n' "$stats" | sed -n 's/.*"uploadsQueued"[^0-9]*\([0-9][0-9]*\).*/\1/p' | head -n1)"
+    prog="${prog:-0}"; queued="${queued:-0}"
+    if [ "$prog" -eq 0 ] && [ "$queued" -eq 0 ]; then
+      printf ' done\n' >&2; break
+    fi
+    printf '\r   waiting for rclone upload to finish ... in-progress=%s queued=%s   ' "$prog" "$queued" >&2
+    sleep 5
+  done
+}
+
+echo "Scanning $ROOT for files over ${MAX_MBIT} Mbit/s ..."
+echo
+
+mapfile -d '' FILES < <(find "$ROOT" -type f \
+  \( -iname '*.mkv' -o -iname '*.mp4' -o -iname '*.m4v' -o -iname '*.avi' -o -iname '*.ts' \) \
+  -print0)
+
+echo "Probing ${#FILES[@]} file(s) over the mount (this can take a while) ..." >&2
+problem=()
+declare -A BPS
+i=0
+for f in "${FILES[@]}"; do
+  i=$((i + 1))
+  printf '\r  probed %d/%d' "$i" "${#FILES[@]}" >&2
+  # Skip our own backups.
+  case "$f" in *.orig.bak) continue ;; esac
+  bps="$(overall_bps "$f")"
+  if [ "${bps:-0}" -gt "$THRESH_BPS" ]; then
+    problem+=("$f")
+    BPS["$f"]="$bps"
+  fi
+done
+printf '\r%*s\r' 40 '' >&2
+
+if [ "${#problem[@]}" -eq 0 ]; then
+  echo "No files above ${MAX_MBIT} Mbit/s. Nothing to do."
+  exit 0
+fi
+
+echo "Found ${#problem[@]} file(s) over ${MAX_MBIT} Mbit/s:"
+total_bytes=0
+for f in "${problem[@]}"; do
+  bytes="$(stat -c '%s' "$f" 2>/dev/null || echo 0)"
+  total_bytes=$((total_bytes + bytes))
+  mbit=$(awk "BEGIN{printf \"%.1f\", ${BPS[$f]}/1000000}")
+  printf '  %6s Mbit/s  %8s  %s\n' "$mbit" "$(numfmt --to=iec "$bytes" 2>/dev/null || echo "${bytes}B")" "$f"
+done
+echo
+printf 'Total: %s across %d file(s)\n' "$(numfmt --to=iec "$total_bytes" 2>/dev/null || echo "${total_bytes}B")" "${#problem[@]}"
+
+if [ "$APPLY" -ne 1 ]; then
+  echo
+  echo "Dry run — no files changed. Re-run with --apply to transcode."
+  exit 0
+fi
+
+echo
+echo "Transcoding to H.264 8-bit, video capped at ${VIDEO_MAXRATE_KBIT}k (crf=$CRF, preset=$PRESET)."
+echo "Scratch: $WORKDIR"
+echo
+
+ok=0; failed=0; done_count=0
+for src in "${problem[@]}"; do
+  if [ "$LIMIT" -gt 0 ] && [ "$done_count" -ge "$LIMIT" ]; then
+    echo "Reached --limit $LIMIT; stopping."
+    break
+  fi
+  done_count=$((done_count + 1))
+
+  ext="${src##*.}"
+  tmp="$WORKDIR/$(basename "${src%.*}").capped.$ext"
+  localsrc="$WORKDIR/$(basename "$src")"
+  echo ">> $src"
+
+  # Copy the source to local scratch first. Encoding straight off the rclone
+  # SFTP mount is unstable (random-access reads over the network), so we pull
+  # it down once (sequential read) and transcode locally.
+  printf '   copying to local scratch ... ' >&2
+  # -a is recursive/attribute-preserving so this is safe whether $src is a file
+  # or (defensively) a directory.
+  if ! cp -af "$src" "$localsrc"; then
+    echo "FAILED: could not copy source to $WORKDIR" >&2
+    rm -f "$localsrc"; failed=$((failed + 1)); continue
+  fi
+  printf 'done\n' >&2
+
+  src_dur="$(duration_s "$localsrc")"
+
+  # Re-encode the first video stream to H.264 8-bit with a hard bitrate cap
+  # (constrained CRF). Audio is RE-ENCODED to AAC at the reserve bitrate rather
+  # than copied: sources often carry lossless tracks (DTS-HD MA, TrueHD) that
+  # run 3-4 Mbit/s and would blow the total budget even with the video capped.
+  # Subtitle streams are copied as-is (optional via '?').
+  # Progress is rendered as a single self-updating line parsed from ffmpeg's
+  # -progress stream, instead of its default multi-line stats spam.
+  if ffmpeg -nostdin -hide_banner -loglevel error -nostats \
+      -progress pipe:1 -stats_period 2 -y \
+      -i "$localsrc" \
+      -map 0:v:0 -map 0:a? -map 0:s? \
+      -c:v libx264 -preset "$PRESET" -crf "$CRF" \
+        -maxrate "${VIDEO_MAXRATE_KBIT}k" -bufsize "${VIDEO_BUFSIZE_KBIT}k" \
+        -profile:v high -pix_fmt yuv420p \
+      -c:a aac -b:a "${AUDIO_RESERVE_KBIT}k" -c:s copy \
+      "$tmp" \
+      | while IFS='=' read -r key val; do
+          case "$key" in
+            out_time) ptime="$val" ;;
+            bitrate)  pbr="$val" ;;
+            speed)    pspeed="$val" ;;
+            progress)
+              printf '\r     t=%s  bitrate=%s  speed=%s          ' \
+                "${ptime:-–}" "${pbr:-–}" "${pspeed:-–}" >&2
+              [ "$val" = "end" ] && printf '\n' >&2
+              ;;
+          esac
+        done; then
+
+    # Local source copy no longer needed once the encode has finished.
+    rm -f "$localsrc"
+
+    out_codec="$(video_codec "$tmp")"
+    out_dur="$(duration_s "$tmp")"
+    out_bytes="$(stat -c '%s' "$tmp" 2>/dev/null || echo 0)"
+    out_bps="$(overall_bps "$tmp")"
+    diff=$(( src_dur > out_dur ? src_dur - out_dur : out_dur - src_dur ))
+
+    if [ "$out_codec" != "h264" ]; then
+      echo "   FAILED: output codec is '$out_codec', not h264 — leaving original untouched" >&2
+      rm -f "$tmp"; failed=$((failed + 1)); continue
+    fi
+    if [ "$out_bytes" -le 0 ]; then
+      echo "   FAILED: output is empty — leaving original untouched" >&2
+      rm -f "$tmp"; failed=$((failed + 1)); continue
+    fi
+    if [ "$diff" -gt 3 ]; then
+      echo "   FAILED: duration mismatch (src ${src_dur}s vs out ${out_dur}s) — leaving original untouched" >&2
+      rm -f "$tmp"; failed=$((failed + 1)); continue
+    fi
+
+    # Success: back up original (same remote fs = cheap rename), install new
+    # file, then optionally drop the backup.
+    mv -f "$src" "$src.orig.bak"
+    if mv -f "$tmp" "$src"; then
+      out_mbit=$(awk "BEGIN{printf \"%.1f\", ${out_bps:-0}/1000000}")
+      if [ "$KEEP_BACKUP" -eq 1 ]; then
+        echo "   OK (${out_mbit} Mbit/s, $(numfmt --to=iec "$out_bytes" 2>/dev/null || echo "${out_bytes}B")); backup kept at $src.orig.bak"
+      else
+        rm -f "$src.orig.bak"
+        echo "   OK (${out_mbit} Mbit/s, $(numfmt --to=iec "$out_bytes" 2>/dev/null || echo "${out_bytes}B"))"
+      fi
+      ok=$((ok + 1))
+      # Don't start the next file's big read until this file's write-back has
+      # finished uploading, so concurrent transfers can't wedge the mount.
+      wait_for_uploads
+    else
+      # Roll back if the install failed after the rename.
+      mv -f "$src.orig.bak" "$src" 2>/dev/null || true
+      echo "   FAILED: could not install transcoded file — original restored" >&2
+      rm -f "$tmp"; failed=$((failed + 1))
+    fi
+  else
+    echo "   FAILED: ffmpeg error — leaving original untouched" >&2
+    rm -f "$localsrc" "$tmp"; failed=$((failed + 1))
+  fi
+done
+
+echo
+echo "Done. $ok transcoded, $failed failed."
+echo "Reminder: run a Jellyfin library scan so cached media info is refreshed."
