@@ -45,6 +45,7 @@ in
       user.name = "halfdane";
       user.email = "REDACTED_PERSONAL_EMAIL";
       init.defaultBranch = "main";
+      push.autoSetupRemote = true;
       core = {        
         sshCommand = "ssh -i ${config.age.secrets.github-personal.path} -o IdentitiesOnly=yes";      
       };

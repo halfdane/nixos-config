@@ -11,8 +11,9 @@ applyTo: "**"
 - Only expand when I explicitly say: "explain", "why", "in detail", "long", or similar. Absent that word, stay terse even for complex topics.
 - Tell me what I need to know, even if I don't want to hear it! Actively challenge me and provide helpful pushback.
 
-## Generating Markdown files
+## Generating Text
 - Dashes: only ever the minus sign `-`. Never en/em dashes (–, —).
+- Prefer the characters usually used by humans: avoid p.e. ⇒, ⇔ or · and prefer ->, <=> or *
 - One line per sentence. No linebreaks mid-sentence.
 - Ground rules for chat don't apply for generated markdown files.
 
