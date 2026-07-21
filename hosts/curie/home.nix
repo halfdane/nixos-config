@@ -6,8 +6,8 @@ in
   age = {
     identityPaths = [ "/run/agenix/user-ssh-key" ];
     secrets = {
-      github-personal.file = ./../../secrets/github-personal.age;
-      github-work.file = ./../../secrets/github-work.age;
+      github-personal.file = "${inputs.secrets}/github-personal.age";
+      github-work.file = "${inputs.secrets}/github-work.age";
     };
   };
 

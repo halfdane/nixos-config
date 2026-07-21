@@ -31,6 +31,14 @@
     agenix.url = "github:ryantm/agenix";
     nixos-aarch64-widevine.url = "github:epetousis/nixos-aarch64-widevine";
     nixarr.url = "github:nix-media-server/nixarr";
+
+    # Private repo holding the agenix-encrypted secrets and agenix recipient
+    # rules. Kept out of this (public) repo. flake = false: it is a plain file
+    # tree, consumed via "${inputs.secrets}/<name>.age".
+    secrets = {
+      url = "git+ssh://git@github.com/halfdane/nixos-secrets.git";
+      flake = false;
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, 
@@ -40,7 +48,7 @@
       nixosModules =
         (import ./nixos)
         ++ [
-          ./secrets/pubkeys.nix
+          "${inputs.secrets}/pubkeys.nix"
           inputs.fetching.nixosModules.default
           agenix.nixosModules.default
           ilias.nixosModules.default

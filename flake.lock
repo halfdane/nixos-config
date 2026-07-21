@@ -433,7 +433,8 @@
         "nixos-aarch64-widevine": "nixos-aarch64-widevine",
         "nixpkgs": "nixpkgs_5",
         "plasma-manager": "plasma-manager",
-        "prometheus-renderer": "prometheus-renderer"
+        "prometheus-renderer": "prometheus-renderer",
+        "secrets": "secrets"
       }
     },
     "rust-overlay": {
@@ -456,6 +457,22 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "type": "github"
+      }
+    },
+    "secrets": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784625841,
+        "narHash": "sha256-uYWglegB/xmWM06cfESnKLkdQHEun90mqWG4xTqYhoI=",
+        "ref": "refs/heads/main",
+        "rev": "baf232ce9d8bd4720802c4c0d5a6a1b0507c3ea1",
+        "revCount": 1,
+        "type": "git",
+        "url": "ssh://git@github.com/halfdane/nixos-secrets.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/halfdane/nixos-secrets.git"
       }
     },
     "systems": {

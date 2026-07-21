@@ -1,10 +1,10 @@
 { config, pkgs, lib, inputs, username, hostname, ... }:
 {
   age.secrets = {
-    wg-server.file = ./../../secrets/wg-server.age;
-    privado_config.file = ./../../secrets/privado_config.age;
-    eweka.file = ./../../secrets/eweka.age;
-    hetzner_storage.file = ./../../secrets/hetzner_storage.age;
+    wg-server.file = "${inputs.secrets}/wg-server.age";
+    privado_config.file = "${inputs.secrets}/privado_config.age";
+    eweka.file = "${inputs.secrets}/eweka.age";
+    hetzner_storage.file = "${inputs.secrets}/hetzner_storage.age";
   };
   imports = [
     ./hardware-configuration.nix

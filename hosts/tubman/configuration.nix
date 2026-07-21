@@ -19,12 +19,12 @@
 
   age.secrets = {
     user-ssh-key = {
-      file = ./../../secrets/personal_ssh.age;
+      file = "${inputs.secrets}/personal_ssh.age";
       path = "/run/agenix/user-ssh-key";
       owner = "${username}";
       mode = "600";
     };
-    hetzner_storage.file = ./../../secrets/hetzner_storage.age;
+    hetzner_storage.file = "${inputs.secrets}/hetzner_storage.age";
   };
   services.maestral = {
     enable = true;

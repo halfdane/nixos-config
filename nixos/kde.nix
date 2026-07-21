@@ -1,4 +1,4 @@
-{ config, lib, pkgs, username, ... }:
+{ config, lib, pkgs, username, inputs, ... }:
 
 let
   cfg = config.services.kde;
@@ -69,10 +69,11 @@ in {
 
       # Agenix secret: the keyring encryption password.
       # Before setting secretService = "oo7" on a host for the first time, create
-      # the secret file (choose a strong password when prompted):
-      #   nix-shell -p agenix --run "agenix -e secrets/oo7-keyring-password.age"
+      # the secret file (choose a strong password when prompted), in the private
+      # secrets repo (git@github.com:halfdane/nixos-secrets.git):
+      #   nix-shell -p agenix --run "agenix -e oo7-keyring-password.age"
       age.secrets.oo7-keyring-password = {
-        file = ../secrets/oo7-keyring-password.age;
+        file = "${inputs.secrets}/oo7-keyring-password.age";
         path = "/run/agenix/oo7-keyring-password";
         owner = username;
         mode = "400";

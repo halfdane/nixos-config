@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, inputs, ... }:
 {
   # ---------------------------------------------------------------------------
   # Let's Encrypt wildcard cert for *.micasaestu.casa via netcup DNS-01 challenge.
@@ -14,7 +14,7 @@
   # ---------------------------------------------------------------------------
 
   age.secrets.netcup = {
-    file = ./../../secrets/netcup.age;
+    file = "${inputs.secrets}/netcup.age";
     # The acme user (created by security.acme) must be able to read this file.
     owner = "acme";
     group = "acme";

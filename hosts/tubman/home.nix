@@ -5,7 +5,7 @@
     identityPaths = [ "/run/agenix/user-ssh-key" ];
     secrets = {
       home_wlan = {
-        file = ./../../secrets/home_wlan.age;
+        file = "${inputs.secrets}/home_wlan.age";
         path = "/etc/NetworkManager/system-connections/home-wlan";
         mode = "0600";
       }; 

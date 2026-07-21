@@ -20,6 +20,9 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
+          # Give home-manager modules the same specialArgs as NixOS modules
+          # (notably `inputs`, so home.nix can reference `${inputs.secrets}`).
+          home-manager.extraSpecialArgs = specialArgs // { inherit username hostname; };
           # plasma-manager is imported for every host because the always-loaded
           # home/plasma_hacking.nix module references programs.plasma options,
           # which must exist even when that module is disabled (mkIf only gates

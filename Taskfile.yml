@@ -71,9 +71,10 @@ tasks:
       - echo "Removed kwinoutputconfig.json — log out/in (or run 'task kwin_restart') to re-detect."
   
   rekey_secrets:
-    desc: Rekey secrets with agenix
+    desc: Rekey secrets with agenix (in the private nixos-secrets repo)
     cmds:
-      - cd secrets && agenix -r
+      - cd ../nixos-secrets && agenix -r && git commit -am "rekey" && git push
+      - nix flake update secrets
 
   add_ada_vpn:
     desc: Add the current Wireguard peer config to the VPN
@@ -100,7 +101,7 @@ tasks:
       - ssh {{.USER_ON_TARGET_HOST}}@{{.TARGET_HOST_IP_USER_ACCESSIBLE}} "sudo nixos-generate-config --show-hardware-config" > ./hosts/{{.CONFIG_NAME}}/hardware-configuration.nix
       - read -p "Adjusted filesystem entries from ./hosts/{{.CONFIG_NAME}}/hardware-configuration.nix , then hit enter for the ssh key" -r;
       - ssh {{.USER_ON_TARGET_HOST}}@{{.TARGET_HOST_IP_USER_ACCESSIBLE}} 'cat /etc/ssh/ssh_host_ed25519_key.pub'
-      - read -p "Hit enter after you added the above SSH host key to the pubkeys_attrset.nix " -r;
+      - read -p "Hit enter after you added the above SSH host key to pubkeys_attrset.nix in the private nixos-secrets repo " -r;
       - task: rekey_secrets
       - task: deploy:{{.CONFIG_NAME}}
         vars: { TARGET_HOST: "{{.TARGET_HOST_IP_USER_ACCESSIBLE}}" }

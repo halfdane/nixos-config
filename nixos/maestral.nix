@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 with lib;
 
@@ -24,7 +24,7 @@ in {
   config = mkIf cfg.enable {
     
     age.secrets.maestral = {
-      file = ../secrets/maestral.age;
+      file = "${inputs.secrets}/maestral.age";
       owner = "${cfg.user}";  # Makes readable by current user
       mode = "0600";  # Only by current user
       path = "/run/agenix/maestral";
