@@ -1,6 +1,7 @@
 { config, pkgs, inputs, lib, username, ... }:
 let
   logsmith = pkgs.callPackage ../../pkgs/logsmith { };
+  gitId = import "${inputs.secrets}/git-identities.nix";
 in
 {
   age = {
@@ -42,26 +43,20 @@ in
   programs.git = {
     enable = true;
     settings = {
-      user.name = "halfdane";
-      user.email = "REDACTED_PERSONAL_EMAIL";
+      user.name = gitId.personal.name;
+      user.email = gitId.personal.email;
       init.defaultBranch = "main";
       push.autoSetupRemote = true;
-      core = {        
-        sshCommand = "ssh -i ${config.age.secrets.github-personal.path} -o IdentitiesOnly=yes";      
-      };
+      core.sshCommand = "ssh -i ${config.age.secrets.github-personal.path} -o IdentitiesOnly=yes";
     };
-    includes = [
-      {
-        condition = "gitdir:~/work/**";
-        contents ={          
-          user.name = "REDACTED_WORK_NAME";            
-          user.email = "REDACTED_WORK_EMAIL";
-          core = {            
-            sshCommand = "ssh -i ${config.age.secrets.github-work.path} -o IdentitiesOnly=yes";          
-          };
-        };
-      }
-    ];
+    includes = [{
+      condition = "gitdir:~/work/**";
+      contents = {
+        user.name = gitId.work.name;
+        user.email = gitId.work.email;
+        core.sshCommand = "ssh -i ${config.age.secrets.github-work.path} -o IdentitiesOnly=yes";
+      };
+    }];
   };
 
 }
