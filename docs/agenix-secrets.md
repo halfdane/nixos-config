@@ -2,10 +2,20 @@
 
 ## 1. General Principles
 - agenix is the recommended tool for managing secrets in NixOS, using age/rage encryption and SSH keys.
-- Secrets are stored as `.age` files in a `secrets/` directory, but referenced by filename only (e.g., `mysecret.age`) in `secrets.nix` and on the CLI.
+- The encrypted secrets live in a **separate private repo**
+  (`git@github.com:halfdane/nixos-secrets.git`), not in this config repo. Clone it
+  as a sibling (`../nixos-secrets`) to edit secrets.
+- Inside that repo, secrets are stored as `.age` files and referenced by filename
+  only (e.g., `mysecret.age`) in `secrets.nix` and on the CLI. Run all `agenix`
+  commands from within the `nixos-secrets` checkout.
+- This config consumes them via the `secrets` flake input; after changing any
+  secret, run `nix flake update secrets` here so the new content is picked up.
 
 
 ## 2. Text Secrets Workflow
+
+All steps 1-2 happen inside a checkout of the private `nixos-secrets` repo.
+
 1. Add a rule to `secrets.nix`:
    ```nix
    {
@@ -19,10 +29,11 @@
 
     agenix -e mysecret.age
    ```
+   Commit and push the `nixos-secrets` repo.
 
-3. Reference in NixOS config:
+3. Reference in NixOS config (in this repo), then `nix flake update secrets`:
    ```nix
-   age.secrets.mysecret.file = ./secrets/mysecret.age;
+   age.secrets.mysecret.file = "${inputs.secrets}/mysecret.age";
    # Use config.age.secrets.mysecret.path in service configs
    ```
 
@@ -35,7 +46,7 @@
 
 - Get public key of a secret ssh key (here github-work.age):
 ```
-(cd ~/nixos-config/secrets; ssh-keygen -y -f <(agenix -d github-work.age))
+(cd ~/nixos-secrets; ssh-keygen -y -f <(agenix -d github-work.age))
 ```
 
 - add to known hosts automatically:

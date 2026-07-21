@@ -1,6 +1,7 @@
 # Maestral Dropbox Headless Setup Guide
 
-If maestral ever refuses to connect with the existing secret in secrets/maestral.age,
+If maestral ever refuses to connect with the existing secret (`maestral.age` in the
+private `nixos-secrets` repo),
 you will have to go through this process.
 It should work easily, but since you're gonna remove the existing config, maybe 
 don't do it lightly. Maybe even back the config up instead, dunno.
@@ -49,17 +50,20 @@ rm -rf ~/.config/maestral
 
 ## Agenix Secret Update
 
-Copy the token to your clipboard (maybe after `echo $token`) and edit from within ./secrets:
+Copy the token to your clipboard (maybe after `echo $token`) and edit from within a
+checkout of the private `nixos-secrets` repo:
 
 ```
-cd secrets
+cd ~/nixos-secrets
 agenix -e maestral.age
 ```
 
-`secrets/maestral.age`:
+`maestral.age`:
 ```
 MAESTRAL_REFRESH_TOKEN=<token>
 ```
+
+Commit and push `nixos-secrets`, then in nixos-config run `nix flake update secrets`.
 
 **Redeploy**:
 

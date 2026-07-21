@@ -51,13 +51,13 @@ ssh root@152.53.176.47 nixos-generate-config --show-hardware-config \
 
 ## Agenix: need to decrypt a secret manually
 
-The disaster-recovery key (`dr_from_keepass`) is stored in KeePass and can decrypt every secret in this repo.
+The disaster-recovery key (`dr_from_keepass`) is stored in KeePass and can decrypt every secret in the `nixos-secrets` repo.
 
 1. Export the private key from KeePass to a temp file (or use `ssh-add` with it).
-2. Decrypt:
+2. Decrypt (from a checkout of the private `nixos-secrets` repo):
 
 ```bash
-cd secrets
+cd ~/nixos-secrets
 agenix -d <secret>.age --identity /path/to/dr_key
 ```
 
@@ -73,15 +73,16 @@ This is needed after a full wipe of ada or curie (the host's ed25519 key changes
 ssh-keyscan <host-ip> | grep ed25519
 ```
 
-2. Update `secrets/secrets.nix` with the new key.
+2. Update `secrets.nix` in the `nixos-secrets` repo with the new key.
 3. Re-encrypt all affected secrets. You need a key that can currently decrypt them — either the `dr_from_keepass` key or the old host key (if still available):
 
 ```bash
-cd secrets
+cd ~/nixos-secrets
 agenix -r -i /path/to/identity
 ```
 
 This re-encrypts every secret defined in `secrets.nix` to the updated key set.
+Commit and push `nixos-secrets`, then run `nix flake update secrets` in nixos-config.
 
 ## Agenix: add a completely new secret
 
@@ -89,14 +90,14 @@ This re-encrypts every secret defined in `secrets.nix` to the updated key set.
 # Generate a random secret (example: 64-byte hex)
 dd if=/dev/urandom bs=1 count=64 status=none | xxd -p -c 64
 
-# Add an entry to secrets/secrets.nix, then:
-cd secrets
+# Add an entry to secrets.nix in the nixos-secrets repo, then:
+cd ~/nixos-secrets
 agenix -e <newname>.age
 ```
 
-Declare it in the relevant host config:
+Declare it in the relevant host config (in nixos-config), then `nix flake update secrets`:
 
 ```nix
-age.secrets."newname".file = ./../../secrets/newname.age;
+age.secrets."newname".file = "${inputs.secrets}/newname.age";
 # Use config.age.secrets."newname".path in service configs
 ```

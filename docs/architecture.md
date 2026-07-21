@@ -65,6 +65,12 @@ All services are behind nginx with a Let's Encrypt wildcard cert for `*.micasaes
 
 Managed by [agenix](https://github.com/ryantm/agenix). See [agenix-secrets.md](agenix-secrets.md) for day-to-day operations.
 
+The encrypted secrets live in a **separate private repository**
+(`git@github.com:halfdane/nixos-secrets.git`), kept out of this (public) repo.
+It is consumed here as the `secrets` flake input (`flake = false`) and referenced
+as `"${inputs.secrets}/<name>.age"`. Edit/rekey secrets inside a checkout of that
+repo, then run `nix flake update secrets` here to pick up the changes.
+
 Secrets are encrypted to a union of keys — any one key can decrypt:
 
 - `root@ada` host key (for runtime decryption on ada)
@@ -88,6 +94,7 @@ Secrets are encrypted to a union of keys — any one key can decrypt:
 | `prometheus-renderer` | custom Grafana-like dashboard |
 | `plasma-manager` | KDE Plasma home-manager module |
 | `nixos-aarch64-widevine` | Widevine CDM for aarch64 |
+| `secrets` | private repo of agenix-encrypted secrets (`flake = false`) |
 
 ## Repository layout
 
@@ -98,10 +105,11 @@ home/                   — shared home-manager modules
 hosts/
   ada/                  — ada host config + DEPLOYMENT.md
   curie/                — curie host config + DEPLOYMENT.md
-secrets/
-  secrets.nix           — agenix key definitions
-  *.age                 — encrypted secrets
 scripts/
   wg-add-peer           — WireGuard peer onboarding helper
 docs/                   — you are here
 ```
+
+The encrypted secrets are **not** in this repo. They live in the private
+`nixos-secrets` repo (agenix `.age` files + `secrets.nix` rules + `pubkeys*.nix`),
+pulled in via the `secrets` flake input.
