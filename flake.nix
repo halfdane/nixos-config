@@ -27,6 +27,7 @@
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    globalprotect-openconnect.url = "github:yuezk/GlobalProtect-openconnect";
 
     agenix.url = "github:ryantm/agenix";
     nixos-aarch64-widevine.url = "github:epetousis/nixos-aarch64-widevine";
