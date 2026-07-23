@@ -33,6 +33,12 @@
     nixos-aarch64-widevine.url = "github:epetousis/nixos-aarch64-widevine";
     nixarr.url = "github:nix-media-server/nixarr";
 
+    minerva_setup = {
+      url = "github:otto-ec/minerva_setup";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     # Private repo holding the agenix-encrypted secrets and agenix recipient
     # rules. Kept out of this (public) repo. flake = false: it is a plain file
     # tree, consumed via "${inputs.secrets}/<name>.age".
@@ -64,6 +70,7 @@
         curie = {
           platform = "aarch64-linux";
           specialArgs = { inherit inputs agenix; };
+          extraHomeManagerModules = [ inputs.minerva_setup.homeManagerModules.default ];
         };
         ada = {
           platform = "x86_64-linux";

@@ -32,12 +32,11 @@ in
     supersonic
     voxtype
     vlc
-    unzip
     obsidian
     opencode
     inkscape
-    awscli2
     tuxedo
+    # awscli2 and unzip are provided by minerva_setup homeManagerModules
   ];
 
   programs.git = {
