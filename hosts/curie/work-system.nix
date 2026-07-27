@@ -34,8 +34,8 @@ let
   '';
 in
 {
-  imports = if builtins.pathExists "${minervaPath}/nixos/certs.nix"
-    then [ (import "${minervaPath}/nixos/certs.nix") ]
+  imports = if builtins.pathExists "${minervaPath}/nixos/default.nix"
+    then [ (import "${minervaPath}/nixos/default.nix") ]
     else [];
 
   # Prefer IPv4 for dual-stack hosts while VPN is active (the tunnel is IPv4-only
