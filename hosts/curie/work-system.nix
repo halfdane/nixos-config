@@ -1,9 +1,9 @@
 { config, pkgs, lib, inputs, ... }:
 
 let
-  # CA certs come from minerva_setup when cloned (same bootstrap timing as other OSes).
+  # CA certs come from minerva_owl-setup when cloned (same bootstrap timing as other OSes).
   # Requires --impure (see Taskfile.yml); absent before `task repos:clone`, active after.
-  minervaPath = "/home/user/work/minerva/minerva_setup";
+  minervaPath = "/home/user/work/minerva/minerva_owl-setup";
 
   gateway = "byod.gp.ottogroup.com";
   gpoc = inputs.globalprotect-openconnect.packages.${pkgs.system}.fromSource;

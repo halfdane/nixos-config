@@ -63,11 +63,11 @@
       hosts = {
         curie =
           let
-            # Include minerva_setup work tools if the repo is cloned to the expected path.
+            # Include minerva_owl-setup work tools if the repo is cloned to the expected path.
             # Gracefully absent before `task repos:clone`; auto-active after.
             # Requires --impure in nixos-rebuild (see Taskfile.yml).
             minervaModule =
-              let path = "/home/user/work/minerva/minerva_setup/home/module.nix";
+              let path = "/home/user/work/minerva/minerva_owl-setup/home/module.nix";
               in if builtins.pathExists path then [ (import path) ] else [];
           in {
             platform = "aarch64-linux";
