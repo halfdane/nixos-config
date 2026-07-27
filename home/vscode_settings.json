@@ -16,5 +16,6 @@
     "git.enableSmartCommit": true,
     "explorer.confirmDelete": false,
     "update.mode": "manual",
+    "diffEditor.renderSideBySide": false,
     "chat.viewSessions.orientation": "stacked"
   }

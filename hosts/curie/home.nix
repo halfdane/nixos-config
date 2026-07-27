@@ -36,7 +36,7 @@ in
     opencode
     inkscape
     tuxedo
-    # awscli2 and unzip are provided by minerva_setup homeManagerModules
+    # awscli2 and unzip come from the minerva_setup module (~/work/minerva/minerva_setup)
   ];
 
   programs.git = {

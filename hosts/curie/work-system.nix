@@ -1,10 +1,9 @@
 { config, pkgs, lib, inputs, ... }:
 
 let
-  # Corporate CA certificates directory
-  # When imported via flake, use relative path
-  certDir = ./certificates;
-  hasCerts = builtins.pathExists certDir;
+  # CA certs come from minerva_setup when cloned (same bootstrap timing as other OSes).
+  # Requires --impure (see Taskfile.yml); absent before `task repos:clone`, active after.
+  minervaPath = "/home/user/work/minerva/minerva_setup";
 
   gateway = "byod.gp.ottogroup.com";
   gpoc = inputs.globalprotect-openconnect.packages.${pkgs.system}.fromSource;
@@ -35,26 +34,10 @@ let
   '';
 in
 {
-  # Install corporate CA certificates system-wide (for curl, wget, git, etc)
-  security.pki.certificateFiles = 
-    if hasCerts then
-      let
-        certFiles = builtins.attrNames (builtins.readDir certDir);
-        isCertFile = name: lib.hasSuffix ".pem" name;
-      in
-        map (f: "${certDir}/${f}") (builtins.filter isCertFile certFiles)
+  imports = if builtins.pathExists "${minervaPath}/nixos/certs.nix"
+    then [ (import "${minervaPath}/nixos/certs.nix") ]
     else [];
 
-  # Also add certificates to system packages for extra compatibility
-  security.pki.certificates = 
-    if hasCerts then
-      let
-        certFiles = builtins.attrNames (builtins.readDir certDir);
-        isCertFile = name: lib.hasSuffix ".pem" name;
-      in
-        map (f: builtins.readFile (certDir + "/${f}")) (builtins.filter isCertFile certFiles)
-    else [];
-  
   # Prefer IPv4 for dual-stack hosts while VPN is active (the tunnel is IPv4-only
   # but installs a black-hole IPv6 default route; this makes glibc pick IPv4).
   environment.etc."gai.conf".text = ''

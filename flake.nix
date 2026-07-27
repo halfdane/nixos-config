@@ -33,12 +33,6 @@
     nixos-aarch64-widevine.url = "github:epetousis/nixos-aarch64-widevine";
     nixarr.url = "github:nix-media-server/nixarr";
 
-    minerva_setup = {
-      url = "github:otto-ec/minerva_setup";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
-    };
-
     # Private repo holding the agenix-encrypted secrets and agenix recipient
     # rules. Kept out of this (public) repo. flake = false: it is a plain file
     # tree, consumed via "${inputs.secrets}/<name>.age".
@@ -67,11 +61,19 @@
         inherit nixpkgs nixosModules homeModules disko agenix home-manager inputs;
       };
       hosts = {
-        curie = {
-          platform = "aarch64-linux";
-          specialArgs = { inherit inputs agenix; };
-          extraHomeManagerModules = [ inputs.minerva_setup.homeManagerModules.default ];
-        };
+        curie =
+          let
+            # Include minerva_setup work tools if the repo is cloned to the expected path.
+            # Gracefully absent before `task repos:clone`; auto-active after.
+            # Requires --impure in nixos-rebuild (see Taskfile.yml).
+            minervaModule =
+              let path = "/home/user/work/minerva/minerva_setup/home/module.nix";
+              in if builtins.pathExists path then [ (import path) ] else [];
+          in {
+            platform = "aarch64-linux";
+            specialArgs = { inherit inputs agenix; };
+            extraHomeManagerModules = minervaModule;
+          };
         ada = {
           platform = "x86_64-linux";
           specialArgs = { inherit inputs agenix fetching; };
