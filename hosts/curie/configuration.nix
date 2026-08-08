@@ -68,12 +68,6 @@
     variant = "";
   };
 
-  i18n.inputMethod = {
-    enable = true;
-    type = "fcitx5";
-    fcitx5.addons = with pkgs; [ fcitx5-gtk qt6Packages.fcitx5-configtool ];
-  };
-
   services.printing.enable = true;
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
