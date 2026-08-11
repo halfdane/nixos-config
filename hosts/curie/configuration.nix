@@ -65,7 +65,8 @@
   services.xserver.enable = true;
   services.xserver.xkb = {
     layout = "us";
-    variant = "";
+    variant = "intl";
+    options = "compose:caps";
   };
 
   services.printing.enable = true;

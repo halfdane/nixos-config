@@ -68,15 +68,20 @@ in
       # SHORTCUTS
       # ---------------------
 
-      # Prevent accidental launcher pop-ups: Meta alone should be a plain modifier,
-      # not trigger anything on release.
-      configFile."kwinrc"."ModifierOnyShortcuts"."Meta" = "";
-
       # Meta+Return → terminal. Assumes konsole; adjust if needed.
       hotkeys.commands."launch-konsole" = {
         name = "Launch Konsole";
         key = "Meta+Return";
         command = "konsole";
+      };
+
+
+      configFile.kwinrc = {
+        # disable screen edges entirely
+        "Windows"."ElectricBorders" = 0;
+        # Prevent accidental launcher pop-ups: Meta alone should be a plain modifier,
+        # not trigger anything on release.
+        "ModifierOnyShortcuts"."Meta" = "";
       };
 
       shortcuts = {
