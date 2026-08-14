@@ -77,7 +77,7 @@
   users.users.${username} = {
     isNormalUser = true;
     extraGroups = [ "wheel" "music" ];
-    shell = pkgs.fish;
+    shell = pkgs.zsh;
     openssh.authorizedKeys.keys = [ config.my.sshPubKeys.personal ];
   };
 

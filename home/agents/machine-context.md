@@ -20,14 +20,7 @@ applyTo: "**"
 ## Working on my machine
 
 - This is a NixOS virtual machine (utm/qemu on a m4 macbook pro). 
-- The shell is **fish**. Use valid fish syntax for every command; bash syntax will fail. Key translations:
 
-    - `cmd1 && cmd2` → `cmd1; and cmd2`
-    - `export VAR=value` → `set -x VAR value`
-    - `$(cmd)` → `(cmd)`
-    - `if [ ... ]; then ... fi` → `if test ...; ...; end`
-    - `cmd &> file` is invalid → use `cmd > file 2>&1`
-    - Multi-line scripts: use `end` instead of `fi`/`done`/`}`.
 
 - Running Tools with Nix
 

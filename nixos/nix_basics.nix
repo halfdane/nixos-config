@@ -22,7 +22,7 @@
   ];
 
   environment.variables.EDITOR = "vim";
-  programs.fish.enable = true;
+  programs.zsh.enable = true;
 
   nix = {
     package = pkgs.nix;

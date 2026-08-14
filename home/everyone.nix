@@ -7,17 +7,11 @@
 
   programs.bash.enable = true;
 
-  programs.fish = {
+  programs.zsh = {
     enable = true;
-    plugins = [
-      {
-        name = "plugin-git";
-        src = pkgs.fishPlugins.plugin-git.src;
-      }
-    ];
-    shellInit = ''
-      fish_add_path ~/.local/bin ~/bin
-    '';
+    enableCompletion = true;
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
   };
 
   programs.direnv = {
@@ -29,11 +23,6 @@
     stdlib = ''
       # Load parent .envrc files automatically
       source_up_if_exists
-
-      # fish 4.x made 'version' read-only; nix dev shells export it, causing
-      # a harmless but noisy warning. Wrap use_flake to unset it after load.
-      eval "$(declare -f use_flake | sed 's/^use_flake (/_use_flake_inner (/')"
-      use_flake() { _use_flake_inner "$@"; unset version; }
     '';
   };
 

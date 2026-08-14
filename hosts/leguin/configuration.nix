@@ -60,7 +60,7 @@
   users.users.${username} = {
     isNormalUser = true;
     extraGroups = [ "networkmanager" "wheel" "docker" ];
-    shell = pkgs.fish;
+    shell = pkgs.zsh;
     openssh.authorizedKeys.keys = [ config.my.sshPubKeys.personal ];
   };
 
