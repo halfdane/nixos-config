@@ -1,12 +1,12 @@
-{ ... }:
-let
-  # All work system-level config lives in the minerva_owl-setup repo.
-  # Requires --impure (see Taskfile.yml); absent before `task repos:clone`, active after.
-  # VPN needs `globalprotect-openconnect` in flake inputs (already present).
-  minervaPath = "/home/user/work/minerva/minerva_owl-setup";
-in
+{ inputs, ... }:
 {
-  imports = if builtins.pathExists "${minervaPath}/nixos/default.nix"
-    then [ (import "${minervaPath}/nixos/default.nix") ]
-    else [];
+  # All work system-level config lives in the minerva_owl-setup repo, fetched
+  # as the `minerva_owl_setup` flake input (see flake.nix).
+  # VPN needs `globalprotect-openconnect` in flake inputs (already present).
+  imports = [ inputs.minerva_owl_setup.nixosModules.workSystem ];
+
+  # dash0 CLI etc. (see minerva_owl-setup/home/module.nix); useGlobalPkgs = true
+  # means overlays must be applied here at the system level, not from within
+  # the Home Manager module itself.
+  nixpkgs.overlays = [ inputs.minerva_owl_setup.overlays.default ];
 }
