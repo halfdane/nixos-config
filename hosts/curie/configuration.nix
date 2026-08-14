@@ -1,6 +1,9 @@
 { config, pkgs, lib, inputs, username, hostname, ... }:
 {
-  nixpkgs.overlays = [ inputs.nixos-aarch64-widevine.overlays.default ];
+  nixpkgs.overlays = [
+    inputs.nixos-aarch64-widevine.overlays.default
+    inputs.minerva_owl_setup.overlays.default
+  ];
 
   age.secrets = {
     user-ssh-key = {

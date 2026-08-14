@@ -12,6 +12,16 @@ in
     };
   };
 
+  # Dedicated alias so the otto-ec work key is selected by hostname, not by
+  # cwd/gitdir (Nix's flake-input git fetcher clones outside ~/work/, so the
+  # gitdir:~/work/** include below never applies to it).
+  programs.ssh.settings."github-otto-ec" = {
+    HostName = "github.com";
+    User = "git";
+    IdentityFile = config.age.secrets.github-work.path;
+    IdentitiesOnly = "yes";
+  };
+
   programs.vscode.enable = true;
   programs.firefox.enable = true;
   programs.ssh.enable = true;  
@@ -21,6 +31,7 @@ in
   programs.plasma.enable = true;
 
   programs.agents.enable = true;
+  programs.minerva.enable = true;
 
   home.packages = with pkgs; [ 
     home-manager 

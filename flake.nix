@@ -40,11 +40,21 @@
       url = "git+ssh://git@github.com/halfdane/nixos-secrets.git";
       flake = false;
     };
+
+    # Minerva team dev tooling (curie only). Fetched via the "github-otto-ec"
+    # SSH host alias (see hosts/curie/home.nix) instead of plain github.com:
+    # git's gitdir-based work/personal key switch doesn't apply here because
+    # Nix clones flake inputs into its own cache, not under ~/work/.
+    minerva_owl_setup = {
+      url = "git+ssh://git@github-otto-ec/otto-ec/minerva_owl-setup.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, 
                       disko, agenix, plasma-manager, fetching, 
-                      ilias, nixarr, ... }:
+                      ilias, nixarr, minerva_owl_setup, ... }:
     let
       nixosModules =
         (import ./nixos)
@@ -61,19 +71,11 @@
         inherit nixpkgs nixosModules homeModules disko agenix home-manager inputs;
       };
       hosts = {
-        curie =
-          let
-            # Include minerva_owl-setup work tools if the repo is cloned to the expected path.
-            # Gracefully absent before `task repos:clone`; auto-active after.
-            # Requires --impure in nixos-rebuild (see Taskfile.yml).
-            minervaModule =
-              let path = "/home/user/work/minerva/minerva_owl-setup/home/module.nix";
-              in if builtins.pathExists path then [ (import path) ] else [];
-          in {
-            platform = "aarch64-linux";
-            specialArgs = { inherit inputs agenix; };
-            extraHomeManagerModules = minervaModule;
-          };
+        curie = {
+          platform = "aarch64-linux";
+          specialArgs = { inherit inputs agenix; };
+          extraHomeManagerModules = [ minerva_owl_setup.homeManagerModules.default ];
+        };
         ada = {
           platform = "x86_64-linux";
           specialArgs = { inherit inputs agenix fetching; };
