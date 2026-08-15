@@ -47,8 +47,17 @@ in
     opencode
     inkscape
     tuxedo
+    fanficfare
     # awscli2 and unzip come from the minerva_owl-setup module (~/work/minerva/minerva_owl-setup)
   ];
+
+  # FanFicFare CLI config. include_images defaults off, but the royalroad.com
+  # adapter crashes (AttributeError on None.startswith) when a cover image is
+  # present and include_images is off, so force it on for that site.
+  home.file.".fanficfare/personal.ini".text = ''
+    [www.royalroad.com]
+    include_images:true
+  '';
 
   programs.git = {
     enable = true;
