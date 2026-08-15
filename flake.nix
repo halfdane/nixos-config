@@ -27,6 +27,13 @@
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Pulls extensions directly from the VS Code Marketplace / Open VSX, e.g.
+    # Pylance, which isn't packaged in nixpkgs (proprietary license). See
+    # home/vscode.nix for usage.
+    nix-vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     globalprotect-openconnect.url = "github:yuezk/GlobalProtect-openconnect";
 
     agenix.url = "github:ryantm/agenix";

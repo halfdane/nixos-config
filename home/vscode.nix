@@ -23,5 +23,15 @@
       );
       force = true;
     };
+
+  ## Pylance is proprietary and not redistributable, so it can't live in
+  ## profiles.default.extensions / nixpkgs. Install it imperatively from the
+  ## Marketplace on every activation instead - idempotent, and keeps the
+  ## "reproducible entry point" without needing a separate manual step.
+  home.activation.installPylance = lib.mkIf config.programs.vscode.enable (
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run ${config.programs.vscode.package}/bin/code --install-extension ms-python.vscode-pylance --force
+    ''
+  );
 }
 
