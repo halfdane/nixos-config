@@ -17,6 +17,6 @@
     "explorer.confirmDelete": false,
     "update.mode": "manual",
     "diffEditor.renderSideBySide": false,
-    "chat.viewSessions.orientation": "stacked",
-    "terminal.integrated.defaultProfile.linux": "zsh"
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    "chat.viewSessions.orientation": "stacked"
   }
