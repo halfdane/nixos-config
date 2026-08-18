@@ -103,7 +103,7 @@ in
           "Window to Desktop 6" = "Meta+Ctrl+6";
 
           # Window management (i3-style)
-          "Window Close"      = "Meta+Shift+Q";
+          "Window Close"      = ["Meta+Q" "Meta+Shift+Q"];
           "Window Maximize" = "Meta+F";
           "Show Desktop"      = [];  # clear Meta+D; reassigned to launcher below
 
@@ -112,6 +112,8 @@ in
 
         # Meta+D → app launcher (replaces dmenu/rofi muscle memory)
         "plasmashell"."activate application launcher" = "Meta+D";
+        # Free up Meta+Q (was "Show Activity Switcher") so it can close windows instead
+        "plasmashell"."manage activities" = [];
 
         # Disable Meta+E silently opening Dolphin
         "org.kde.dolphin.desktop"."_launch" = [];
