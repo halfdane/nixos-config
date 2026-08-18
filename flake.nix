@@ -87,10 +87,6 @@
           platform = "x86_64-linux";
           specialArgs = { inherit inputs agenix fetching; };
         };
-        tubman = {
-          platform = "x86_64-linux";
-          specialArgs = { inherit inputs agenix; };
-        };
         leguin = {
           platform = "x86_64-linux";
           specialArgs = { inherit inputs agenix; };

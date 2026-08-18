@@ -745,11 +745,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1784645010,
-        "narHash": "sha256-hbQ50tbWYxIx5Y6tqux7sQAYhoisJOSa0gQ6b24sJDA=",
+        "lastModified": 1787038224,
+        "narHash": "sha256-dknA1qJ0Iq+imqHW2f5XYJ4TE7AQ45rWa94IFpDZDEQ=",
         "ref": "refs/heads/main",
-        "rev": "044f45c8f1c59bee38ade86ca1f650718a8f722d",
-        "revCount": 4,
+        "rev": "e8d94448d6042082fdda525268df5771718a9b17",
+        "revCount": 5,
         "type": "git",
         "url": "ssh://git@github.com/halfdane/nixos-secrets.git"
       },

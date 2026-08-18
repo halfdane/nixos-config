@@ -1,12 +1,11 @@
 # nixos-config
 
-NixOS flake for four machines.
+NixOS flake for three machines.
 
 | Host | Role | Flake target |
 |------|------|-------------|
 | **ada** | x86_64 netcup VPS — runs all services | `.#ada` |
 | **curie** | aarch64 laptop — main workstation | `.#curie` |
-| **tubman** | x86_64 laptop | `.#tubman` |
 | **leguin** | x86_64 host | `.#leguin` |
 
 ## Deploy

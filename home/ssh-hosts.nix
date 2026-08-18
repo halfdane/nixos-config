@@ -17,10 +17,6 @@
         HostName = "192.168.178.103";
         User = "user";
       };
-      tubman = {
-        HostName = "192.168.178.145";
-        User = "user";
-      };
 
     };
   };
