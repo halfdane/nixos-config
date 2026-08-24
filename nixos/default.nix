@@ -5,4 +5,5 @@
   ./kde.nix
   ./networking.nix
   ./storagebox.nix
+  ./ssh.nix
 ]
