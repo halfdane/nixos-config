@@ -1,6 +1,5 @@
 { config, pkgs, inputs, lib, username, ... }:
 let
-  logsmith = pkgs.callPackage ../../pkgs/logsmith { };
   gitId = import "${inputs.secrets}/git-identities.nix";
 in
 {
@@ -46,7 +45,6 @@ in
   home.packages = with pkgs; [ 
     home-manager 
     github-copilot-cli
-    logsmith
     kdePackages.kdeconnect-kde
     keepassxc
     libsecret
