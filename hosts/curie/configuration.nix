@@ -16,6 +16,12 @@
       mode = "600";
     };
     hetzner_storage.file = "${inputs.secrets}/hetzner_storage.age";
+    # Needed so root (sudo nixos-rebuild) can authenticate to github-otto-ec when fetching flake inputs.
+    github-work = {
+      file = "${inputs.secrets}/github-work.age";
+      path = "/run/agenix/github-work";
+      mode = "600";
+    };
   };
 
   imports = [

@@ -8,7 +8,6 @@ let
   cfg = config.programs.agents;
   repoRoot = "/home/user/nixos-config";
   machineContext = "${repoRoot}/home/agents/machine-context.md";
-  opencodeConfig = "${repoRoot}/home/agents/opencode.jsonc";
   link = path: config.lib.file.mkOutOfStoreSymlink path;
 in
 {
@@ -23,7 +22,6 @@ in
 
       # opencode — global instructions and permission rules.
       ".config/opencode/AGENTS.md".source = link machineContext;
-      ".config/opencode/opencode.jsonc".source = link opencodeConfig;
 
       # VS Code Copilot Chat — global instructions location is configured in
       # vscode_settings.json (chat.instructionsFilesLocations: ~/global-instructions).

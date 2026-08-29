@@ -5,6 +5,15 @@
 # of its own, and per-user known_hosts (home-manager) never applies to it.
 # Fingerprint verified against https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
 {
+  # github-otto-ec alias for root so `sudo nixos-rebuild` can fetch flake inputs via SSH.
+  programs.ssh.extraConfig = ''
+    Host github-otto-ec
+      HostName github.com
+      User git
+      IdentityFile /run/agenix/github-work
+      IdentitiesOnly yes
+  '';
+
   programs.ssh.knownHosts."github.com" = {
     hostNames = [ "github.com" ];
     publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl";
