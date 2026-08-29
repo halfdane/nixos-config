@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "references": {
+    "nixos-secrets": {
+      "path": "../nixos-secrets",
+      "description": "Sensitive NixOS configuration - secrets and credentials"
+    },
+    "owl-setup": {
+      "path": "../work/minerva/minerva_owl-setup",
+      "description": "Minerva team dev environment (home-manager, nix flake)"
+    }
+  }
+}
