@@ -9,9 +9,4 @@
   ];
 
   services.minerva-vpn.enable = true;
-
-  # dash0 CLI etc. (see minerva_owl-setup/home/module.nix); useGlobalPkgs = true
-  # means overlays must be applied here at the system level, not from within
-  # the Home Manager module itself.
-  nixpkgs.overlays = [ inputs.minerva_owl_setup.overlays.default ];
 }
