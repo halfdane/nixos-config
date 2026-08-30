@@ -9,5 +9,11 @@
       "path": "../work/minerva/minerva_owl-setup",
       "description": "Minerva team dev environment (home-manager, nix flake)"
     }
+  },
+  "permission": {
+    "external_directory": {
+      "*": "ask",
+      "/home/user/work/minerva/minerva_owl-setup/**": "allow"
+    }
   }
 }
