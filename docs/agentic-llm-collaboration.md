@@ -4,6 +4,8 @@
 - Always use NixOS-native, declarative solutions (e.g., module options, environment.variables, flakes).
 - Document and automate workflows for reproducibility (secrets, overlays, config).
 - Summarize NixOS-specific learnings and best practices in `docs/`.
+- Prefer each project's canonical validation task (usually `task check`) before declaring code changes complete.
+- For multi-platform flakes, run native checks plus `nix flake check --all-systems --no-build` to catch cross-system evaluation failures.
 
 ## Interaction Patterns (Driver/Navigator)
 - You (user) are navigator: review, approve, or question each step.
@@ -18,4 +20,3 @@
 - I execute the command (without asking), then pause for your review.
 - You approve, question, or request a change.
 - Repeat until the task is complete.
-
