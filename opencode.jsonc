@@ -12,7 +12,7 @@
   },
   "permission": {
     "external_directory": {
-      "*": "ask",
+      "/home/user/nixos-secrets/**": "allow",
       "/home/user/work/minerva/minerva_owl-setup/**": "allow"
     }
   }

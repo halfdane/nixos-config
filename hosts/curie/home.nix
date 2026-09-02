@@ -56,7 +56,6 @@ in
     inkscape
     tuxedo
     fanficfare
-    # awscli2 and unzip come from the minerva_owl-setup module (~/work/minerva/minerva_owl-setup)
   ];
 
   # FanFicFare CLI config. include_images defaults off, but the royalroad.com
