@@ -41,6 +41,7 @@ in
 
   programs.agents.enable = true;
   programs.minerva.enable = true;
+  programs.minerva.updateNotifier.enable = true;
 
   home.packages = with pkgs; [ 
     home-manager 
