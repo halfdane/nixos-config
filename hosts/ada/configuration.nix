@@ -54,10 +54,10 @@
   # Persist logs across reboots so the crash that triggers an auto-reboot can
   # actually be diagnosed afterwards (journald otherwise keeps them only in
   # volatile /run and loses them on the following reboot).
-  services.journald.extraConfig = ''
-    Storage=persistent
-    SystemMaxUse=500M
-  '';
+  services.journald.settings.Journal = {
+    Storage = "persistent";
+    SystemMaxUse = "500M";
+  };
 
   # Proactively kill the worst memory hog under pressure instead of letting the
   # box thrash into a soft-lockup/hang. systemd-oomd is enabled by default but

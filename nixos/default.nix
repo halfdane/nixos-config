@@ -1,5 +1,6 @@
 [
   ./nix_basics.nix
+  ./coredump.nix
   ./wireguard.nix
   ./maestral.nix
   ./kde.nix
