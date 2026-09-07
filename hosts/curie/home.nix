@@ -57,6 +57,7 @@ in
     inkscape
     tuxedo
     fanficfare
+    commitizen
   ];
 
   # FanFicFare CLI config. include_images defaults off, but the royalroad.com
