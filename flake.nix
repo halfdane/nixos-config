@@ -38,6 +38,7 @@
     agenix.url = "github:ryantm/agenix";
     nixos-aarch64-widevine.url = "github:epetousis/nixos-aarch64-widevine";
     nixarr.url = "github:nix-media-server/nixarr";
+    nixarr_nixpkgs.follows = "nixarr/nixpkgs";
 
     # Private repo holding the agenix-encrypted secrets and agenix recipient
     # rules. Kept out of this (public) repo. flake = false: it is a plain file

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 {
   options.nixarr = {
     wgConfigPath = lib.mkOption {
@@ -35,6 +35,7 @@
       };
 
       jellyfin.enable = true;
+      jellyfin.package = inputs.nixarr_nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system}.jellyfin;
       bazarr.enable = true;
       lidarr.enable = true;
       prowlarr.enable = true;
