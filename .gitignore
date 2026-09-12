@@ -4,3 +4,4 @@ nixos-config.code-workspace
 .direnv
 .idea/
 hosts/curie-old/
+opencode.jsonc

@@ -8,12 +8,18 @@
     "owl-setup": {
       "path": "../work/minerva/minerva_owl-setup",
       "description": "Minerva team dev environment (home-manager, nix flake)"
+    },
+    "hopper_toolbox": {
+      "path": "../work/hopper/hopper_toolbox",
+      "description": "Scripts and little helpers for everyday engineering at hopper"
     }
+
   },
   "permission": {
     "external_directory": {
       "/home/user/nixos-secrets/**": "allow",
-      "/home/user/work/minerva/minerva_owl-setup/**": "allow"
+      "/home/user/work/minerva/minerva_owl-setup/**": "allow",
+      "/home/user/work/hopper/hopper_toolbox/**": "allow"
     }
   }
 }

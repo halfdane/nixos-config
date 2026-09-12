@@ -274,11 +274,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788617768,
-        "narHash": "sha256-oVXjz8/1NmjpRBn4SRSivdM/4vyEGHnjMWTeoPHHnfc=",
+        "lastModified": 1789183968,
+        "narHash": "sha256-pEWnYdIF1pBMZwarp/rEPzl+Lknhm5hhjSfeLxH8nAA=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "caa6dc59c445ef78b82b8684103d02095158fd82",
+        "rev": "cd1c9e552f41894aeb5cc5cb353d5a1d61550357",
         "type": "github"
       },
       "original": {
@@ -372,11 +372,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788792419,
-        "narHash": "sha256-6wJ3+EKL1WWXQ2biPGbuyJNYjbZfo5fZDH3B4xaqr3I=",
+        "lastModified": 1789212132,
+        "narHash": "sha256-kJ/uH5jj/oW1y6uh1PTsNdy4KfmzOY1RPvQyRHQJAcY=",
         "ref": "refs/heads/main",
-        "rev": "7c3c1b4d891be7f3e2bd977e64eece6c6f545255",
-        "revCount": 122,
+        "rev": "a7b84a9f75f9118e3b0eb2fc459d3c5bf83473c5",
+        "revCount": 124,
         "type": "git",
         "url": "ssh://git@github-otto-ec/otto-ec/minerva_owl-setup.git"
       },
@@ -416,11 +416,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788580600,
-        "narHash": "sha256-cU9wBSSJk2jQbFdWdgxgkVm9W32L9TQgCzAfxtDFIqg=",
+        "lastModified": 1789186092,
+        "narHash": "sha256-rz28W8yY4LyFWA+SVrnTKoerI+XNrU4NbhGCmAFMgn0=",
         "owner": "nix-community",
         "repo": "nix-vscode-extensions",
-        "rev": "2bdda593f9225883f9c2bb8fd4044ba440ce0564",
+        "rev": "6131d5084e8836d17a4b72a120d228b7dafb44c1",
         "type": "github"
       },
       "original": {
@@ -502,11 +502,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1782847189,
-        "narHash": "sha256-twXPFqFsrrY5r28Zh7Homgcp2gUMBgQ6WDS98Q/3xFI=",
+        "lastModified": 1775595990,
+        "narHash": "sha256-OEf7YqhF9IjJFYZJyuhAypgU+VsRB5lD4DuiMws5Ltc=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "b6018f87da91d19d0ab4cf979885689b469cdd41",
+        "rev": "4e92bbcdb030f3b4782be4751dc08e6b6cb6ccf2",
         "type": "github"
       },
       "original": {
