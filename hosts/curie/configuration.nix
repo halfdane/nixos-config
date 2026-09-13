@@ -108,7 +108,7 @@
     file
     strawberry
     ffmpeg
-    jetbrains.idea
+    openssl
   ];
   programs.git = {
     enable = true;

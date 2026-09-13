@@ -372,11 +372,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789212132,
-        "narHash": "sha256-kJ/uH5jj/oW1y6uh1PTsNdy4KfmzOY1RPvQyRHQJAcY=",
+        "lastModified": 1789290495,
+        "narHash": "sha256-T3ZNVH8cxg6fFvRXzz6d9ZGp1bjO0OXV7OkgP7mMFKE=",
         "ref": "refs/heads/main",
-        "rev": "a7b84a9f75f9118e3b0eb2fc459d3c5bf83473c5",
-        "revCount": 124,
+        "rev": "86e0d2e12022e3c4be52305c695552d4cf292fc1",
+        "revCount": 135,
         "type": "git",
         "url": "ssh://git@github-otto-ec/otto-ec/minerva_owl-setup.git"
       },
