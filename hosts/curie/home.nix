@@ -43,6 +43,12 @@ in
   programs.minerva.enable = true;
   programs.minerva.updateNotifier.enable = true;
 
+  # The locked Minerva path CLI module invokes tar, which looks up gzip via
+  # PATH. Keep the activation working until the fixed Minerva revision lands.
+  home.activation.pathCliGzip = lib.hm.dag.entryBefore [ "pathCli" ] ''
+    export PATH="${pkgs.gzip}/bin:$PATH"
+  '';
+
   home.packages = with pkgs; [ 
     home-manager 
     github-copilot-cli
