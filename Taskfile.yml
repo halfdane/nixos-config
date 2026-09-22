@@ -5,7 +5,19 @@ silent: true
 tasks:
   default:
     cmds:
+      - task: deploy:curie-local-owl
+
+  deploy:curie-local-owl:
+    desc: Deploy curie using the local minerva_owl-setup checkout
+    vars:
+      LOCAL_OWL: /home/user/work/minerva/minerva_owl-setup
+    preconditions:
+      - sh: test -e {{.LOCAL_OWL}}/flake.nix
+        msg: "Local Owl checkout not found at {{.LOCAL_OWL}}"
+    cmds:
       - task: deploy:curie
+        vars:
+          FLAKE_INPUT_OVERRIDES: --override-input minerva_owl_setup path:{{.LOCAL_OWL}}
 
   deploy:* :
     desc: Deploy to a specific target
@@ -16,7 +28,7 @@ tasks:
         sh: "hostname"
       ALLOWED_TARGETS: # Dynamically get allowed targets to use in precondition
         sh: "nix flake show --json 2>/dev/null | jq -r '.nixosConfigurations | keys[]'"
-      NIX_REBUILD_CMD: nixos-rebuild switch --flake .#{{.TARGET}} --no-reexec
+      NIX_REBUILD_CMD: nixos-rebuild switch --flake .#{{.TARGET}} --no-reexec {{.FLAKE_INPUT_OVERRIDES | default ""}}
     preconditions:
       - sh: echo '{{.ALLOWED_TARGETS}}' | grep -q '^{{.TARGET}}$'
         msg: "Target [{{.TARGET}}] is not in the list of allowed targets: [{{.ALLOWED_TARGETS}}]"
