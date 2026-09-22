@@ -1,8 +1,12 @@
 { config, pkgs, lib, ... }:
+let
+  marketplace = pkgs.vscode-marketplace;
+in
 {
   programs.vscode = lib.mkIf config.programs.vscode.enable {
     profiles.default.extensions = with pkgs.vscode-extensions; [
       ms-python.python
+      marketplace.ms-python.vscode-pylance
       jnoortheen.nix-ide
       rust-lang.rust-analyzer
       ms-vscode.makefile-tools
@@ -23,15 +27,5 @@
       );
       force = true;
     };
-
-  ## Pylance is proprietary and not redistributable, so it can't live in
-  ## profiles.default.extensions / nixpkgs. Install it imperatively from the
-  ## Marketplace on every activation instead - idempotent, and keeps the
-  ## "reproducible entry point" without needing a separate manual step.
-  home.activation.installPylance = lib.mkIf config.programs.vscode.enable (
-    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      run ${config.programs.vscode.package}/bin/code --install-extension ms-python.vscode-pylance --force
-    ''
-  );
 }
 

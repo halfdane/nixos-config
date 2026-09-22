@@ -12,7 +12,10 @@
   nixpkgs.lib.nixosSystem {
     specialArgs = specialArgs // { inherit username hostname; };
     modules = nixosModules ++ [
-      { nixpkgs.hostPlatform = hostPlatform; }
+      {
+        nixpkgs.hostPlatform = hostPlatform;
+        nixpkgs.overlays = [ inputs.nix-vscode-extensions.overlays.default ];
+      }
       disko.nixosModules.disko
     ] ++ extraModules ++ [
       home-manager.nixosModules.home-manager
