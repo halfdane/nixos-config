@@ -122,8 +122,9 @@
     powerOnBoot = true; # Schaltet Bluetooth beim Systemstart ein
   };
 
-  # allow kde connect
+  # Allow SSH and KDE Connect.
   networking.firewall = {
+    allowedTCPPorts = [ 22 ];
     allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
     allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
   };
