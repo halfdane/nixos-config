@@ -42,6 +42,10 @@ in
   programs.agents.enable = true;
   programs.minerva.enable = true;
   programs.minerva.updateNotifier.enable = true;
+  programs.opencode.settings.enabled_providers = lib.mkForce [
+    "github-copilot"
+    "litellm"
+  ];
 
   # The locked Minerva path CLI module invokes tar, which looks up gzip via
   # PATH. Keep the activation working until the fixed Minerva revision lands.
