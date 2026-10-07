@@ -19,6 +19,13 @@ let
   mountCleanup = mountpoint: pkgs.writeShellScript "storagebox-premount-clean" ''
     set -eu
     MP=${lib.escapeShellArg mountpoint}
+    # A crashed rclone leaves a stale FUSE mount (ENOTCONN): the kernel still
+    # lists it, but stat fails, so mkdir/mountpoint below would abort forever.
+    # findmnt reads the mount table, not the dead mount, so it still works.
+    if ${pkgs.util-linux}/bin/findmnt -rn "$MP" >/dev/null \
+       && ! ${pkgs.coreutils}/bin/stat "$MP" >/dev/null 2>&1; then
+      ${pkgs.util-linux}/bin/umount -l "$MP"
+    fi
     ${pkgs.coreutils}/bin/mkdir -p "$MP"
     if ! ${pkgs.util-linux}/bin/mountpoint -q "$MP"; then
       ${pkgs.findutils}/bin/find "$MP" -mindepth 1 -depth -type d -empty -delete
@@ -123,6 +130,10 @@ in
             --buffer-size=32M \
             --vfs-read-ahead=128M \
             --transfers=2 \
+            --sftp-idle-timeout=60s \
+            --contimeout=15s \
+            --timeout=60s \
+            --low-level-retries=20 \
             ${optionalString cfg.rc.enable "--rc --rc-addr=${cfg.rc.addr} --rc-no-auth \\\n            "}--log-level=INFO
         '';
         # Give rclone a real HOME so it stops erroring on the missing `getent`
@@ -136,9 +147,14 @@ in
         # hangs every consumer. Under memory pressure, tell the OOM killers to
         # sacrifice the greedy readers/writers (ffmpeg, cp) first, not rclone.
         OOMScoreAdjust = -800;
+        # Detach the mount whenever rclone exits (stop or crash), so a dead
+        # process never leaves a stale FUSE mount behind. `-`: best-effort.
+        ExecStopPost = "-+${pkgs.util-linux}/bin/umount -l ${cfg.mountpoint}";
         Restart    = "on-failure";
         RestartSec = "10s";
       };
+      # Never give up retrying during long network outages (VPN, Hetzner).
+      unitConfig.StartLimitIntervalSec = 0;
         };
       }
 
