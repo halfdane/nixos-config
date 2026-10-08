@@ -79,6 +79,7 @@ in
       configFile.kwinrc = {
         # disable screen edges entirely
         "Windows"."ElectricBorders" = 0;
+        "Effect-overview"."BorderActivate" = 9;
         # Prevent accidental launcher pop-ups: Meta alone should be a plain modifier,
         # not trigger anything on release.
         "ModifierOnyShortcuts"."Meta" = "";
