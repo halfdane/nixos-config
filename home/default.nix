@@ -7,5 +7,6 @@
   ./chrome.nix
   ./plasma_hacking.nix
   ./kde_secrets.nix
+  ./keepassxc.nix
   ./agents.nix
 ]
