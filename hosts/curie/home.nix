@@ -40,6 +40,8 @@ in
   programs.plasma.enable = true;
 
   programs.agents.enable = true;
+  programs.lazyvim.enable = true;
+  programs.fonts.enable = true;
   programs.minerva.enable = true;
   programs.minerva.updateNotifier.enable = true;
   programs.opencode.settings.enabled_providers = lib.mkForce [

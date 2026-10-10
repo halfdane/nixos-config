@@ -9,4 +9,6 @@
   ./kde_secrets.nix
   ./keepassxc.nix
   ./agents.nix
+  ./lazyvim.nix
+  ./fonts.nix
 ]
