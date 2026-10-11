@@ -34,6 +34,7 @@
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    neru.url = "github:y3owk1n/neru";
 
     agenix.url = "github:ryantm/agenix";
     nixos-aarch64-widevine.url = "github:epetousis/nixos-aarch64-widevine";

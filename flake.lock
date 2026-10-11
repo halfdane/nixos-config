@@ -409,6 +409,24 @@
         "type": "github"
       }
     },
+    "neru": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_3"
+      },
+      "locked": {
+        "lastModified": 1791687707,
+        "narHash": "sha256-UqAxX+Gum6roBQk0uoGs00kcNUTAGYAuHZvaYc8PhVU=",
+        "owner": "y3owk1n",
+        "repo": "neru",
+        "rev": "8efb605af5195477f3b11fdb9b360e84d760ee0a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "y3owk1n",
+        "repo": "neru",
+        "type": "github"
+      }
+    },
     "nix-vscode-extensions": {
       "inputs": {
         "nixpkgs": [
@@ -431,7 +449,7 @@
     },
     "nixarr": {
       "inputs": {
-        "nixpkgs": "nixpkgs_3",
+        "nixpkgs": "nixpkgs_4",
         "treefmt-nix": "treefmt-nix",
         "vpnconfinement": "vpnconfinement",
         "website-builder": "website-builder"
@@ -452,7 +470,7 @@
     },
     "nixos-aarch64-widevine": {
       "inputs": {
-        "nixpkgs": "nixpkgs_4"
+        "nixpkgs": "nixpkgs_5"
       },
       "locked": {
         "lastModified": 1712816564,
@@ -502,6 +520,22 @@
     },
     "nixpkgs_3": {
       "locked": {
+        "lastModified": 1790822859,
+        "narHash": "sha256-69xHQhAeMAD2wDXO7T2pcOZIF9Sga2W+JkmY2a11Ops=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "c59305bab2065cfecc4944690d9eedbb56f3a9fa",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_4": {
+      "locked": {
         "lastModified": 1775595990,
         "narHash": "sha256-OEf7YqhF9IjJFYZJyuhAypgU+VsRB5lD4DuiMws5Ltc=",
         "owner": "nixos",
@@ -516,7 +550,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_4": {
+    "nixpkgs_5": {
       "locked": {
         "lastModified": 1712122226,
         "narHash": "sha256-pmgwKs8Thu1WETMqCrWUm0CkN1nmCKX3b51+EXsAZyY=",
@@ -532,7 +566,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_5": {
+    "nixpkgs_6": {
       "locked": {
         "lastModified": 1789006805,
         "narHash": "sha256-xB8mKMOx1IA9vTDNLmJZ6n4wCMq/cuWBBOzGCRnqxrU=",
@@ -652,6 +686,7 @@
         "home-manager": "home-manager_2",
         "ilias": "ilias",
         "minerva_owl_setup": "minerva_owl_setup",
+        "neru": "neru",
         "nix-vscode-extensions": "nix-vscode-extensions",
         "nixarr": "nixarr",
         "nixarr_nixpkgs": [
@@ -659,7 +694,7 @@
           "nixpkgs"
         ],
         "nixos-aarch64-widevine": "nixos-aarch64-widevine",
-        "nixpkgs": "nixpkgs_5",
+        "nixpkgs": "nixpkgs_6",
         "plasma-manager": "plasma-manager",
         "prometheus-renderer": "prometheus-renderer",
         "secrets": "secrets"

@@ -44,6 +44,17 @@ in
   programs.fonts.enable = true;
   programs.minerva.enable = true;
   programs.minerva.updateNotifier.enable = true;
+  services.neru = {
+    enable = true;
+    settings.hints.strategy = "contour";
+    settings.hotkeys = {
+      "Ctrl+Alt+Space" = "hints --action left_click";
+      "Ctrl+Alt+G" = "grid";
+      "Ctrl+Alt+C" = "recursive_grid --zoom-to-depth 1";
+      "Ctrl+Alt+B" = "bisect --cursor-selection-mode hold";
+      "Ctrl+Alt+S" = "scroll";
+    };
+  };
   programs.opencode.settings.enabled_providers = lib.mkForce [
     "github-copilot"
     "litellm"
