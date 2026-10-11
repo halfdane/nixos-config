@@ -4,6 +4,7 @@
   ./wireguard.nix
   ./maestral.nix
   ./kde.nix
+  ./macos_keys.nix
   ./keepassxc-2.8.nix
   ./networking.nix
   ./storagebox.nix

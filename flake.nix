@@ -35,6 +35,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     neru.url = "github:y3owk1n/neru";
+    # Key remapper with per-application rules (KDE Wayland aware).
+    # Used by nixos/macos_keys.nix for macOS-style Meta+C/V/X.
+    xremap-flake = {
+      url = "github:xremap/nix-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     agenix.url = "github:ryantm/agenix";
     nixos-aarch64-widevine.url = "github:epetousis/nixos-aarch64-widevine";
@@ -73,6 +79,8 @@
           ilias.nixosModules.default
           inputs.prometheus-renderer.nixosModules.default
           nixarr.nixosModules.default
+          # Inert unless services.xremap.enable (set via services.macos_keys).
+          inputs.xremap-flake.nixosModules.default
         ];
       homeModules = (import ./home);
       mkHost = import ./lib/mkHost.nix {

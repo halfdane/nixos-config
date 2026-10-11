@@ -39,6 +39,7 @@
     autoLogin = "${username}";
     secretService = "gnome-keyring";
   };
+  services.macos_keys.enable = true;
   services.teamviewer.enable = true;
   programs.nix-ld.enable = true;
 

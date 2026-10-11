@@ -82,7 +82,7 @@ in
         "Effect-overview"."BorderActivate" = 9;
         # Prevent accidental launcher pop-ups: Meta alone should be a plain modifier,
         # not trigger anything on release.
-        "ModifierOnyShortcuts"."Meta" = "";
+        "ModifierOnlyShortcuts"."Meta" = "";
       };
 
       shortcuts = {
@@ -115,6 +115,9 @@ in
         "plasmashell"."activate application launcher" = "Meta+D";
         # Free up Meta+Q (was "Show Activity Switcher") so it can close windows instead
         "plasmashell"."manage activities" = [];
+        # Klipper history on Meta+Shift+V (macOS clipboard-manager style).
+        # Meta+V is taken by xremap for paste (nixos/macos_keys.nix).
+        "plasmashell"."show-on-mouse-pos" = "Meta+Shift+V";
 
         # Disable Meta+E silently opening Dolphin
         "org.kde.dolphin.desktop"."_launch" = [];
