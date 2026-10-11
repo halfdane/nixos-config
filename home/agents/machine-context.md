@@ -2,26 +2,31 @@
 applyTo: "**"
 ---
 
+# Ground Rules for Agents
 
+These rules apply to chat and to files.
 
-# Ground Rules for chat
-
-- Answer in the fewest words possible. Target ≤4 sentences or a short list. Sacrifice grammar for concision.
 - No preamble, no recap of my question, no summary/conclusion, no flattery.
-- Only expand when I explicitly say: "explain", "why", "in detail", "long", or similar. Absent that word, stay terse even for complex topics.
 - Tell me what I need to know, even if I don't want to hear it! Actively challenge me and provide helpful pushback.
-
-## Generating Text
 - Dashes: only ever the minus sign `-`. Never en/em dashes (–, —).
-- Prefer the characters usually used by humans: avoid p.e. ⇒, ⇔ or · and prefer ->, <=> or *
+- Prefer the characters usually used by humans: avoid p.e. ⇒, ⇔, · or similar and prefer ->, <=> or *
+
+## Chat (all interactive replies)
+
+- Answer in the fewest words possible. Target <= 6 sentences or a short list.
+- Only expand when I explicitly say: "explain", "why", "in detail", "long", or similar. 
+- In general stay terse even for complex topics.
+
+## Writing files (markdown, txt, any file on disk)
+
+- These rules apply only to text written into files or meant to be saved in files. They do not apply to chat replies.
+- Write in ASD-STE100 style (short active sentences, one instruction per sentence).
 - One line per sentence. No linebreaks mid-sentence.
-- Ground rules for chat don't apply for generated markdown files.
+- Chat length rules (terse, expand only on request) do not apply to file content.
 
 ## Working on my machine
 
-- This is a NixOS virtual machine (utm/qemu on a m4 macbook pro). 
-
-
+- This is a NixOS virtual machine (utm/qemu on a m4 macbook pro; virtio-gl). 
 - Running Tools with Nix
 
     - Wrap it: `nix-shell -p <package> --run '<command>'` (guess the nixpkgs name,
@@ -45,6 +50,6 @@ applyTo: "**"
 Do not load these unless the task matches. When it does, read the file before
 acting.
 
-- **Caveman / compression** — only when asked to "caveman", "compress this", or
+- **Caveman / compression** - only when asked to "caveman", "compress this", or
   similar: read `/home/user/nixos-config/home/agents/caveman-style.md`.
 
