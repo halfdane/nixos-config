@@ -60,6 +60,13 @@ in
               "Super-x" = "C-x";
             };
           }
+          {
+            name = "macos-umlaut-handling";
+            exact_match = true;
+            remap = {
+              "Alt-u" = [ "CapsLock" "Shift-APOSTROPHE" ];
+            };
+          }
         ];
       };
     })
