@@ -1,6 +1,9 @@
 { config, pkgs, lib, inputs, username, hostname, ... }:
 {
-  nixpkgs.overlays = [ inputs.nixos-aarch64-widevine.overlays.default ];
+  nixpkgs.overlays = [
+    inputs.nixos-aarch64-widevine.overlays.default
+    (import ./opencode-wrapper.nix)
+  ];
 
   age.secrets = {
     user-ssh-key = {
