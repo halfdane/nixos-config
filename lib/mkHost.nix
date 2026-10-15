@@ -16,7 +16,6 @@
         nixpkgs.hostPlatform = hostPlatform;
           nixpkgs.overlays = [
             inputs.nix-vscode-extensions.overlays.default
-            inputs.neru.overlays.default
           ];
       }
       disko.nixosModules.disko
@@ -36,7 +35,6 @@
           # imported exactly once rather than also via extraHomeManagerModules.
           home-manager.sharedModules = extraHomeManagerModules ++ [
             inputs.plasma-manager.homeModules.plasma-manager
-            inputs.neru.homeManagerModules.default
           ];
           home-manager.users.${username} = { config, pkgs, lib, ... }:
             {

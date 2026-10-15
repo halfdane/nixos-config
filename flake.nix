@@ -34,7 +34,6 @@
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    neru.url = "github:y3owk1n/neru";
     # Key remapper with per-application rules (KDE Wayland aware).
     # Used by nixos/macos_keys.nix for macOS-style Meta+C/V/X.
     xremap-flake = {

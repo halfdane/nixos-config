@@ -44,40 +44,7 @@ in
   programs.fonts.enable = true;
   programs.minerva.enable = true;
   programs.minerva.updateNotifier.enable = true;
-  services.neru = {
-    enable = true;
-    settings.hints.strategy = "contour";
-    # Default "bottom" pushes labels for the bottom panel off-screen.
-    settings.hints.ui = {
-      placement = "center";
-      # Smaller, translucent labels keep the target visible underneath.
-      font_size = 9; # default 10
-      # Theme surface colors at 60% alpha (0x99).
-      background_color = {
-        light = "#99EEF2FF";
-        dark = "#990A1338";
-      };
-    };
-    # Defaults (wl-kbptr) produce many duplicate hints per target.
-    # Larger minimums and slack merge nested blobs into their parent.
-    settings.hints.contour = {
-      min_target_width = 12.0; # default 7
-      min_target_height = 8.0; # default 3
-      flat_line_height = 8.0; # default 6
-      same_center_slack = 16.0; # default 8
-      square_icon_size = 56.0; # default 40
-      square_icon_slack = 10.0; # default 5
-    };
-    settings.hotkeys = {
-      "Ctrl+Alt+Space" = "hints --action left_click";
-      # Whole screen: includes the Plasma panel and window decorations.
-      "Ctrl+Alt+Meta+Space" = "hints --action left_click --capture-scope screen";
-      "Ctrl+Alt+G" = "grid";
-      "Ctrl+Alt+C" = "recursive_grid --zoom-to-depth 1";
-      "Ctrl+Alt+B" = "bisect --cursor-selection-mode hold";
-      "Ctrl+Alt+S" = "scroll";
-    };
-  };
+
   programs.opencode.settings.enabled_providers = lib.mkForce [
     "github-copilot"
     "litellm"
