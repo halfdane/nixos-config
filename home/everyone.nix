@@ -1,9 +1,12 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
   home.stateVersion = "25.11";
 
   # Shell configuration
-  home.sessionPath = [ "$HOME/bin" "$HOME/.local/bin" ];
+  home.sessionPath = [
+    "$HOME/bin"
+    "$HOME/.local/bin"
+  ];
 
   programs.bash.enable = true;
 
