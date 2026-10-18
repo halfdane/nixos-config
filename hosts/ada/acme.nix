@@ -24,7 +24,7 @@
     acceptTerms = true;
 
     defaults = {
-      email = "REDACTED_PERSONAL_EMAIL";
+      email = "halfdane@gmx.net";
     };
 
     certs."micasaestu.casa" = {
