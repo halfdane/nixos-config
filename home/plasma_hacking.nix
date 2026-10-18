@@ -68,11 +68,11 @@ in
       # SHORTCUTS
       # ---------------------
 
-      # Meta+Return → terminal. Assumes konsole; adjust if needed.
-      hotkeys.commands."launch-konsole" = {
-        name = "Launch Konsole";
+      # Meta+Return → Foot terminal with Zellij.
+      hotkeys.commands."launch-foot" = {
+        name = "Launch Foot";
         key = "Meta+Return";
-        command = "konsole";
+        command = "foot";
       };
 
 

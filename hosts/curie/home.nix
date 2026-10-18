@@ -121,4 +121,16 @@ in
     settings.default_shell = "${pkgs.zsh}/bin/zsh";
   };
 
+  programs.foot = {
+    enable = true;
+    settings.main = {
+      font = "JetBrainsMono Nerd Font:size=11";
+      shell = "${pkgs.zellij}/bin/zellij";
+    };
+    settings.bell = {
+      system = "no";
+      notify = "no";
+    };
+  };
+
 }
