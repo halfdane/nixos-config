@@ -36,6 +36,14 @@ in
         kscreenlockerrc.Daemon.Timeout = 0;
         ksmserverrc.General.confirmLogout = false;
         ksmserverrc.General.loginMode = "emptySession";
+
+        # disable baloo file indexing
+        baloofilerc."Basic Settings"."Indexing-Enabled" = {
+          value = false;
+          # Forces kde to not change this value (even through the settings app).
+          immutable = true;
+        };
+
       };
 
       powerdevil = {

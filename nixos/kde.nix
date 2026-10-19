@@ -45,6 +45,7 @@ in {
       };
 
       services.desktopManager.plasma6.enable = true;
+      environment.plasma6.excludePackages = [ pkgs.kdePackages.baloo ];
     }
 
     (lib.mkIf (cfg.secretService == "gnome-keyring") {
