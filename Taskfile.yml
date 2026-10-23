@@ -28,7 +28,7 @@ tasks:
         sh: "hostname"
       ALLOWED_TARGETS: # Dynamically get allowed targets to use in precondition
         sh: "nix flake show --json 2>/dev/null | jq -r '.nixosConfigurations | keys[]'"
-      NIX_REBUILD_CMD: nixos-rebuild switch --flake .#{{.TARGET}} --no-reexec {{.FLAKE_INPUT_OVERRIDES | default ""}}
+      NIX_REBUILD_CMD: nixos-rebuild switch --flake .#{{.TARGET}} --print-build-logs --no-reexec {{.FLAKE_INPUT_OVERRIDES | default ""}}
     preconditions:
       - sh: echo '{{.ALLOWED_TARGETS}}' | grep -q '^{{.TARGET}}$'
         msg: "Target [{{.TARGET}}] is not in the list of allowed targets: [{{.ALLOWED_TARGETS}}]"
