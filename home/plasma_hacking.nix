@@ -44,6 +44,8 @@ in
           immutable = true;
         };
 
+        kwinrc.Effect-zoom.PointerAxisGestureModifiers = "Meta";
+
       };
 
       powerdevil = {
