@@ -5,7 +5,7 @@
   ./maestral.nix
   ./kde.nix
   ./macos_keys.nix
-  ./keepassxc-2.8.nix
+  ./workarounds.nix
   ./networking.nix
   ./storagebox.nix
   ./ssh.nix
