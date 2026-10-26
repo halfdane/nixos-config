@@ -112,7 +112,10 @@ in
 
   programs.zellij = {
     enable = true;
-    settings.default_shell = "${pkgs.zsh}/bin/zsh";
+    settings = {
+      default_shell = "${pkgs.zsh}/bin/zsh";
+      show_startup_tips = false;
+    };
   };
 
   programs.foot = {
