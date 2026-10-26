@@ -37,6 +37,7 @@ in
   programs.chromium.enable = true;
   
   programs.plasma_hacking.enable = true;
+  programs.plasma_hacking.aiUsageWidget = true;
   programs.plasma.enable = true;
 
   programs.agents.enable = true;

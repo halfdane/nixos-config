@@ -11,6 +11,7 @@ in
       description = "Number of KDE virtual desktops to configure.";
       example = 4;
     };
+    aiUsageWidget = lib.mkEnableOption "the ai-usage-widget plasmoid in the panel, left of the system tray";
   };
 
   config = lib.mkIf cfg.enable {
@@ -20,6 +21,13 @@ in
         message = ''
           programs.plasma_hacking.enable = true requires plasma-manager to be active.
           Set programs.plasma.enable = true on this host.
+        '';
+      }
+      {
+        assertion = !cfg.aiUsageWidget || config.programs.minerva.enable;
+        message = ''
+          programs.plasma_hacking.aiUsageWidget = true requires the ai-usage-widget
+          package, which is only installed via programs.minerva.enable = true.
         '';
       }
     ];
@@ -129,7 +137,32 @@ in
       # TASK BAR
       # ----------------------
 
-      
+      panels = [
+        {
+          location = "bottom";
+          height = 40;
+          widgets = [
+            "org.kde.plasma.kickoff"
+            "org.kde.plasma.pager"
+            {
+              iconTasks = {
+                iconsOnly = false;
+                appearance.rows.multirowView = "lowSpace";
+              };
+            }
+          ]
+          ++ lib.optionals cfg.aiUsageWidget [
+            { panelSpacer.expanding = true; }
+            "org.muddyblack.aiUsageWidget"
+          ]
+          ++ [
+            "org.kde.plasma.marginsseparator"
+            "org.kde.plasma.systemtray"
+            "org.kde.plasma.digitalclock"
+            "org.kde.plasma.showdesktop"
+          ];
+        }
+      ];
 
     };
   };
