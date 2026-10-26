@@ -3,6 +3,16 @@
   nixpkgs.overlays = [
     inputs.nixos-aarch64-widevine.overlays.default
     (import ./opencode-wrapper.nix)
+    # Permanent preference: owl-setup installs jetbrains.idea on Linux, but
+    # this machine does not want it. Replace it with an empty package.
+    (final: prev: {
+      jetbrains = prev.jetbrains // { idea = prev.emptyDirectory; };
+    })
+    # Permanent preference: owl-setup installs duckdb, but this machine does
+    # not want it. Replace it with an empty package.
+    (final: prev: {
+      duckdb = prev.emptyDirectory;
+    })
   ];
 
   age.secrets = {

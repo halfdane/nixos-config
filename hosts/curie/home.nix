@@ -58,14 +58,12 @@ in
 
   home.packages = with pkgs; [ 
     home-manager 
-    github-copilot-cli
     kdePackages.kdeconnect-kde
     keepassxc
     libsecret
     supersonic
     voxtype
     vlc
-    obsidian
     opencode
     inkscape
     tuxedo
@@ -109,11 +107,6 @@ in
         core.sshCommand = "${pkgs.openssh}/bin/ssh -i ${config.age.secrets.github-work.path} -o IdentitiesOnly=yes";
       };
     }];
-  };
-
-  programs.atuin = {
-    enable = lib.mkDefault true;
-    enableZshIntegration = lib.mkDefault true;
   };
 
   programs.zellij = {

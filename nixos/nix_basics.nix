@@ -62,6 +62,9 @@
   };
   nix.settings.trusted-users = [ "@wheel" ];
 
+  # Dedupe the store on a schedule instead of on every build.
+  nix.optimise.automatic = true;
+
   # let oom killer become active earlier: before the whole machine crashes and burns!
   services.earlyoom = {
     enable = true;

@@ -8,5 +8,5 @@
     inputs.minerva_owl_setup.nixosModules.vpn
   ];
 
-  services.minerva-vpn.enable = true;
+  services.minerva-vpn.enable = false;
 }
