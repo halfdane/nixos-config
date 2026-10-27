@@ -1,15 +1,21 @@
 { config, lib, pkgs, ... }:
-
-# Global Auto-Type shortcut for KeePassXC.
-#
-# Like kde_secrets.nix this has no enable flag: it activates automatically when
-# plasma-manager is active on the host (programs.plasma.enable) and keepassxc is
-# installed through home.packages.
 let
   usesKeepass = lib.elem pkgs.keepassxc config.home.packages;
 in
 {
-  config = lib.mkIf (config.programs.plasma.enable && usesKeepass) {
-    programs.plasma.shortcuts."org.keepassxc.KeePassXC".autotype = "Meta+A";
+
+  config = lib.mkIf usesKeepass {
+    home.file."${config.xdg.configHome}/keepassxc/keepassxc.ini" = 
+      lib.mkIf config.programs.keepassxc.enable
+      {
+        source = lib.mkForce  (
+          config.lib.file.mkOutOfStoreSymlink /home/user/nixos-config/home/keepassxc/keepassxc_settings.ini
+        );
+        force = lib.mkForce true;
+      };
+
+
+    programs.plasma.shortcuts."org.keepassxc.KeePassXC".autotype = 
+      lib.mkIf (config.programs.plasma.enable) "Meta+A";
   };
 }
