@@ -29,6 +29,7 @@
       mode = "600";
     };
     hetzner_storage.file = "${inputs.secrets}/hetzner_storage.age";
+    hetzner_synch_webdav.file = "${inputs.secrets}/hetzner_synch_webdav.age";
     # Needed so root (sudo nixos-rebuild) can authenticate to github-otto-ec when fetching flake inputs.
     github-work = {
       file = "${inputs.secrets}/github-work.age";
@@ -156,5 +157,12 @@
     # Enable the loopback RC API so scripts/transcode-oversized can wait for
     # VFS write-back uploads to finish between files.
     rc.enable = true;
+    # The company VPN blocks SFTP to the Storage Box but passes WebDAV. The
+    # keepass file lives in synch/, so it is mounted over WebDAV as well.
+    synch = {
+      enable = true;
+      username = "u564954-sub1";
+      passwordFile = config.age.secrets.hetzner_synch_webdav.path;
+    };
   };
 }

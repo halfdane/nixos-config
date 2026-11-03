@@ -76,6 +76,48 @@ in
       };
     };
 
+    synch = {
+      enable = mkEnableOption ''
+        a second rclone mount of the Storage Box `synch` folder over WebDAV
+        (HTTPS, port 443). The company VPN drops SFTP to the Storage Box but
+        lets WebDAV through, so anything that must stay reachable from inside
+        the VPN (the keepass file) should live here, not on the SFTP mount
+      '';
+
+      mountpoint = mkOption {
+        type = types.path;
+        default = "/mnt/synch";
+        description = ''
+          Mount point for the synch folder. Must not be inside the SFTP
+          mountpoint: rclone refuses to mount over a non-empty directory.
+        '';
+      };
+
+      username = mkOption {
+        type = types.str;
+        example = "u564954-sub1";
+        description = "Storage Box sub-account whose home directory is the synch folder.";
+      };
+
+      server = mkOption {
+        type = types.str;
+        default = "${cfg.synch.username}.your-storagebox.de";
+        defaultText = literalExpression ''"''${config.services.storagebox.synch.username}.your-storagebox.de"'';
+        description = ''
+          WebDAV hostname. Sub-accounts have their own hostname, named after
+          the sub-account: the main account's host answers 401 for them.
+        '';
+      };
+
+      passwordFile = mkOption {
+        type = types.path;
+        description = ''
+          File containing the sub-account password in plain text. A trailing
+          newline is ignored. The service obscures it for rclone at start.
+        '';
+      };
+    };
+
     dependentServices = mkOption {
       type = types.listOf types.str;
       default = [];
@@ -157,6 +199,54 @@ in
       unitConfig.StartLimitIntervalSec = 0;
         };
       }
+
+      # -----------------------------------------------------------------------
+      # rclone WebDAV mount of the synch folder (reachable through the VPN)
+      # -----------------------------------------------------------------------
+      (lib.mkIf cfg.synch.enable {
+        rclone-synch = {
+          description = "rclone WebDAV mount for Hetzner Storage Box synch folder";
+          after    = [ "network-online.target" ];
+          wants    = [ "network-online.target" ];
+          wantedBy = [ "multi-user.target" ];
+          serviceConfig = {
+            Type = "notify";
+            ExecStartPre = "+${mountCleanup cfg.synch.mountpoint}";
+            ExecStart = pkgs.writeShellScript "rclone-synch-mount" ''
+              set -eu
+              # rclone only accepts obscured passwords; read the plain one from
+              # the secret file via stdin so it never shows up in argv.
+              RCLONE_WEBDAV_PASS=$(printf '%s' "$(< ${cfg.synch.passwordFile})" | ${pkgs.rclone}/bin/rclone obscure -)
+              export RCLONE_WEBDAV_PASS
+              exec ${pkgs.rclone}/bin/rclone mount \
+                :webdav: \
+                ${cfg.synch.mountpoint} \
+                --webdav-url=https://${cfg.synch.server} \
+                --webdav-vendor=other \
+                --webdav-user=${cfg.synch.username} \
+                --allow-other \
+                --dir-perms=0775 \
+                --file-perms=0664 \
+                --cache-dir=/var/cache/rclone-synch \
+                --vfs-cache-mode=full \
+                --vfs-cache-max-age=72h \
+                --vfs-cache-max-size=1G \
+                --dir-cache-time=30s \
+                --contimeout=15s \
+                --timeout=60s \
+                --low-level-retries=20 \
+                --log-level=INFO
+            '';
+            Environment = "HOME=/root";
+            CacheDirectory = "rclone-synch";
+            OOMScoreAdjust = -800;
+            ExecStopPost = "-+${pkgs.util-linux}/bin/umount -l ${cfg.synch.mountpoint}";
+            Restart    = "on-failure";
+            RestartSec = "10s";
+          };
+          unitConfig.StartLimitIntervalSec = 0;
+        };
+      })
 
       # Order every declared consumer after a *successful* mount and require
       # it, so nothing writes to the mountpoint before the Storage Box is live.
