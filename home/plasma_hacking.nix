@@ -153,7 +153,18 @@ in
           ]
           ++ lib.optionals cfg.aiUsageWidget [
             { panelSpacer.expanding = true; }
-            "org.muddyblack.aiUsageWidget"
+            {
+              name = "org.muddyblack.aiUsageWidget";
+              config.General = {
+                claudeEnabled = false;
+                antigravityEnabled = false;
+                openaiEnabled = false;
+                kiroEnabled = false;
+                grokEnabled = false;
+                copilotEnabled = true;
+                sessionsEnabled = false;
+              };
+            }
           ]
           ++ [
             "org.kde.plasma.marginsseparator"
