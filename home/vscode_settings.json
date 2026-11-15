@@ -18,5 +18,6 @@
     "update.mode": "manual",
     "diffEditor.renderSideBySide": false,
     "terminal.integrated.defaultProfile.linux": "zsh",
-    "chat.viewSessions.orientation": "stacked"
+    "chat.viewSessions.orientation": "stacked",
+    "editor.wordWrap": "bounded"
   }
