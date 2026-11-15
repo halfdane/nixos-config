@@ -6,6 +6,13 @@ with lib;
 let
   cfg = config.services.storagebox;
 
+  sleepTargets = [
+    "suspend.target"
+    "hibernate.target"
+    "hybrid-sleep.target"
+    "suspend-then-hibernate.target"
+  ];
+
   # Runs immediately before rclone mounts. Other modules (notably nixarr's
   # systemd-tmpfiles rules) recreate an empty directory skeleton under the
   # mountpoint very early at boot, long before the network is up. rclone
@@ -197,6 +204,22 @@ in
       };
       # Never give up retrying during long network outages (VPN, Hetzner).
       unitConfig.StartLimitIntervalSec = 0;
+        };
+      }
+
+      {
+        rclone-storagebox-resume = {
+          description = "Restart the Storage Box mount after resume from sleep";
+          after    = sleepTargets;
+          wantedBy = sleepTargets;
+          serviceConfig.Type = "oneshot";
+          script = ''
+            for _ in $(seq 60); do
+              ${pkgs.getent}/bin/getent hosts ${cfg.server} >/dev/null && break
+              sleep 1
+            done
+            ${config.systemd.package}/bin/systemctl restart rclone-storagebox.service
+          '';
         };
       }
 
