@@ -40,12 +40,6 @@ tasks:
         if: '{{ne .TARGET_HOST .HOSTNAME}}'
       - cmd: echo "🎉 Deployment to {{.TARGET_HOST}} completed successfully! 🎉"
   
-  deploy:all:
-    desc: Deploy to all targets
-    deps:
-      - for: [curie, ada, leguin, hamilton]
-        task: deploy:{{.ITEM}}
-
   update:
     desc: Full system update
     prompt: This will update *everything* in your systems. Do you want to continue?
