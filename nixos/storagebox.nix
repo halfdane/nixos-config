@@ -38,6 +38,32 @@ let
       ${pkgs.findutils}/bin/find "$MP" -mindepth 1 -depth -type d -empty -delete
     fi
   '';
+
+  cacheCleanup = pkgs.writeShellScript "storagebox-cache-clean" ''
+    set -u
+    ROOT=/var/cache/rclone
+    ${pkgs.findutils}/bin/find "$ROOT/vfs" "$ROOT/vfsMeta" -mindepth 1 -maxdepth 1 \
+        ! -name storagebox -printf '%f\n' 2>/dev/null | ${pkgs.coreutils}/bin/sort -u |
+    while read -r name; do
+      if ${pkgs.gnugrep}/bin/grep -rqE '"Dirty": *true' "$ROOT/vfsMeta/$name" 2>/dev/null; then
+        echo "keeping orphaned cache $name: it has files pending upload"
+      else
+        echo "removing orphaned cache $name"
+        ${pkgs.coreutils}/bin/rm -rf "$ROOT/vfs/$name" "$ROOT/vfsMeta/$name"
+      fi
+    done
+  '';
+
+  storageboxConfig = pkgs.writeText "rclone-storagebox.conf" ''
+    [storagebox]
+    type = sftp
+    host = ${cfg.server}
+    port = 23
+    user = ${cfg.username}
+    key_file = ${cfg.sshKeyPath}
+    idle_timeout = 60s
+    disable_hashcheck = true
+  '';
 in
 
 {
@@ -160,15 +186,15 @@ in
         # mount is actually live, so `after`-ordered consumers wait for a real
         # mount rather than merely for the process to have been spawned.
         Type = "notify";
-        ExecStartPre = "+${mountCleanup cfg.mountpoint}";
+        ExecStartPre = [
+          "+${mountCleanup cfg.mountpoint}"
+          "+${cacheCleanup}"
+        ];
         ExecStart = pkgs.writeShellScript "rclone-storagebox-mount" ''
           exec ${pkgs.rclone}/bin/rclone mount \
-            :sftp:/home \
+            storagebox:/home \
             ${cfg.mountpoint} \
-            --sftp-host=${cfg.server} \
-            --sftp-port=23 \
-            --sftp-user=${cfg.username} \
-            --sftp-key-file=${cfg.sshKeyPath} \
+            --config=${storageboxConfig} \
             --allow-other \
             --dir-perms=0775 \
             --file-perms=0664 \
@@ -179,14 +205,17 @@ in
             --buffer-size=32M \
             --vfs-read-ahead=128M \
             --transfers=2 \
-            --sftp-idle-timeout=60s \
-            --sftp-disable-hashcheck \
             --vfs-fast-fingerprint \
             --contimeout=15s \
             --timeout=60s \
             --low-level-retries=20 \
             ${optionalString cfg.rc.enable "--rc --rc-addr=${cfg.rc.addr} --rc-no-auth \\\n            "}--log-level=INFO
         '';
+        # A named remote from a config file keeps the VFS cache directory
+        # stable. An on-the-fly `:sftp:` remote (and a remote configured via
+        # RCLONE_CONFIG_* environment variables) get a hash of their options
+        # appended to the cache directory name, so every option change
+        # orphaned a full-size cache that no cleaner ever touched.
         # Give rclone a real HOME so it stops erroring on the missing `getent`
         # and stores its config/cache where we expect.
         Environment = "HOME=/root";
