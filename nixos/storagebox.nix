@@ -180,6 +180,8 @@ in
             --vfs-read-ahead=128M \
             --transfers=2 \
             --sftp-idle-timeout=60s \
+            --sftp-disable-hashcheck \
+            --vfs-fast-fingerprint \
             --contimeout=15s \
             --timeout=60s \
             --low-level-retries=20 \
