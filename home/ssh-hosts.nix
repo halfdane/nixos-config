@@ -17,6 +17,10 @@
         HostName = "192.168.178.103";
         User = "user";
       };
+      hamilton = {
+        HostName = "192.168.178.138";
+        User = "user";
+      };
 
     };
   };

@@ -7,6 +7,7 @@
 | **ada** | netcup VPS 500 G12 (KVM) | 2 vCPU AMD EPYC-Genoa | 3.8 GiB + 5.8 GiB swap (zram+file) | 125 GB (≈105 GB free) | `152.53.176.47` | `10.100.0.1` | x86_64 |
 | **curie** | laptop | — | — | — | — | `10.100.0.5` | aarch64 |
 | **leguin** | NUC (desktop) | 2× Intel Celeron N2830 @ 2.16 GHz | 3.7 GiB, no swap | 109 GB (≈79 GB free) | — | — (home LAN `192.168.178.103`) | x86_64 |
+| **hamilton** | Dell OptiPlex 3050 Micro (HTPC, replaces leguin) | Intel i5-7500T (4 cores) | 7.6 GiB | 238 GB SATA SSD | — | — (home LAN `192.168.178.138`, DHCP reservation for MAC `d8:9e:f3:7e:d4:ed`) | x86_64 |
 | *(phone)* | Android/iOS | — | — | — | — | `10.100.0.3` | — |
 
 > **Resource notes.** ada is memory-constrained: at profiling time only ~730 MiB was available and it was actively swapping (~2 GiB in swap). Disk headroom is ample (~105 GB free). leguin's Celeron N2830 is a weak 2014 low-power part — comparable to ada for transcoding, not faster. Neither box is a strong transcoder. Media for both lives on the Hetzner Storage Box (rclone SFTP mount), not on local disk.

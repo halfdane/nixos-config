@@ -101,6 +101,10 @@
           platform = "x86_64-linux";
           specialArgs = { inherit inputs agenix; };
         };
+        hamilton = {
+          platform = "x86_64-linux";
+          specialArgs = { inherit inputs agenix; };
+        };
       };
     in {
       packages = {

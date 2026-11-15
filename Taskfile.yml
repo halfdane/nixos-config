@@ -43,7 +43,7 @@ tasks:
   deploy:all:
     desc: Deploy to all targets
     deps:
-      - for: [curie, ada, leguin]
+      - for: [curie, ada, leguin, hamilton]
         task: deploy:{{.ITEM}}
 
   update:
@@ -88,36 +88,61 @@ tasks:
       - cd ../nixos-secrets && agenix -r && git commit -am "rekey" && git push
       - nix flake update secrets
 
-  add_ada_vpn:
-    desc: Add the current Wireguard peer config to the VPN
-    requires:
-      vars:
-        - name: USER_ON_TARGET_HOST
-        - name: TARGET_HOST_IP_USER_ACCESSIBLE
-    cmds:
-      - ssh {{.USER_ON_TARGET_HOST}}@{{.TARGET_HOST_IP_USER_ACCESSIBLE}} "nmcli connection import type wireguard file /var/run/agenix/ada_vpn_curie.conf"
-
   new_install:
-    desc: Fresh install on a new machine
+    desc: Fresh install on a new machine that is booted from a NixOS installer stick
+    summary: |
+      Usage:
+        task new_install TARGET_HOST_IP_USER_ACCESSIBLE=<installer ip> CONFIG_NAME=<host> [EMPTY_USER_PASSWORD=y] [SKIP_ACTUAL_INSTALL=y]
+
+      Prerequisite: hosts/<host>/ exists and is wired into flake.nix.
+      SKIP_ACTUAL_INSTALL=y skips everything up to and including the first boot, for a machine that already runs the new config.
+      EMPTY_USER_PASSWORD=y sets an empty local password for the user (SSH stays key-only).
     requires:
       vars:
-        - name: USER_ON_TARGET_HOST
         - name: TARGET_HOST_IP_USER_ACCESSIBLE
         - name: CONFIG_NAME
-        - name: SKIP_ACTUAL_INSTALL
-          enum: [y,n]
+    vars:
+      USER_ON_TARGET_HOST: '{{.USER_ON_TARGET_HOST | default "user"}}'
+      INSTALLER_USER: '{{.INSTALLER_USER | default "root"}}'
+      SKIP_ACTUAL_INSTALL: '{{.SKIP_ACTUAL_INSTALL | default "n"}}'
+      EMPTY_USER_PASSWORD: '{{.EMPTY_USER_PASSWORD | default "n"}}'
+      INSTALLER_SSH_OPTS: -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+      TARGET: '{{.USER_ON_TARGET_HOST}}@{{.TARGET_HOST_IP_USER_ACCESSIBLE}}'
+      INSTALLER_TARGET: '{{.INSTALLER_USER}}@{{.TARGET_HOST_IP_USER_ACCESSIBLE}}'
+      HOST_DIR: ./hosts/{{.CONFIG_NAME}}
+    preconditions:
+      - sh: test -f {{.HOST_DIR}}/configuration.nix
+        msg: "{{.HOST_DIR}}/configuration.nix not found. Create the host and add it to flake.nix first."
     cmds:
-      - cmd: "nix run github:nix-community/nixos-anywhere -- {{.USER_ON_TARGET_HOST}}@{{.TARGET_HOST_IP_USER_ACCESSIBLE}} --flake .#{{.CONFIG_NAME}} --print-build-logs"
+      - cmd: |
+          echo "Boot the target from the NixOS installer stick (UEFI entry, cable plugged in)."
+          echo "On its console run 'sudo passwd root' and check the IP with 'ip -4 a'."
+          read -p "Hit enter when the installer is up at {{.TARGET_HOST_IP_USER_ACCESSIBLE}} (you will be asked for the root password once) " -r
         if: '[ "{{.SKIP_ACTUAL_INSTALL}}" != "y" ]'
-      - read -p "Wait for boot into new config, then hit enter to get the hardware configuration" -r;
-      - ssh {{.USER_ON_TARGET_HOST}}@{{.TARGET_HOST_IP_USER_ACCESSIBLE}} "sudo nixos-generate-config --show-hardware-config" > ./hosts/{{.CONFIG_NAME}}/hardware-configuration.nix
-      - read -p "Adjusted filesystem entries from ./hosts/{{.CONFIG_NAME}}/hardware-configuration.nix , then hit enter for the ssh key" -r;
-      - ssh {{.USER_ON_TARGET_HOST}}@{{.TARGET_HOST_IP_USER_ACCESSIBLE}} 'cat /etc/ssh/ssh_host_ed25519_key.pub'
-      - read -p "Hit enter after you added the above SSH host key to pubkeys_attrset.nix in the private nixos-secrets repo " -r;
+      - cmd: ssh-copy-id {{.INSTALLER_SSH_OPTS}} {{.INSTALLER_TARGET}}
+        if: '[ "{{.SKIP_ACTUAL_INSTALL}}" != "y" ]'
+      - cmd: nix run github:nix-community/nixos-anywhere -- --ssh-option StrictHostKeyChecking=no --ssh-option UserKnownHostsFile=/dev/null --phases kexec,disko,install --flake .#{{.CONFIG_NAME}} --print-build-logs {{.INSTALLER_TARGET}}
+        if: '[ "{{.SKIP_ACTUAL_INSTALL}}" != "y" ]'
+      - cmd: |
+          read -p "Installed. Hit enter to reboot, then pull the installer stick as soon as the screen goes dark " -r
+          ssh {{.INSTALLER_SSH_OPTS}} {{.INSTALLER_TARGET}} 'umount -R /mnt; reboot' || true
+        if: '[ "{{.SKIP_ACTUAL_INSTALL}}" != "y" ]'
+      - cmd: |
+          echo "Waiting for {{.TARGET}} ..."
+          until ssh -o BatchMode=yes -o ConnectTimeout=3 {{.INSTALLER_SSH_OPTS}} {{.TARGET}} true > /dev/null 2>&1; do sleep 5; done
+          ssh-keygen -R {{.TARGET_HOST_IP_USER_ACCESSIBLE}} > /dev/null 2>&1 || true
+          ssh -o StrictHostKeyChecking=accept-new {{.TARGET}} true
+      - cmd: ssh {{.TARGET}} "sudo passwd -d {{.USER_ON_TARGET_HOST}}"
+        if: '[ "{{.EMPTY_USER_PASSWORD}}" = "y" ]'
+      - ssh {{.TARGET}} "sudo nixos-generate-config --no-filesystems --show-hardware-config" > {{.HOST_DIR}}/hardware-configuration.nix.new
+      - mv {{.HOST_DIR}}/hardware-configuration.nix.new {{.HOST_DIR}}/hardware-configuration.nix
+      - cmd: |
+          HOST_KEY=$(ssh {{.TARGET}} 'cat /etc/ssh/ssh_host_ed25519_key.pub' | cut -d' ' -f1,2)
+          echo
+          echo "In the private nixos-secrets repo:"
+          echo "  1. pubkeys_attrset.nix: add   {{.CONFIG_NAME}} = \"$HOST_KEY\";"
+          echo "  2. secrets.nix: add {{.CONFIG_NAME}} to the 'inherit (import ./pubkeys_attrset.nix)' list and to 'general'"
+          read -p "Hit enter when done " -r
       - task: rekey_secrets
       - task: deploy:{{.CONFIG_NAME}}
         vars: { TARGET_HOST: "{{.TARGET_HOST_IP_USER_ACCESSIBLE}}" }
-      - task: add_ada_vpn
-        vars: 
-          TARGET_HOST_IP_USER_ACCESSIBLE: "{{.TARGET_HOST_IP_USER_ACCESSIBLE}}"
-          USER_ON_TARGET_HOST: "{{.USER_ON_TARGET_HOST}}"
