@@ -25,6 +25,11 @@
   networking.hostName = hostname;
   networking.networkmanager.enable = true;
 
+  systemd.network.links."10-enp1s0-wol" = {
+    matchConfig.MACAddress = "d8:9e:f3:7e:d4:ed";
+    linkConfig.WakeOnLan = "magic";
+  };
+
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [ intel-media-driver ];
