@@ -3,7 +3,7 @@
 # ALL temporary workarounds live in this file. Nothing else.
 #
 # Cleanup routine: read this file, check each "REMOVE WHEN", delete what is done.
-# Each entry warns at eval time (visible in `task` output) when it looks obsolete.
+# Each entry fails at eval time when it looks obsolete.
 #
 # Rules for a new entry:
 #   WHAT         - what the workaround changes

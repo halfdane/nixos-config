@@ -39,10 +39,6 @@ the absolute repo path makes it machine/host-specific.
 Put every temporary workaround in `nixos/workarounds.nix`, and nowhere else.
 This includes package overlays, version pins, and relaxed dependency checks.
 Do **not** add them to host files or other modules.
-Each entry needs `WHAT`, `WHY`, `REMOVE WHEN`, and `ADDED` comments.
-Each entry also needs a `lib.warnIf` that fires when the entry looks obsolete.
-The user reviews this one file when cleaning up.
-Overlays reach home-manager too, because `home-manager.useGlobalPkgs = true`.
 
 ## Deploy
 
