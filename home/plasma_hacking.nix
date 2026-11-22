@@ -182,9 +182,18 @@ in
           ]
           ++ [
             "org.kde.plasma.marginsseparator"
-            "org.kde.plasma.systemtray"
+            {
+              systemTray.items.hidden = [
+                "org.kde.plasma.brightness"
+                "org.kde.plasma.networkmanagement"
+                "TeamViewer"
+                "org.kde.plasma.mediacontroller"
+                "org.kde.merkuro.contact.applet"
+                "org.kde.plasma.notifications"
+                "org.kde.plasma.clipboard"
+              ];
+            }
             "org.kde.plasma.digitalclock"
-            "org.kde.plasma.showdesktop"
           ];
         }
       ];
