@@ -70,17 +70,17 @@ tasks:
     cmds:
       - task: deploy:all
 
-  kwin_restart:
-    desc: Restart KWin && Plasma
+  plasma_restart:
+    desc: Restart Plasma
     cmds:
-      - kwin_wayland --replace &
       - systemctl --user restart plasma-plasmashell
 
   reset_display:
-    desc: Reset saved display/output config so KWin re-detects the preferred mode
+    desc: Reset saved display/output config and restart KWin, so it re-detects the preferred mode
     cmds:
       - rm -f ~/.config/kwinoutputconfig.json
       - echo "Removed kwinoutputconfig.json — log out/in (or run 'task kwin_restart') to re-detect."
+      - kwin_wayland --replace &
   
   rekey_secrets:
     desc: Rekey secrets with agenix (in the private nixos-secrets repo)
