@@ -40,6 +40,12 @@ tasks:
         if: '{{ne .TARGET_HOST .HOSTNAME}}'
       - cmd: echo "🎉 Deployment to {{.TARGET_HOST}} completed successfully! 🎉"
   
+  test:
+    desc: Run tests
+    cmds:
+      - bash home/todo/greeting.test.sh
+      - bash home/todo/otto-mate.test.sh
+
   update:
     desc: Full system update
     prompt: This will update *everything* in your systems. Do you want to continue?

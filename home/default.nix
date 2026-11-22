@@ -11,4 +11,5 @@
   ./agents.nix
   ./lazyvim.nix
   ./fonts.nix
+  ./todo.nix
 ]

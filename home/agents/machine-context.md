@@ -20,8 +20,7 @@ These rules apply to chat and to files.
 ## Writing files (markdown, txt, any file on disk)
 
 - These rules apply only to text written into files or meant to be saved in files. They do not apply to chat replies.
-- Write in ASD-STE100 style (short active sentences, one instruction per sentence).
-- One line per sentence. No linebreaks mid-sentence.
+- One line per sentence that has more than a few words. No linebreaks mid-sentence.
 - Chat length rules (terse, expand only on request) do not apply to file content.
 
 ## Working on my machine
@@ -44,6 +43,8 @@ These rules apply to chat and to files.
     - **`.envrc`** containing `use flake` so direnv loads the shell automatically.
     - **A `shellHook`** that echoes the key build/run/test commands.
     - **A `Taskfile.yml`** wrapping those commands as the canonical entry points.
+
+- Run the `todo`-command before anything else, if user tells you handle todos for them (this is different from a harness' internal todo tool)
 
 ## On-demand references (routing)
 

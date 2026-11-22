@@ -43,6 +43,7 @@ in
   programs.agents.enable = true;
   programs.lazyvim.enable = true;
   programs.fonts.enable = true;
+  programs.todo.enable = true;
   programs.minerva.enable = true;
   programs.minerva.updateNotifier.enable = true;
 
