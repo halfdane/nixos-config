@@ -18,6 +18,15 @@
   nixpkgs.overlays = [
     (final: prev: {
 
+      # WHAT         - adds kdePackages.komodo, built from pkgs/komodo/package.nix.
+      # WHY          - nixpkgs does not package KomoDo (KDE todo.txt manager).
+      # REMOVE WHEN  - nixpkgs has kdePackages.komodo. Then delete this entry and pkgs/komodo.
+      # ADDED        - 2026-11-22
+      kdePackages = lib.throwIf (prev.kdePackages ? komodo)
+        "workarounds: nixpkgs now has kdePackages.komodo - remove the komodo overlay and pkgs/komodo"
+        (prev.kdePackages.overrideScope (kfinal: _: {
+          komodo = kfinal.callPackage ../pkgs/komodo/package.nix { };
+        }));
     })
   ];
 }

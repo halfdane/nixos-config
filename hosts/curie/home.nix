@@ -38,12 +38,14 @@ in
   
   programs.plasma_hacking.enable = true;
   programs.plasma_hacking.aiUsageWidget = true;
+  programs.plasma_hacking.komodoWidget = true;
   programs.plasma.enable = true;
 
   programs.agents.enable = true;
   programs.lazyvim.enable = true;
   programs.fonts.enable = true;
   programs.todo.enable = true;
+  programs.komodo.enable = true;
   programs.minerva.enable = true;
   programs.minerva.updateNotifier.enable = true;
 

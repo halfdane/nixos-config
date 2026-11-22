@@ -12,4 +12,5 @@
   ./lazyvim.nix
   ./fonts.nix
   ./todo.nix
+  ./komodo.nix
 ]

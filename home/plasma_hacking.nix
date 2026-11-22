@@ -12,6 +12,7 @@ in
       example = 4;
     };
     aiUsageWidget = lib.mkEnableOption "the ai-usage-widget plasmoid in the panel, left of the system tray";
+    komodoWidget = lib.mkEnableOption "the KomoDo plasmoid in the panel, left of the system tray";
   };
 
   config = lib.mkIf cfg.enable {
@@ -28,6 +29,13 @@ in
         message = ''
           programs.plasma_hacking.aiUsageWidget = true requires the ai-usage-widget
           package, which is only installed via programs.minerva.enable = true.
+        '';
+      }
+      {
+        assertion = !cfg.komodoWidget || config.programs.komodo.enable;
+        message = ''
+          programs.plasma_hacking.komodoWidget = true requires the KomoDo
+          package, which is only installed via programs.komodo.enable = true.
         '';
       }
     ];
@@ -164,6 +172,12 @@ in
                 copilotEnabled = true;
                 sessionsEnabled = false;
               };
+            }
+          ]
+          ++ lib.optionals cfg.komodoWidget [
+            {
+              name = "org.kde.komodo.widget";
+              config.General.filePath = "file://${config.programs.todo.directory}/todo.txt";
             }
           ]
           ++ [
