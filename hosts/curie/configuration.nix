@@ -119,11 +119,10 @@
     gst_all_1.gst-plugins-ugly
     gst_all_1.gst-libav
     gst_all_1.gstreamer
-    kid3
     file
-    strawberry
     ffmpeg
     openssl
+    fractal
   ];
   programs.git = {
     enable = true;
