@@ -21,14 +21,17 @@ in
     IdentitiesOnly = "yes";
   };
 
-  # Plain github.com defaults to the personal key. This is what git actually
-  # falls back to now that programs.git.settings.core.sshCommand has no
-  # unconditional default - only the gitdir:~/work/** include below still
-  # overrides it (with the work key) for repos under ~/work/.
-  programs.ssh.settings."github.com" = {
-    User = "git";
-    IdentityFile = config.age.secrets.github-personal.path;
-    IdentitiesOnly = "yes";
+  programs.ssh.settings = {
+      "github.com" = {
+      User = "git";
+      IdentityFile = config.age.secrets.github-personal.path;
+      IdentitiesOnly = "yes";
+    };
+    "invent.kde.org" = {
+      User = "git";
+      IdentityFile = config.age.secrets.github-personal.path;
+      IdentitiesOnly = "yes";
+    };
   };
 
   programs.vscode.enable = true;
