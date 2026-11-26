@@ -249,6 +249,24 @@
         "type": "github"
       }
     },
+    "flake-utils_6": {
+      "inputs": {
+        "systems": "systems_6"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "globalprotect-openconnect": {
       "inputs": {
         "flake-utils": [
@@ -561,6 +579,27 @@
         "type": "github"
       }
     },
+    "otto_mate": {
+      "inputs": {
+        "flake-utils": "flake-utils_5",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1795726743,
+        "narHash": "sha256-vOhjfQwLWoA3piTlAU6M/nzpwELgDKruV6oCxmubTbw=",
+        "ref": "refs/heads/main",
+        "rev": "29bf229658056598e619e0179d8740106802a6e7",
+        "revCount": 57,
+        "type": "git",
+        "url": "ssh://git@github-otto-ec/TomVollerthun1337/otto-mate.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github-otto-ec/TomVollerthun1337/otto-mate.git"
+      }
+    },
     "plasma-manager": {
       "inputs": {
         "home-manager": "home-manager_2",
@@ -584,7 +623,7 @@
     },
     "prometheus-renderer": {
       "inputs": {
-        "flake-utils": "flake-utils_5",
+        "flake-utils": "flake-utils_6",
         "nixpkgs": [
           "nixpkgs"
         ]
@@ -669,6 +708,7 @@
         "nixarr": "nixarr",
         "nixos-aarch64-widevine": "nixos-aarch64-widevine",
         "nixpkgs": "nixpkgs_4",
+        "otto_mate": "otto_mate",
         "plasma-manager": "plasma-manager",
         "prometheus-renderer": "prometheus-renderer",
         "secrets": "secrets",
@@ -813,6 +853,21 @@
       }
     },
     "systems_5": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_6": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",

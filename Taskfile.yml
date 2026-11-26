@@ -8,16 +8,19 @@ tasks:
       - task: deploy:curie-local-owl
 
   deploy:curie-local-owl:
-    desc: Deploy curie using the local minerva_owl-setup checkout
+    desc: Deploy curie using the local minerva_owl-setup and otto-mate checkouts
     vars:
       LOCAL_OWL: /home/user/work/minerva/minerva_owl-setup
+      LOCAL_OTTO_MATE: /home/user/work/otto-mate
     preconditions:
       - sh: test -e {{.LOCAL_OWL}}/flake.nix
         msg: "Local Owl checkout not found at {{.LOCAL_OWL}}"
+      - sh: test -e {{.LOCAL_OTTO_MATE}}/flake.nix
+        msg: "Local otto-mate checkout not found at {{.LOCAL_OTTO_MATE}}"
     cmds:
       - task: deploy:curie
         vars:
-          FLAKE_INPUT_OVERRIDES: --override-input minerva_owl_setup path:{{.LOCAL_OWL}}
+          FLAKE_INPUT_OVERRIDES: --override-input minerva_owl_setup path:{{.LOCAL_OWL}} --override-input otto_mate path:{{.LOCAL_OTTO_MATE}}
 
   deploy:* :
     desc: Deploy to a specific target

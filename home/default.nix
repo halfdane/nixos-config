@@ -13,4 +13,5 @@
   ./fonts.nix
   ./todo.nix
   ./komodo.nix
+  ./otto_mate.nix
 ]

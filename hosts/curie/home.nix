@@ -49,6 +49,7 @@ in
   programs.fonts.enable = true;
   programs.todo.enable = true;
   programs.komodo.enable = true;
+  programs.otto_mate.enable = true;
   programs.minerva.enable = true;
   programs.minerva.updateNotifier.enable = true;
 

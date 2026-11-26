@@ -14,6 +14,7 @@ usage() {
     otto-mate since
     otto-mate add "LINE"
     otto-mate finish
+    otto-mate inbox
     otto-mate accept N
     otto-mate reject N
 EOF
@@ -77,6 +78,12 @@ finish_extraction() {
     echo "pruned $pruned inbox lines"
 }
 
+print_inbox() {
+    local inbox=$todo_dir/inbox.txt
+    [[ -f $inbox ]] || return 0
+    awk 'NF { print NR, $0 }' "$inbox"
+}
+
 require_line_number() {
     [[ ${1:-} =~ ^[1-9][0-9]*$ ]] || fail "usage: otto-mate $2 N"
 }
@@ -108,6 +115,9 @@ case $subcommand in
         ;;
     finish)
         finish_extraction
+        ;;
+    inbox)
+        print_inbox
         ;;
     accept)
         require_line_number "${1:-}" accept

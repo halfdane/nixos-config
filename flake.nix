@@ -65,6 +65,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+
+    # otto-mate CLI plus its opencode agent and skills (curie only). Private
+    # repo owned by the account behind the work key, hence the same SSH alias
+    # as minerva_owl_setup.
+    otto_mate = {
+      url = "git+ssh://git@github-otto-ec/TomVollerthun1337/otto-mate.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, nixos-aarch64-widevine, 

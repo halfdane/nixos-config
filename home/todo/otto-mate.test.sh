@@ -160,6 +160,19 @@ assert_equals "finish refreshes .last-extraction" \
 
 new_case
 printf 'one\ntwo\nthree\n' > "$todo_dir/inbox.txt"
+assert_equals "inbox prints numbered lines" "$(todo otto-mate inbox)" "$(printf '1 one\n2 two\n3 three')"
+assert_equals "inbox works from any directory" "$(cd / && todo otto-mate inbox | head -n 1)" "1 one"
+
+new_case
+printf 'one\n\nthree\n' > "$todo_dir/inbox.txt"
+assert_equals "inbox skips blank lines and keeps numbers" "$(todo otto-mate inbox)" "$(printf '1 one\n3 three')"
+
+new_case
+assert_equals "inbox without a file prints nothing" "$(todo otto-mate inbox)" ""
+assert_succeeds "inbox without a file succeeds" todo otto-mate inbox
+
+new_case
+printf 'one\ntwo\nthree\n' > "$todo_dir/inbox.txt"
 printf 'open\n' > "$todo_dir/todo.txt"
 todo otto-mate accept 2 > /dev/null
 assert_equals "accept appends line to todo.txt" "$(cat "$todo_dir/todo.txt")" "$(printf 'open\ntwo')"
