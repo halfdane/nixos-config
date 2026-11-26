@@ -122,7 +122,7 @@
     file
     ffmpeg
     openssl
-    fractal
+    element-desktop
   ];
   programs.git = {
     enable = true;
